@@ -1,4 +1,7 @@
-import {additions} from './catalog.js';
+import {abilityRules} from './abilities.js?v=unique-abilities-4';
+import {createCombatState,resolveTurn} from './combat.js?v=unique-abilities-4';
+export {abilityRules} from './abilities.js?v=unique-abilities-4';
+import {additions} from './catalog.js?v=unique-abilities-4';
 const option=(id,name,icon,desc,stats={})=>({id,name,icon,desc,stats});
 export const categories=[
 {id:'weapon',name:'Broń',icon:'⚔',options:[option('sword','Miecz','⚔','Wszechstronny i celny.',{attack:4,accuracy:8}),option('axe','Topór','🪓','Silne, lecz wolniejsze ciosy.',{attack:9,speed:-3}),option('spear','Włócznia','↗','Zasięg i pierwszeństwo.',{attack:3,speed:5,accuracy:4}),option('hammer','Młot','🔨','Przełamuje ciężką ochronę.',{attack:7,pierce:7,speed:-5})]},
@@ -11,20 +14,13 @@ export const categories=[
 {id:'ability',name:'Specjalna umiejętność',icon:'✺',options:[option('rage','Szał berserkerski','♨','Co czwarty atak: +9 siły.'),option('disarm','Rozbrojenie','✕','Co czwarty atak osłabia następny cios rywala.'),option('precise','Precyzyjny cios','⊕','Co czwarty atak trafia i omija część zbroi.'),option('breath','Drugi oddech','≋','Co czwarty atak przywraca 8 zdrowia.')]}];
 // Keep the original four entries and add sixteen named alternatives per slot.
 for(const category of categories){
- for(const [id,name,desc,stats,effect] of additions[category.id]){
+ for(const [id,name,desc,stats] of additions[category.id]){
   const item=option(id,name,category.icon,desc,stats);
-  if(effect)item.effect=effect;
   category.options.push(item);
  }
 }
-export const abilityRules={
- rage:{description:'Co czwarty atak: +9 siły przy trafieniu.',power:9},
- disarm:{description:'Co czwarty celny atak: −12 siły następnego ciosu rywala.',penalty:12},
- precise:{description:'Co czwarty atak: pewne trafienie, pomija 10 obrony.',pierce:10},
- breath:{description:'Co czwarty atak: odzyskuje do 8 HP i 15 kondycji.',heal:8,energy:15}
-};
 for(const ability of categories.find(c=>c.id==='ability').options){
- ability.desc=abilityRules[ability.effect||ability.id].description;
+ ability.desc=abilityRules[ability.id].description;
 }
 export const durations={
  short:{name:'Krótka',multiplier:0.65},
@@ -48,26 +44,12 @@ export function createFighter(name,picks,duration='medium'){
 }
 export function seededRandom(seed){let s=seed>>>0;return ()=>{s+=0x6D2B79F5;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296;};}
 export function simulate(a,b,random=Math.random){
- const f=[a,b],hp=f.map(x=>x.stats.health),energy=f.map(x=>x.stats.stamina),turns=[0,0],disarmed=[false,false],events=[];
- let first=random()<(0.5+(a.stats.speed-b.stats.speed)/100)?0:1;
- for(let turn=0;turn<160&&hp.every(h=>h>0);turn++){
- const actor=(first+turn)%2,target=1-actor,s=f[actor].stats,d=f[target].stats;turns[actor]++;
- const ability=turns[actor]%4===0?f[actor].picks.ability:null;
- const effect=ability?(f[actor].traits.ability.effect||ability):null;
- const exhausted=energy[actor]<=0;energy[actor]=Math.max(0,energy[actor]-7);
- const chance=Math.max(.35,Math.min(.95,(s.accuracy+(s.speed-d.speed)*.65)/100));
- const hit=effect==='precise'||random()<chance;
- let damage=0,kind='dodge';
- if(hit){const power=s.attack+(random()*8-4)+(effect==='rage'?abilityRules.rage.power:0)-(disarmed[actor]?abilityRules.disarm.penalty:0);const protection=Math.max(0,d.defense-s.pierce-(effect==='precise'?abilityRules.precise.pierce:0));damage=Math.max(2,Math.round((power-protection*.6)*(exhausted?.65:1)));kind=damage<8?'block':'hit';hp[target]=Math.max(0,hp[target]-damage);}
- const weakened=disarmed[actor];
- disarmed[actor]=false;if(effect==='disarm'&&hit)disarmed[target]=true;
- let healed=0;if(effect==='breath'){healed=Math.min(abilityRules.breath.heal,s.health-hp[actor]);hp[actor]+=healed;energy[actor]+=abilityRules.breath.energy;}
- const text=hit?`${f[actor].name}: ${kind==='block'?'cios częściowo zablokowany':'trafienie'} −${damage} HP.`:`${f[target].name} unika ataku ${f[actor].name}.`;
- events.push({actor,target,damage,kind,ability,healed,hp:[...hp],text,exhausted,weakened});
- }
- const reason=hp.every(h=>h>0)?'decision':'knockout';
- const scores=hp.map((h,i)=>h/f[i].stats.health);
- const winner=reason==='decision'?(scores[0]===scores[1]?first:scores[0]>scores[1]?0:1):(hp[0]>0?0:1);
+ const fighters=[a,b],state=createCombatState(fighters),events=[];
+ const first=random()<(0.5+(a.stats.speed-b.stats.speed)/100)?0:1;
+ for(let turn=0;turn<160&&state.hp.every(h=>h>0);turn++)events.push(resolveTurn(fighters,state,(first+turn)%2,random));
+ const reason=state.hp.every(h=>h>0)?'decision':'knockout';
+ const scores=state.hp.map((h,i)=>h/fighters[i].stats.health);
+ const winner=reason==='decision'?(scores[0]===scores[1]?first:scores[0]>scores[1]?0:1):(state.hp[0]>0?0:1);
  return {winner,reason,events};
 }
 export function describe(result,fighters){const w=fighters[result.winner],l=fighters[1-result.winner];const hits=result.events.filter(e=>e.actor===result.winner&&e.damage>0);const best=hits.reduce((a,b)=>b.damage>(a?.damage??-1)?b:a,null);const special=hits.find(e=>e.ability);return `Zwycięża ${w.name}! ${w.traits.weapon.name} przyniósł ${hits.length} celnych trafień${best?`, a najmocniejszy cios odebrał ${best.damage} punktów zdrowia`:''}. ${special?`${w.traits.ability.name} znalazł zastosowanie w starciu.`:`${l.name} walczył do końca, ale nie zdołał przechylić szali.`} ${result.reason==='decision'?'Po limicie wymian o wyniku zdecydował pozostały procent zdrowia.':'Pojedynek zakończył się wyczerpaniem zdrowia przeciwnika.'}`;}

@@ -20,11 +20,24 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - run: npm ci
       - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - name: Test game in browser before publication
+        run: |
+          python3 -m http.server 8000 --bind 127.0.0.1 > /tmp/jatka-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          for attempt in $(seq 1 20); do
+            if curl --fail --silent http://127.0.0.1:8000/index.html > /dev/null; then break; fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:8000/index.html > /dev/null
+          npm run test:browser
       - name: Prepare static game
         run: |
           mkdir site
-          cp index.html app.js engine.js catalog.js weapons.js style.css site/
+          cp index.html app.js engine.js catalog.js abilities.js combat.js weapons.js style.css site/
           cp -R assets site/assets
           touch site/.nojekyll
       - uses: actions/upload-pages-artifact@v3

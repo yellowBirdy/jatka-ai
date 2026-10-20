@@ -35,7 +35,7 @@ Każdy gracz otrzymuje osobną ofertę: 5 różnych cech z puli 20 w każdej z 8
 
 Długość jest wspólna dla obu wojowników: **krótka — 65% HP**, **średnia — 100% HP**, **długa — 160% HP**. Mnożnik jest stosowany po bonusach cech, z zaokrągleniem do całego punktu. Pozostałe statystyki i tempo animacji pozostają takie same. Zmiana długości aktualizuje także zatwierdzonego wojownika; podczas walki ustawienie jest zablokowane.
 
-W katalogu jest 160 nazwanych cech. Dodatkowe umiejętności korzystają z czterech niemagicznych mechanik aktywnych (mocne uderzenie, osłabienie kolejnego ataku, precyzyjny cios, regeneracja sił), z równą siłą wariantów w obrębie każdej mechaniki, bez dodatkowych bonusów pasywnych. Nie każda nazwa oznacza osobny system walki.
+W katalogu jest 160 nazwanych cech. Każda z 20 specjalnych umiejętności ma własny efekt: od kontry i uszkadzania pancerza po odbieranie kondycji, spowalnianie, dwucios, warunkowe leczenie i oszczędzanie sił. Opis karty jest zgodny z regułą w `abilities.js`, a faktyczne skutki są widoczne w dzienniku walki.
 
 ## Zasady walki
 
@@ -47,10 +47,10 @@ Balans jest wstępny: testy sprawdzają równe szanse identycznych postaci i pop
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` uruchamia testy i publikuje wyłącznie pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
+Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie trzy zestawy testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
 
 ## Balans umiejętności
 
-Rozbrojenie osłabia tylko następny atak rywala o 12 siły (poprzednio 7), pod warunkiem trafienia. Warianty o tej samej mechanice mają identyczną siłę, bez darmowych bonusów pasywnych. Szczegóły widoczne na kartach pochodzą z `abilityRules`, z którego korzysta też silnik.
+Każda umiejętność aktywuje się co czwarty własny atak. Warunki trafienia, czasy trwania, limity trwałych osłabień i zakaz leczenia po śmiertelnej kontrze mają osobne testy. Test porównuje też przebiegi walki wszystkich 20 umiejętności, aby zmiana samego opisu nie mogła udawać unikalnej mechaniki.
 
 `npm run balance` wykonuje 547 200 deterministycznych walk: 20 umiejętności, wszystkie pary, 40 losowych zestawów pozostałych cech, 12 ziaren walki, obie strony i trzy długości. Porównujemy identyczne zestawy różniące się umiejętnością, aby oddzielić jej wpływ od przewagi ekwipunku. Test regresji używa osobnej próby 24 zestawów i 8 ziaren. Raport w `docs/balans-umiejetnosci.md` nie gwarantuje równowagi każdego możliwego zestawu.

@@ -1,6 +1,6 @@
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
-(async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});try{
+(async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||(process.env.CI?chromium.executablePath():'/usr/bin/chromium'),headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});try{
 const page=await browser.newPage({viewport:{width:1440,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:8000');
 assert.equal(await page.locator('.option .weapon-icon').count(),10);await page.screenshot({path:'/tmp/jatka-creator.png',fullPage:true});
 await page.locator('#fighter-name').fill(' ');await page.getByRole('button',{name:'Zatwierdź wojownika'}).click();assert.ok(await page.locator('#error').innerText());await page.locator('#fighter-name').fill('<Ragnar>');

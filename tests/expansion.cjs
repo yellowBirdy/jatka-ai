@@ -1,6 +1,6 @@
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
-(async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});try{
+(async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||(process.env.CI?chromium.executablePath():'/usr/bin/chromium'),headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});try{
 const page=await browser.newPage({viewport:{width:1440,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:8000');
 const offers=()=>page.locator('#categories input').evaluateAll(inputs=>inputs.map(i=>i.name+':'+i.value));
 const checkOffers=async()=>{assert.equal(await page.locator('.category').count(),8);for(const group of await page.locator('.category').all()){assert.equal(await group.locator('input').count(),5);assert.equal(new Set(await group.locator('input').evaluateAll(a=>a.map(i=>i.value))).size,5);}};

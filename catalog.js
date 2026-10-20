@@ -1,5 +1,5 @@
 // Additional traits complete each category to twenty options.
-// Each tuple: id, Polish name, description, stat modifiers, optional active ability.
+// Each tuple: id, Polish name, description, stat modifiers. Ability descriptions live in abilities.js.
 export const additions = {
  weapon: [
  ['sabre','Szabla','Szybkie cięcia kosztem przebicia.',{attack:3,speed:4,pierce:1}],
@@ -128,21 +128,21 @@ export const additions = {
  ['economy','Ekonomia ruchu','Nie marnuje sił na ataki.',{stamina:20,accuracy:5}]
  ],
  ability: [
- ['charge','Szarża','Co czwarty atak: +9 siły.',{},'rage'],
- ['overhead','Cios znad głowy','Co czwarty atak: +9 siły.',{},'rage'],
- ['shoulder','Uderzenie barkiem','Co czwarty atak: +9 siły.',{},'rage'],
- ['combo','Seria uderzeń','Co czwarty atak: +9 siły.',{},'rage'],
- ['wrist-lock','Blokada nadgarstka','Co czwarty celny atak osłabia kolejny cios rywala.',{},'disarm'],
- ['weapon-hook','Zaczepienie broni','Co czwarty celny atak osłabia kolejny cios rywala.',{},'disarm'],
- ['sand','Piasek w oczy','Co czwarty celny atak osłabia kolejny cios rywala.',{},'disarm'],
- ['pommel','Cios głowicą','Co czwarty celny atak osłabia kolejny cios rywala.',{},'disarm'],
- ['gap','Cios w szczelinę','Co czwarty atak trafia i omija część zbroi.',{},'precise'],
- ['lunge','Wypad','Co czwarty atak trafia i omija część zbroi.',{},'precise'],
- ['feint-strike','Zwód i pchnięcie','Co czwarty atak trafia i omija część zbroi.',{},'precise'],
- ['low-cut','Niskie cięcie','Co czwarty atak trafia i omija część zbroi.',{},'precise'],
- ['breathing','Kontrola oddechu','Co czwarty atak przywraca 8 HP i 15 kondycji.',{},'breath'],
- ['rally','Mobilizacja','Co czwarty atak przywraca 8 HP i 15 kondycji.',{},'breath'],
- ['reset-stance','Odzyskanie postawy','Co czwarty atak przywraca 8 HP i 15 kondycji.',{},'breath'],
- ['pace','Zmiana tempa','Co czwarty atak przywraca 8 HP i 15 kondycji.',{},'breath']
+ ['charge','Szarża','',{}],
+ ['overhead','Cios znad głowy','',{}],
+ ['shoulder','Uderzenie barkiem','',{}],
+ ['combo','Seria uderzeń','',{}],
+ ['wrist-lock','Blokada nadgarstka','',{}],
+ ['weapon-hook','Zaczepienie broni','',{}],
+ ['sand','Piasek w oczy','',{}],
+ ['pommel','Cios głowicą','',{}],
+ ['gap','Cios w szczelinę','',{}],
+ ['lunge','Wypad','',{}],
+ ['feint-strike','Zwód i pchnięcie','',{}],
+ ['low-cut','Niskie cięcie','',{}],
+ ['breathing','Kontrola oddechu','',{}],
+ ['rally','Mobilizacja','',{}],
+ ['reset-stance','Odzyskanie postawy','',{}],
+ ['pace','Zmiana tempa','',{}]
  ]
 };
