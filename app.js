@@ -1,3 +1,4 @@
+import {setupTutorial} from './tutorial.js?v=tutorial-11';
 import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=teams-10';
 import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=fantasy-pools-9';
 import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=weapon-families-6';
@@ -92,3 +93,5 @@ function finishTeams(){
  fighters.forEach((_,i)=>{const card=$('combatant'+i);card.classList.remove('selected-attacker','selected-target');card.classList.toggle('victor',winner!==null&&teamOf(i)===winner);card.querySelector('.fighter-select').hidden=true;});
  $('history').replaceChildren(...teamBattle.events.map(e=>{const li=document.createElement('li');li.textContent=`${fighters[e.actor].name} → ${fighters[e.target].name}: ${e.text} ${e.details.join(' ')}`;return li;}));
 }
+
+setupTutorial(()=>({format,mode,player,activeTeam:teamBattle?.activeTeam,phase:!$('creator').hidden?'creator':!$('result').hidden?'result':!$('team-controls').hidden?'teams':$('fight').hidden?'watching':'arena'}));

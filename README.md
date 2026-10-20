@@ -47,7 +47,7 @@ Balans jest wstępny: testy sprawdzają równe szanse identycznych postaci i pop
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie sześć zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
+Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie siedem zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
 
 ## Balans umiejętności
 
@@ -107,3 +107,11 @@ Po rozpoczęciu walki wybierz **atakującego** i **cel ataku** z list lub przyci
 Wygrywa drużyna, która pokona obu rywali. Po 320 turach decyduje suma pozostałych procentów HP jej członków; identyczny wynik daje remis. Historia zapisuje rzeczywistych atakujących i cele. Rewanż zachowuje cztery postacie i przywraca ich pełne zdrowie. Podczas walki format, tryb i długość są zablokowane.
 
 Testy drużynowe obejmują dozwolone i zabronione cele, kolejność ruchów, śmierć od podpalenia, przenoszenie stanów między turami, zakończenie, remis oraz serie walk w obu trybach. Test przeglądarkowy sprawdza tworzenie czterech postaci, wybór kartami, zmianę HP wskazanego celu, widok mobilny, rewanż i powrót do 1 na 1.
+
+## Interaktywny samouczek
+
+Przycisk **Samouczek ▷** w nagłówku uruchamia przewodnik na bieżącym ekranie. Podświetla prawdziwe elementy gry i reaguje na wybór imienia, broni, materiału i umiejętności. W trybie fantastycznym obejmuje też przedmiot i moc, a w 2 na 2 prowadzi przez wybór atakującego, celu oraz pierwszy atak. Kolejne etapy to przygotowanie pozostałych postaci, walka i wynik. Ustawienia potwierdzasz przyciskiem „Dalej”; pozostałe kroki przechodzą po wykonaniu wskazanej akcji.
+
+Przewodnik można uruchomić także na arenie lub po zakończeniu walki. „Zamknij ×” oraz Escape wyłączają wskazówki bez resetowania postaci, ofert, ustawień i trwającej walki. Samouczek działa z klawiaturą i na telefonie; nie uruchamia się automatycznie.
+
+Test przeglądarkowy przechodzi przez pełny samouczek pojedynku, dodatkowe sloty fantastyczne i pierwszą turę drużynową. Sprawdza też zamknięcie, ponowne uruchomienie, zachowanie wyborów i szerokość mobilną.
