@@ -47,7 +47,7 @@ Balans jest wstępny: testy sprawdzają równe szanse identycznych postaci i pop
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie dwanaście zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
+Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie trzynaście zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
 
 ## Balans umiejętności
 
@@ -175,3 +175,11 @@ Każda część wnosi opisane premie i koszty do statystyk, a jej kształt i kol
 Osobno wybierasz instynkt specjalny z dotychczasowych umiejętności (5 losowych propozycji z puli 20). Tryb fantastyczny nadal dodaje przedmiot i moc. Hybrydy działają w obu formatach oraz automatycznie i turowo, z atakiem, odpoczynkiem, obroną i taktykami. Hybryda jest samodzielną postacią — jej włączenie wyłącza Wierzchowce. Powrót do zwykłych wojowników zachowuje wybory części do kolejnego włączenia. Edycja i rewanż również zachowują budowę, a Losuj nowe opcje wybiera nowe zwierzęta dla wszystkich części bieżącej hybrydy.
 
 Testy obejmują każdą część i gatunek, dokładne statystyki, wyłączenie premii ekwipunku, skalowanie HP, oba tryby i formaty, obie metody walki, edycję, przełączanie, samouczek oraz widok mobilny.
+
+## Tekstury i kolorowy przebieg walki
+
+Hybrydy i wierzchowce mają wzory futra, cętek, łusek, piór lub grubej skóry, zachowując kolor wybranego zwierzęcia. Metal wyposażenia ma nową szczotkowaną teksturę z refleksami, krawędziami i nitami. Każdy portret ma własne identyfikatory wzorów SVG, aby tekstury nie mieszały się między postaciami.
+
+W walce kolor i podpis razem odróżniają obrażenia (czerwone), leczenie (zielone), obronę/unik (niebieskie), kondycję (złote), magię (fioletowe) i bestie (pomarańczowe). Nad postaciami pojawiają się osobne napisy, także przy jednoczesnym leczeniu i otrzymaniu obrażeń. Pod areną są kolorowe komunikaty z imionami oraz legenda. Liczby wynikają z rzeczywistych wydarzeń; nie ma fikcyjnych trafień krytycznych ani premii.
+
+Ataki mają zamach i doskok, trafienia odrzut i smugę uderzenia, uniki zejście, a odpoczynek i obrona poświaty. Podgląd postaci ma łagodny ruch oddechu. Preferencja ograniczonego ruchu wyłącza animacje, zachowując czytelne napisy i symbole. Efekty są sprzątane przed następną akcją, edycją i rewanżem. Testy obejmują treść napisów, tekstury, kolory, reset efektów, bezpieczne wyświetlanie imion i widok mobilny.
