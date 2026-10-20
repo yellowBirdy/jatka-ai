@@ -47,7 +47,7 @@ Balans jest wstępny: testy sprawdzają równe szanse identycznych postaci i pop
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie pięć zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
+Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie sześć zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
 
 ## Balans umiejętności
 
@@ -90,10 +90,20 @@ Zmiana trybu przelicza statystyki obu wojowników. Klasyczny ignoruje premie i m
 
 Procent na karcie jest szansą uruchomienia efektu, a nie gwarancją trafienia: rozbrojenie i podobne efekty nadal wymagają trafienia po udanym losowaniu. Przedmioty specjalne dają stałe premie; ich działanie nie jest losowane. Testy obejmują progi 0%/100%, niezależne losowania, jednoczesną aktywację, brak cyklicznego wyzwalania i częstości z 10 000 ataków. Losowość wciąż może być odtwarzana przez ziarno w symulacjach.
 
-## Losowane pule fantastyczne (development)
+## Losowane pule fantastyczne
 
 Przedmiot specjalny i moc magiczna mają osobne pule po 20 opcji. Oferty po 5 są losowane niezależnie dla każdego gracza, bez powtórzeń w slocie. Wybór opcji ani zmiana trybu nie losują ponownie oferty. Edycja i rewanż zachowują ofertę oraz wybory. „Losuj nowe opcje” odświeża wszystkie oferty bieżącego gracza, a nowi wojownicy otrzymują nowe oferty. Losowanie nie zmienia oferty drugiego gracza. Materiały zachowują dotychczasowe zasady zgodności z bronią.
 
 Nowe moce obejmują kradzież życia, ciszę, oczyszczenie, odzyskiwanie kondycji, meteor, korzenie, ciernie, trwałą pulę bariery, piętno, migotanie, runiczny okrzyk, rozproszenie, pochłanianie kondycji, grom i mgłę. Wszystkie mają opis efektu i szansę aktywacji (10–30%). Nowe przedmioty dają różne zestawy premii i kosztów statystyk.
 
 Testy obejmują wszystkie 400 zestawów przedmiotu i mocy w trzech długościach, unikalność efektów, ograniczenia zasobów, czas działania stanów, losowanie i zachowanie ofert w przeglądarce. GitHub Actions testuje gałąź `development`; publikacja Pages uruchamia się wyłącznie z `master`.
+
+## Walka drużynowa 2 na 2
+
+Wybierz **2 na 2** nad kreatorem. Tworzysz kolejno dwóch wojowników drużyny A i dwóch drużyny B; każdy otrzymuje własną ofertę cech. Format działa w trybie klasycznym i fantastycznym oraz we wszystkich długościach. Zmiana formatu rozpoczyna tworzenie nowych postaci.
+
+Po rozpoczęciu walki wybierz **atakującego** i **cel ataku** z list lub przyciskami przy postaciach, a następnie kliknij **Atakuj**. Drużyny ruszają się na zmianę; inicjatywa zależy od ich łącznej szybkości. Każdy żywy sojusznik musi wykonać ruch, zanim ta sama postać zaatakuje ponownie. Samotny ocalały może atakować w każdej turze swojej drużyny. Nie można atakować sojuszników ani pokonanych. Efekty umiejętności i magii pozostają przypisane do konkretnej postaci także po zmianie celu; wybór postaci pokonanej przez podpalenie zużywa turę.
+
+Wygrywa drużyna, która pokona obu rywali. Po 320 turach decyduje suma pozostałych procentów HP jej członków; identyczny wynik daje remis. Historia zapisuje rzeczywistych atakujących i cele. Rewanż zachowuje cztery postacie i przywraca ich pełne zdrowie. Podczas walki format, tryb i długość są zablokowane.
+
+Testy drużynowe obejmują dozwolone i zabronione cele, kolejność ruchów, śmierć od podpalenia, przenoszenie stanów między turami, zakończenie, remis oraz serie walk w obu trybach. Test przeglądarkowy sprawdza tworzenie czterech postaci, wybór kartami, zmianę HP wskazanego celu, widok mobilny, rewanż i powrót do 1 na 1.

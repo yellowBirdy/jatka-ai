@@ -2,7 +2,7 @@ import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=fantasy-p
 import {weaponMaterials,resolveMaterials} from './materials.js?v=weapon-families-6';
 export {weaponMaterials} from './materials.js?v=weapon-families-6';
 import {abilityRules} from './abilities.js?v=fantasy-pools-9';
-import {createCombatState,resolveTurn} from './combat.js?v=fantasy-pools-9';
+import {createCombatState,resolveTurn} from './combat.js?v=teams-10';
 export {abilityRules} from './abilities.js?v=fantasy-pools-9';
 import {additions} from './catalog.js?v=unique-abilities-4';
 const option=(id,name,icon,desc,stats={})=>({id,name,icon,desc,stats});

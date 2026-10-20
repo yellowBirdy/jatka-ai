@@ -4,11 +4,11 @@ import {abilityRules as rules} from './abilities.js?v=chance-8';
 const clamp=(x,min,max)=>Math.max(min,Math.min(max,x));
 export function createCombatState(fighters){
  const state={hp:fighters.map(f=>f.stats.health),energy:fighters.map(f=>f.stats.stamina)};
- for(const key of ['turns','wrist','blind','exposed','armorDamage','slow','shield','tempo','focus','exposureStrength','burn','frozen','magicShield','silenced','rooted','thorns','barrier','marked','blink','battlecry','stunned','mist'])state[key]=[0,0];
- state.disarmed=[false,false];state.staggered=[false,false];return state;
+ for(const key of ['turns','wrist','blind','exposed','armorDamage','slow','shield','tempo','focus','exposureStrength','burn','frozen','magicShield','silenced','rooted','thorns','barrier','marked','blink','battlecry','stunned','mist'])state[key]=fighters.map(()=>0);
+ state.disarmed=fighters.map(()=>false);state.staggered=fighters.map(()=>false);return state;
 }
-export function resolveTurn(f,state,actor,random=Math.random){
- const target=1-actor,s=f[actor].stats,d=f[target].stats;
+export function resolveTurn(f,state,actor,random=Math.random,target=1-actor){
+ const s=f[actor].stats,d=f[target].stats;
  const {hp,energy}=state;state.turns[actor]++;
  let selfDamage=0;
  const burnDetails=[];

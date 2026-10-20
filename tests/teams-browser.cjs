@@ -1,0 +1,19 @@
+const {chromium}=require('playwright');const assert=require('node:assert/strict');
+(async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||(process.env.CI?chromium.executablePath():'/usr/bin/chromium'),headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});try{
+ const page=await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'}),errors=[];page.on('pageerror',e=>errors.push(e.message));
+ for(const mode of ['classic','fantasy']){
+  await page.goto('http://127.0.0.1:8000');await page.locator('input[value="teams"]').check();await page.locator(`input[name="mode"][value="${mode}"]`).check();
+  for(let i=0;i<4;i++){assert.match(await page.locator('#player-label').innerText(),new RegExp(`DRUŻYNA ${i<2?'A':'B'}`));await page.locator('#fighter-name').fill(['A1','A2','B1','B2'][i]);assert.equal(await page.locator('.fantasy-category').count(),mode==='fantasy'?2:0);await page.locator('#confirm').click();}
+  assert.equal(await page.locator('.combatant').count(),4);await page.evaluate(()=>Math.random=()=>.5);await page.locator('#fight').click();assert.ok(await page.locator('#team-controls').isVisible());assert.ok(await page.locator('input[value="duel"]').isDisabled());
+  const team=await page.locator('#team-turn').innerText(),isA=team.includes('Drużyna A'),actor=isA?1:3,target=isA?3:1;
+  await page.locator(`#combatant${actor} .fighter-select`).click();await page.locator(`#combatant${target} .fighter-select`).click();assert.equal(await page.locator('#team-actor').inputValue(),String(actor));assert.equal(await page.locator('#team-target').inputValue(),String(target));
+  const hp=await page.locator('.health').evaluateAll(nodes=>nodes.map(n=>Number(n.getAttribute('aria-valuenow'))));await page.locator('#team-attack').click();const after=await page.locator('.health').evaluateAll(nodes=>nodes.map(n=>Number(n.getAttribute('aria-valuenow'))));assert.ok(after[target]<hp[target]);for(const i of [0,2])assert.equal(after[i],hp[i]);assert.notEqual(await page.locator('#team-turn').innerText(),team);
+  await page.locator('#team-attack').click();assert.equal(await page.locator('#team-actor option').count(),1);assert.notEqual(await page.locator('#team-actor').inputValue(),String(actor));
+  await page.setViewportSize({width:390,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.locator('#arena').screenshot({path:`/tmp/jatka-teams-${mode}.png`});
+  let turns=2;while(await page.locator('#result').isHidden()){assert.ok(turns++<320);await page.locator('#team-attack').click();}
+  assert.match(await page.locator('#winner').innerText(),/Zwycięża Drużyna|Remis/);assert.equal(await page.locator('#history li').count(),turns);assert.ok(await page.locator('#team-controls').isHidden());assert.ok(await page.locator('input[value="duel"]').isEnabled());
+  await page.locator('#rematch').click();assert.ok(await page.locator('#team-controls').isVisible());assert.equal(await page.locator('.health').evaluateAll(nodes=>nodes.every(n=>n.getAttribute('aria-valuenow')===n.getAttribute('aria-valuemax'))),true);
+  await page.reload();await page.locator('input[value="teams"]').check();await page.locator('#confirm').click();await page.locator('input[value="duel"]').check();assert.match(await page.locator('#player-label').innerText(),/GRACZ 01/);await page.locator('#confirm').click();await page.locator('#confirm').click();assert.equal(await page.locator('.combatant').count(),2);await page.locator('#fight').click();assert.ok(await page.locator('#result').isVisible());await page.setViewportSize({width:1440,height:1000});
+ }
+ assert.deepEqual(errors,[]);console.log('PASS: tworzenie 4 postaci, klasyczny i magia, wybór kartami, cel ataku, tury, mobile, wynik, rewanż i powrót do 1v1');
+}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
