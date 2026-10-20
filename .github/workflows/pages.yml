@@ -25,6 +25,7 @@ jobs:
         run: |
           mkdir site
           cp index.html app.js engine.js catalog.js style.css site/
+          cp -R assets site/assets
           touch site/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
