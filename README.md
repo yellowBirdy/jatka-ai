@@ -145,3 +145,5 @@ Każda z 20 bestii ma stały zestaw 5 własnych umiejętności: łącznie 100 na
 Edycja, rewanż, zmiana długości lub trybu oraz wyłączenie i ponowne włączenie Wierzchowców zachowują wybór. Zmiana bestii dopasowuje listę i wybiera jej pierwszą zdolność. Losowanie oferty również wybiera domyślną zdolność wylosowanej bestii. W walce uruchamia się wyłącznie wybrana umiejętność; premia +10 obrażeń bronią pozostaje niezależna.
 
 Testy obejmują komplet 100 wyborów, odrzucenie cudzych zdolności, zachowanie wyboru, aktywacje i zakończenie walk w obu trybach. Test przeglądarkowy sprawdza pięć kart, pojedynczy wybór, przełączanie, edycję i historię walki.
+
+U góry gry znajduje się tabela siedmiu statystyk z liczbowymi przelicznikami oraz rozwijanymi przykładami trafienia, obrażeń, zmęczenia, inicjatywy i wpływu wierzchowców. Na telefonie szeroką tabelę można przewijać poziomo.

@@ -2,7 +2,7 @@ const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 (async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||(process.env.CI?chromium.executablePath():'/usr/bin/chromium'),headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});try{
 const page=await browser.newPage({viewport:{width:1440,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:8000');
-assert.equal(await page.locator('.option .weapon-icon').count(),10);await page.screenshot({path:'/tmp/jatka-creator.png',fullPage:true});
+assert.equal(await page.locator('#stat-guide tbody tr').count(),7);assert.ok(await page.locator('#stat-guide').isVisible());assert.equal(await page.locator('.option .weapon-icon').count(),10);await page.screenshot({path:'/tmp/jatka-creator.png',fullPage:true});
 await page.locator('#fighter-name').fill(' ');await page.getByRole('button',{name:'Zatwierdź wojownika'}).click();assert.ok(await page.locator('#error').innerText());await page.locator('#fighter-name').fill('<Ragnar>');
 const weapon=page.locator('input[name="weapon"]').nth(1);const weaponName=await weapon.locator('..').locator('.option-name').innerText();await weapon.check();assert.equal(await page.locator('#portrait [data-weapon]').first().getAttribute('data-weapon'),await weapon.inputValue());assert.ok((await page.locator('#portrait svg').getAttribute('aria-label')).includes(weaponName));
 await page.getByRole('button',{name:'Zatwierdź wojownika'}).click();await page.getByRole('button',{name:'Zatwierdź wojownika'}).click();await page.getByRole('button',{name:'Rozpocznij walkę'}).click();
