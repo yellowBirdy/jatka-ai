@@ -24,7 +24,7 @@ jobs:
       - name: Prepare static game
         run: |
           mkdir site
-          cp index.html app.js engine.js catalog.js style.css site/
+          cp index.html app.js engine.js catalog.js weapons.js style.css site/
           cp -R assets site/assets
           touch site/.nojekyll
       - uses: actions/upload-pages-artifact@v3

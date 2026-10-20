@@ -128,21 +128,21 @@ export const additions = {
  ['economy','Ekonomia ruchu','Nie marnuje sił na ataki.',{stamina:20,accuracy:5}]
  ],
  ability: [
- ['charge','Szarża','Co czwarty atak: +9 siły.',{speed:1},'rage'],
- ['overhead','Cios znad głowy','Co czwarty atak: +9 siły.',{pierce:1},'rage'],
- ['shoulder','Uderzenie barkiem','Co czwarty atak: +9 siły.',{health:3},'rage'],
- ['combo','Seria uderzeń','Co czwarty atak: +9 siły.',{accuracy:2},'rage'],
- ['wrist-lock','Blokada nadgarstka','Co czwarty celny atak osłabia kolejny cios rywala.',{defense:1},'disarm'],
- ['weapon-hook','Zaczepienie broni','Co czwarty celny atak osłabia kolejny cios rywala.',{pierce:1},'disarm'],
- ['sand','Piasek w oczy','Co czwarty celny atak osłabia kolejny cios rywala.',{speed:1},'disarm'],
- ['pommel','Cios głowicą','Co czwarty celny atak osłabia kolejny cios rywala.',{attack:1},'disarm'],
- ['gap','Cios w szczelinę','Co czwarty atak trafia i omija część zbroi.',{pierce:1},'precise'],
- ['lunge','Wypad','Co czwarty atak trafia i omija część zbroi.',{speed:1},'precise'],
- ['feint-strike','Zwód i pchnięcie','Co czwarty atak trafia i omija część zbroi.',{accuracy:2},'precise'],
- ['low-cut','Niskie cięcie','Co czwarty atak trafia i omija część zbroi.',{attack:1},'precise'],
- ['breathing','Kontrola oddechu','Co czwarty atak przywraca 8 HP i 15 kondycji.',{stamina:5},'breath'],
- ['rally','Mobilizacja','Co czwarty atak przywraca 8 HP i 15 kondycji.',{health:3},'breath'],
- ['reset-stance','Odzyskanie postawy','Co czwarty atak przywraca 8 HP i 15 kondycji.',{defense:1},'breath'],
- ['pace','Zmiana tempa','Co czwarty atak przywraca 8 HP i 15 kondycji.',{speed:1},'breath']
+ ['charge','Szarża','Co czwarty atak: +9 siły.',{},'rage'],
+ ['overhead','Cios znad głowy','Co czwarty atak: +9 siły.',{},'rage'],
+ ['shoulder','Uderzenie barkiem','Co czwarty atak: +9 siły.',{},'rage'],
+ ['combo','Seria uderzeń','Co czwarty atak: +9 siły.',{},'rage'],
+ ['wrist-lock','Blokada nadgarstka','Co czwarty celny atak osłabia kolejny cios rywala.',{},'disarm'],
+ ['weapon-hook','Zaczepienie broni','Co czwarty celny atak osłabia kolejny cios rywala.',{},'disarm'],
+ ['sand','Piasek w oczy','Co czwarty celny atak osłabia kolejny cios rywala.',{},'disarm'],
+ ['pommel','Cios głowicą','Co czwarty celny atak osłabia kolejny cios rywala.',{},'disarm'],
+ ['gap','Cios w szczelinę','Co czwarty atak trafia i omija część zbroi.',{},'precise'],
+ ['lunge','Wypad','Co czwarty atak trafia i omija część zbroi.',{},'precise'],
+ ['feint-strike','Zwód i pchnięcie','Co czwarty atak trafia i omija część zbroi.',{},'precise'],
+ ['low-cut','Niskie cięcie','Co czwarty atak trafia i omija część zbroi.',{},'precise'],
+ ['breathing','Kontrola oddechu','Co czwarty atak przywraca 8 HP i 15 kondycji.',{},'breath'],
+ ['rally','Mobilizacja','Co czwarty atak przywraca 8 HP i 15 kondycji.',{},'breath'],
+ ['reset-stance','Odzyskanie postawy','Co czwarty atak przywraca 8 HP i 15 kondycji.',{},'breath'],
+ ['pace','Zmiana tempa','Co czwarty atak przywraca 8 HP i 15 kondycji.',{},'breath']
  ]
 };

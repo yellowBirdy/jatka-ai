@@ -12,12 +12,19 @@ export const categories=[
 // Keep the original four entries and add sixteen named alternatives per slot.
 for(const category of categories){
  for(const [id,name,desc,stats,effect] of additions[category.id]){
-  const labels={speed:'szybkości',pierce:'przebicia',health:'HP',accuracy:'celności',defense:'obrony',attack:'siły',stamina:'kondycji'};
-  const passive=effect?Object.entries(stats).map(([key,value])=>` +${value} ${labels[key]}.`).join(''):'';
-  const item=option(id,name,category.icon,desc+passive,stats);
+  const item=option(id,name,category.icon,desc,stats);
   if(effect)item.effect=effect;
   category.options.push(item);
  }
+}
+export const abilityRules={
+ rage:{description:'Co czwarty atak: +9 siły przy trafieniu.',power:9},
+ disarm:{description:'Co czwarty celny atak: −12 siły następnego ciosu rywala.',penalty:12},
+ precise:{description:'Co czwarty atak: pewne trafienie, pomija 10 obrony.',pierce:10},
+ breath:{description:'Co czwarty atak: odzyskuje do 8 HP i 15 kondycji.',heal:8,energy:15}
+};
+for(const ability of categories.find(c=>c.id==='ability').options){
+ ability.desc=abilityRules[ability.effect||ability.id].description;
 }
 export const durations={
  short:{name:'Krótka',multiplier:0.65},
@@ -51,11 +58,12 @@ export function simulate(a,b,random=Math.random){
  const chance=Math.max(.35,Math.min(.95,(s.accuracy+(s.speed-d.speed)*.65)/100));
  const hit=effect==='precise'||random()<chance;
  let damage=0,kind='dodge';
- if(hit){const power=s.attack+(random()*8-4)+(effect==='rage'?9:0)-(disarmed[actor]?7:0);const protection=Math.max(0,d.defense-s.pierce-(effect==='precise'?10:0));damage=Math.max(2,Math.round((power-protection*.6)*(exhausted?.65:1)));kind=damage<8?'block':'hit';hp[target]=Math.max(0,hp[target]-damage);}
+ if(hit){const power=s.attack+(random()*8-4)+(effect==='rage'?abilityRules.rage.power:0)-(disarmed[actor]?abilityRules.disarm.penalty:0);const protection=Math.max(0,d.defense-s.pierce-(effect==='precise'?abilityRules.precise.pierce:0));damage=Math.max(2,Math.round((power-protection*.6)*(exhausted?.65:1)));kind=damage<8?'block':'hit';hp[target]=Math.max(0,hp[target]-damage);}
+ const weakened=disarmed[actor];
  disarmed[actor]=false;if(effect==='disarm'&&hit)disarmed[target]=true;
- let healed=0;if(effect==='breath'){healed=Math.min(8,s.health-hp[actor]);hp[actor]+=healed;energy[actor]+=15;}
+ let healed=0;if(effect==='breath'){healed=Math.min(abilityRules.breath.heal,s.health-hp[actor]);hp[actor]+=healed;energy[actor]+=abilityRules.breath.energy;}
  const text=hit?`${f[actor].name}: ${kind==='block'?'cios częściowo zablokowany':'trafienie'} −${damage} HP.`:`${f[target].name} unika ataku ${f[actor].name}.`;
- events.push({actor,target,damage,kind,ability,healed,hp:[...hp],text,exhausted});
+ events.push({actor,target,damage,kind,ability,healed,hp:[...hp],text,exhausted,weakened});
  }
  const reason=hp.every(h=>h>0)?'decision':'knockout';
  const scores=hp.map((h,i)=>h/f[i].stats.health);

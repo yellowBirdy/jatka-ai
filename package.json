@@ -5,7 +5,8 @@
   "scripts": {
     "test": "node --test tests/engine.test.js",
     "start": "python3 -m http.server 8000 --bind 0.0.0.0",
-    "test:browser": "node tests/browser.cjs && node tests/expansion.cjs"
+    "test:browser": "node tests/browser.cjs && node tests/expansion.cjs",
+    "balance": "node scripts/balance.js"
   },
   "devDependencies": {
     "playwright": "1.62.1"
