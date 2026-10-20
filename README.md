@@ -47,7 +47,7 @@ Balans jest wstępny: testy sprawdzają równe szanse identycznych postaci i pop
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie trzynaście zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
+Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie czternaście zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
 
 ## Balans umiejętności
 
@@ -183,3 +183,5 @@ Hybrydy i wierzchowce mają wzory futra, cętek, łusek, piór lub grubej skóry
 W walce kolor i podpis razem odróżniają obrażenia (czerwone), leczenie (zielone), obronę/unik (niebieskie), kondycję (złote), magię (fioletowe) i bestie (pomarańczowe). Nad postaciami pojawiają się osobne napisy, także przy jednoczesnym leczeniu i otrzymaniu obrażeń. Pod areną są kolorowe komunikaty z imionami oraz legenda. Liczby wynikają z rzeczywistych wydarzeń; nie ma fikcyjnych trafień krytycznych ani premii.
 
 Ataki mają zamach i doskok, trafienia odrzut i smugę uderzenia, uniki zejście, a odpoczynek i obrona poświaty. Podgląd postaci ma łagodny ruch oddechu. Preferencja ograniczonego ruchu wyłącza animacje, zachowując czytelne napisy i symbole. Efekty są sprzątane przed następną akcją, edycją i rewanżem. Testy obejmują treść napisów, tekstury, kolory, reset efektów, bezpieczne wyświetlanie imion i widok mobilny.
+
+Automatyczne 1 na 1 ma przełącznik prędkości **×1 / ×2 / ×3**: odpowiednio 1200 / 600 / 400 ms między akcjami. Domyślne ×1 jest wolniejsze od wcześniejszych 650 ms. Prędkość można zmieniać także w trakcie walki; wybór pozostaje na rewanż. Nie zmienia wyniku symulacji, tempa 2 na 2 ani walk turowych. Preferencja ograniczonego ruchu nadal pokazuje wynik od razu.
