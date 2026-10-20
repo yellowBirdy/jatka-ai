@@ -47,7 +47,7 @@ Balans jest wstępny: testy sprawdzają równe szanse identycznych postaci i pop
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie czternaście zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
+Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie piętnaście zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
 
 ## Balans umiejętności
 
@@ -185,3 +185,9 @@ W walce kolor i podpis razem odróżniają obrażenia (czerwone), leczenie (ziel
 Ataki mają zamach i doskok, trafienia odrzut i smugę uderzenia, uniki zejście, a odpoczynek i obrona poświaty. Podgląd postaci ma łagodny ruch oddechu. Preferencja ograniczonego ruchu wyłącza animacje, zachowując czytelne napisy i symbole. Efekty są sprzątane przed następną akcją, edycją i rewanżem. Testy obejmują treść napisów, tekstury, kolory, reset efektów, bezpieczne wyświetlanie imion i widok mobilny.
 
 Automatyczne 1 na 1 ma przełącznik prędkości **×1 / ×2 / ×3**: odpowiednio 1200 / 600 / 400 ms między akcjami. Domyślne ×1 jest wolniejsze od wcześniejszych 650 ms. Prędkość można zmieniać także w trakcie walki; wybór pozostaje na rewanż. Nie zmienia wyniku symulacji, tempa 2 na 2 ani walk turowych. Preferencja ograniczonego ruchu nadal pokazuje wynik od razu.
+
+## Mocne trafienia i głębsze tekstury
+
+Trafienie jest oznaczone jako mocne, jeśli faktycznie odebrało co najmniej 30 HP albo co najmniej 25% maksymalnego zdrowia celu i minimum 18 HP. Liczą się łączne obrażenia broni i magii danej akcji. To opis siły istniejącego trafienia, bez dodatkowej premii do obrażeń. Pojawia się napis „MOCNE TRAFIENIE”, fala uderzenia i pojedynczy, krótki wstrząs areny. Na telefonie wstrząs jest słabszy, a przy preferencji ograniczonego ruchu nie występuje; napisy pozostają widoczne. Efekt jest czyszczony przed kolejną akcją, rewanżem i edycją.
+
+Animacja ciosu ma wyraźniejszy zamach i doskok, a trafiona postać reaguje odrzutem. Skóra wojownika ma cieniowanie, tkanina nowy splot, a wzory futra, łusek, piór i skóry zwierząt zyskały gradienty oraz mocniejsze szczegóły. Tekstury i wstrząsy nie zmieniają mechaniki walki.
