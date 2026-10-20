@@ -56,6 +56,6 @@ export function weaponSvg(id, prefix, secondary = false, materials = {}) {
 
 export function weaponIcon(id,materials={}){
  const prefix=`equipment-${id}`;
- const defs=['steel','darksteel','bronze','wood','wrap','ash','birch','walnut','tempered'].map(material=>`<pattern id="${prefix}-${material}" patternUnits="userSpaceOnUse" width="80" height="80"><image href="assets/textures/${material}.svg" width="80" height="80"/></pattern>`).join('');
+ const defs=['steel','darksteel','bronze','wood','wrap','ash','birch','walnut','tempered','damascus','flint','bone','granite','bamboo','ironwood','rattan'].map(material=>`<pattern id="${prefix}-${material}" patternUnits="userSpaceOnUse" width="80" height="80"><image href="assets/textures/${material}.svg" width="80" height="80"/></pattern>`).join('');
  return `<svg class="weapon-icon" viewBox="145 -5 150 310" aria-hidden="true" focusable="false"><defs>${defs}</defs>${weaponSvg(id,prefix,false,materials)}</svg>`;
 }

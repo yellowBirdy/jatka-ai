@@ -57,8 +57,20 @@ Każda umiejętność aktywuje się co czwarty własny atak. Warunki trafienia, 
 
 ## Materiały głównej broni
 
-Pod bronią są dwa podpunkty: **część bojowa (ostrze / głowica)** i **rękojeść / drzewce**. Każdy ma pięć stale dostępnych materiałów. Opisy pokazują dodatnie i ujemne modyfikatory; oba wybory sumują się ze statystykami wojownika i zmieniają tekstury głównej broni. Dotyczy to także broni drewnianej, którą można wykonać z innego materiału. Broń dodatkowa zachowuje swój materiał.
+Pod bronią są dwa podpunkty: **część bojowa (ostrze / głowica)** i **rękojeść / drzewce**. Każdy ma pięć materiałów dopasowanych do rodziny wybranej broni. Opisy pokazują dodatnie i ujemne modyfikatory; oba wybory sumują się ze statystykami wojownika i zmieniają tekstury głównej broni. Kostury i maczugi mają osobny wybór drewnianych rdzeni zamiast metalowych ostrzy. Broń dodatkowa zachowuje swój materiał.
 
-Stal i jesion to domyślne materiały bez premii. Stal hartowana zwiększa siłę i przebicie kosztem szybkości i kondycji; lekka brzoza zwiększa szybkość kosztem siły. Kreator pokazuje teraz także celność, przebicie i kondycję. Losowanie cech oraz zmiana rodzaju broni zachowują materiały. Każdy gracz wybiera je osobno, edycja i rewanż je zachowują, a nowi wojownicy zaczynają od stali i jesionu.
+Stal i jesion to domyślne materiały bez premii. Stal hartowana zwiększa siłę i przebicie kosztem szybkości i kondycji; lekka brzoza zwiększa szybkość kosztem siły. Kreator pokazuje teraz także celność, przebicie i kondycję. Losowanie cech oraz zmiana rodzaju broni zachowują pasujące materiały. Niepasujące wybory zastępują neutralne materiały nowego typu broni, a kreator wyświetla komunikat. Każdy gracz wybiera je osobno, edycja i rewanż je zachowują, a nowi wojownicy zaczynają od stali i jesionu albo twardego drewna i jesionu dla kosturów i maczug.
 
 Testy obejmują 25 kombinacji modyfikatorów, ich rzeczywisty wpływ na obrażenia, 500 kombinacji rodzaju broni i materiałów oraz pełne przejście przez wybór, wygląd, statystyki, rewanż, edycję i reset w przeglądarce.
+
+### Materiały według rodzaju broni
+
+| Rodzina | Część bojowa | Chwyt / drzewce |
+|---|---|---|
+| Miecze, szable, rapiery, koncerze | stal, żelazo, brąz, stal hartowana, stal damasceńska | jesion, orzech, skórzany oplot, kość, len |
+| Topory i sierpy | stal, żelazo, stal hartowana, stal damasceńska, krzemień | jesion, dąb, skórzany oplot, hikora, brzoza |
+| Włócznie, halabardy, glewie, piki, trójzęby | stal, żelazo, brąz, stal hartowana, kość | jesion, dąb, bambus, brzoza, hikora |
+| Młoty, buławy, cepy, nadziaki | stal, żelazo, brąz, stal hartowana, granit | jesion, dąb, żelazo, skórzany oplot, hikora |
+| Kostury i maczugi | twarde drewno, drewno wzmacniane, bambus, drewno żelazne, rattan | jesion, skórzany oplot, len, surowa skóra, orzech |
+
+Każdy materiał ma własny opis bonusów i kosztów. Silnik odrzuca niedozwolone kombinacje zamiast potajemnie naliczać ich premie. Testy sprawdzają dostępność dla wszystkich 20 broni oraz komplet 500 legalnych kombinacji.

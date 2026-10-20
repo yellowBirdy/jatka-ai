@@ -1,5 +1,5 @@
-import {weaponMaterials,resolveMaterials} from './materials.js?v=weapon-materials-5';
-export {weaponMaterials} from './materials.js?v=weapon-materials-5';
+import {weaponMaterials,resolveMaterials} from './materials.js?v=weapon-families-6';
+export {weaponMaterials} from './materials.js?v=weapon-families-6';
 import {abilityRules} from './abilities.js?v=unique-abilities-4';
 import {createCombatState,resolveTurn} from './combat.js?v=unique-abilities-4';
 export {abilityRules} from './abilities.js?v=unique-abilities-4';
