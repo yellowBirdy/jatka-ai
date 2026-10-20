@@ -66,10 +66,11 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor){
  }
  const evaded=state.blink[target]>0;if(evaded){state.blink[target]--;details.push('Migotanie: unik całego ataku bronią.');}
  const hit=!evaded&&(ability==='precise'||random()<chance);
- strike(hit?raw(strength):0);
- if(ability==='combo'&&!evaded&&hp[target]>0&&hp[actor]>0){strike(random()<chance?raw(strength*rule.ratio):0);details.push(`Seria dwóch ciosów: ${strikes.join(' + ')} HP.`);}
+ const weaponStrike=amount=>strike(amount>0?amount+(f[actor].mounted?10:0):0);
+ weaponStrike(hit?raw(strength):0);
+ if(ability==='combo'&&!evaded&&hp[target]>0&&hp[actor]>0){weaponStrike(random()<chance?raw(strength*rule.ratio):0);details.push(`Seria dwóch ciosów: ${strikes.join(' + ')} HP.`);}
  if(ability==='feint-strike'&&!evaded&&hp[actor]>0){
-  if(!hit)strike(Math.max(2,Math.round(raw(strength)*rule.ratio)));
+  if(!hit)weaponStrike(Math.max(2,Math.round(raw(strength)*rule.ratio)));
   else state.focus[actor]=1;
  }
  if(ability==='charge'){
