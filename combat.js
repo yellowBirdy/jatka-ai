@@ -1,4 +1,6 @@
-import {abilityRules as rules} from './abilities.js?v=unique-abilities-4';
+import {rollChance} from './probability.js?v=chance-8';
+import {magicRules} from './fantasy.js?v=chance-8';
+import {abilityRules as rules} from './abilities.js?v=chance-8';
 const clamp=(x,min,max)=>Math.max(min,Math.min(max,x));
 export function createCombatState(fighters){
  const state={hp:fighters.map(f=>f.stats.health),energy:fighters.map(f=>f.stats.stamina)};
@@ -14,7 +16,9 @@ export function resolveTurn(f,state,actor,random=Math.random){
   state.burn[actor]--;selfDamage=Math.min(3,hp[actor]);hp[actor]-=selfDamage;burnDetails.push(`Podpalenie: ${f[actor].name} traci ${selfDamage} HP.`);
   if(hp[actor]===0)return {actor,target,damage:0,kind:'burn',ability:null,magic:null,magicDamage:0,selfDamage,healed:0,hp:[...hp],energy:[...energy],text:`${f[actor].name} nie może kontynuować walki po podpaleniu.`,exhausted:false,weakened:false,strikes:[0],details:burnDetails,counterDamage:0};
  }
- const ability=state.turns[actor]%4===0?f[actor].picks.ability:null;
+ const selectedAbility=f[actor].picks.ability;
+ if(!rules[selectedAbility])throw Error(`Nieznana umiejętność: ${selectedAbility}`);
+ const ability=rollChance(rules[selectedAbility].chance,random)?selectedAbility:null;
  const rule=ability?rules[ability]:null;
  if(ability&&!rule)throw Error(`Nieznana umiejętność: ${ability}`);
  const details=[...burnDetails],strikes=[];let healed=0,counterDamage=0;
@@ -78,7 +82,7 @@ export function resolveTurn(f,state,actor,random=Math.random){
  if(ability==='reset-stance'){state.shield[actor]=rule.shield;details.push(`Osłona następnego trafienia: ${rule.shield} HP.`);}
  if(ability==='pace'){state.tempo[actor]=rule.duration;details.push('Dwa kolejne ataki w oszczędnym tempie.');}
  let magic=null,magicDamage=0;
- if(f[actor].mode==='fantasy'&&state.turns[actor]%5===0&&hp[actor]>0&&hp[target]>0){
+ if(f[actor].mode==='fantasy'&&hp[actor]>0&&hp[target]>0&&rollChance(magicRules[f[actor].picks.magicPower].chance,random)){
   magic=f[actor].picks.magicPower;
   switch(magic){
    case 'fire':state.burn[target]=2;details.push('Płomień: podpalenie rywala na dwa jego ataki.');break;

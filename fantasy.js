@@ -15,6 +15,12 @@ export const fantasySlots=[
   {id:'earth',name:'Kamienna aura',icon:'⬡',stats:{},desc:'Co piąty własny atak: osłona pochłania do 8 obrażeń jednego trafienia bronią lub błyskawicą. Nie kumuluje się.'}
  ]}
 ];
+const magicChances={fire:.25,frost:.3,lightning:.2,healing:.15,earth:.2};
+for(const power of fantasySlots[1].options){
+ power.chance=magicChances[power.id];
+ power.desc=`${Math.round(power.chance*100)}% szans po każdym własnym ataku: ${power.desc.replace('Co piąty własny atak: ','')}`;
+}
+export const magicRules=Object.fromEntries(fantasySlots[1].options.map(power=>[power.id,power]));
 export const fantasyDefaults=Object.fromEntries(fantasySlots.map(slot=>[slot.id,slot.options[0].id]));
 export function resolveFantasy(picks){return Object.fromEntries(fantasySlots.map(slot=>{
  const id=picks[slot.id]??fantasyDefaults[slot.id];const item=slot.options.find(o=>o.id===id);

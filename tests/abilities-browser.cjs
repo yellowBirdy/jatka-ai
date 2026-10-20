@@ -8,7 +8,7 @@ const assert=require('node:assert/strict');
  for(const ability of abilities){
   await page.goto('http://127.0.0.1:8000');let radio=page.locator(`input[name="ability"][value="${ability.id}"]`);
   for(let tries=0;await radio.count()===0&&tries<100;tries++)await page.getByRole('button',{name:'Losuj nowe opcje'}).click();
-  assert.equal(await radio.count(),1,ability.id);await radio.check();assert.equal(await radio.locator('..').locator('.option-desc').innerText(),ability.desc);
+  assert.equal(await radio.count(),1,ability.id);await radio.check();assert.equal(await radio.locator('..').locator('.option-desc').innerText(),ability.desc);assert.match(await radio.locator('..').locator('.chance-badge').innerText(),/^\d+%$/);
   await page.getByLabel('Długa').check();await page.getByRole('button',{name:'Zatwierdź wojownika'}).click();await page.getByRole('button',{name:'Zatwierdź wojownika'}).click();await page.getByRole('button',{name:'Rozpocznij walkę'}).click();await page.locator('#result').waitFor({state:'visible'});assert.ok((await page.locator('#history li').count())>0);
  }
  await page.screenshot({path:'/tmp/jatka-unique-abilities-result.png',fullPage:true});assert.deepEqual(errors,[]);console.log('PASS: wybór i pełna rozgrywka z każdą z 20 unikalnych umiejętności w przeglądarce');

@@ -39,7 +39,7 @@ W katalogu jest 160 nazwanych cech. Każda z 20 specjalnych umiejętności ma w�
 
 ## Zasady walki
 
-Cechy modyfikują zdrowie, atak, obronę, szybkość, celność, kondycję i przebicie pancerza. Szybkość wpływa na inicjatywę i uniki. Kondycja spada z każdym atakiem; zmęczenie osłabia obrażenia. Umiejętność specjalna uruchamia się co czwarty własny atak. Rozbrojenie osłabia kolejny atak rywala, a precyzyjny cios zawsze trafia i częściowo omija pancerz. Mechanika jest niemagiczna; utrata HP oznacza zdolność do dalszej walki.
+Cechy modyfikują zdrowie, atak, obronę, szybkość, celność, kondycję i przebicie pancerza. Szybkość wpływa na inicjatywę i uniki. Kondycja spada z każdym atakiem; zmęczenie osłabia obrażenia. Umiejętność specjalna ma 25% szans aktywacji przy każdym własnym ataku. Rozbrojenie osłabia kolejny atak rywala, a precyzyjny cios zawsze trafia i częściowo omija pancerz. Tryb klasyczny jest niemagiczny; utrata HP oznacza zdolność do dalszej walki.
 
 Wygrywa postać, która sprowadzi HP rywala do zera. Po 160 wymianach decyduje pozostały procent HP; remis rozstrzyga inicjatywa. Symulacja jest niezależna od animacji i przyjmuje generator losowy do powtarzalnych testów. Gra nie używa AI ani backendu: opisy są składane lokalnie z faktycznych wydarzeń.
 
@@ -51,7 +51,7 @@ Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie pi
 
 ## Balans umiejętności
 
-Każda umiejętność aktywuje się co czwarty własny atak. Warunki trafienia, czasy trwania, limity trwałych osłabień i zakaz leczenia po śmiertelnej kontrze mają osobne testy. Test porównuje też przebiegi walki wszystkich 20 umiejętności, aby zmiana samego opisu nie mogła udawać unikalnej mechaniki.
+Każda umiejętność ma 25% szans na aktywację przy każdym własnym ataku. Warunki trafienia, czasy trwania, limity trwałych osłabień i zakaz leczenia po śmiertelnej kontrze mają osobne testy. Test porównuje też przebiegi walki wszystkich 20 umiejętności, aby zmiana samego opisu nie mogła udawać unikalnej mechaniki.
 
 `npm run balance` wykonuje 547 200 deterministycznych walk: 20 umiejętności, wszystkie pary, 40 losowych zestawów pozostałych cech, 12 ziaren walki, obie strony i trzy długości. Porównujemy identyczne zestawy różniące się umiejętnością, aby oddzielić jej wpływ od przewagi ekwipunku. Test regresji używa osobnej próby 24 zestawów i 8 ziaren. Raport w `docs/balans-umiejetnosci.md` nie gwarantuje równowagi każdego możliwego zestawu.
 
@@ -82,6 +82,10 @@ Przełącznik nad kreatorem wybiera wspólny dla obu wojowników tryb: **Klasycz
 - Przedmiot specjalny: amulet żywotności (+14 bazowego HP), talizman skupienia (+8 celności), buty wędrowca (+4 szybkości), sztandar wytrwałości (+20 kondycji), pas olbrzyma (+3 siły).
 - Moc magiczna: płomień (podpalenie na dwa ataki), uścisk lodu (tymczasowe spowolnienie), błyskawica (obrażenia przez pancerz), odnowa (leczenie), kamienna aura (jednorazowa osłona).
 
-Magia aktywuje się po co piątym własnym ataku, jeśli obaj wojownicy nadal żyją; umiejętność niemagiczna zachowuje cykl czterech ataków. Leczenie nie przekracza maksimum i nie wskrzesza. Magiczna osłona działa przeciw broni i błyskawicy, ale podpalenie ją omija. Podpalenie i zamrożenie odświeżają czas działania zamiast się kumulować. Szczegóły są na kartach i w dzienniku walki.
+Magia jest losowana po każdym własnym ataku, jeśli obaj wojownicy nadal żyją: płomień 25%, uścisk lodu 30%, błyskawica 20%, odnowa 15%, kamienna aura 20%. Umiejętność niemagiczna ma osobne 25% szans przy każdym ataku. Wyniki są niezależne i oba efekty mogą zadziałać jednocześnie, nawet w pierwszym ataku. Nie ma cyklu ani gwarancji aktywacji po określonej liczbie ataków. Leczenie nie przekracza maksimum i nie wskrzesza. Magiczna osłona działa przeciw broni i błyskawicy, ale podpalenie ją omija. Podpalenie i zamrożenie odświeżają czas działania zamiast się kumulować. Szczegóły są na kartach i w dzienniku walki.
 
 Zmiana trybu przelicza statystyki obu wojowników. Klasyczny ignoruje premie i moce z dodatkowych slotów. Powrót do fantastycznego, edycja i rewanż zachowują wcześniejsze wybory. W trakcie walki przełącznik trybu jest zablokowany. Fioletowa aura i znak przedmiotu odróżniają postacie fantastyczne.
+
+## Procentowe aktywacje
+
+Procent na karcie jest szansą uruchomienia efektu, a nie gwarancją trafienia: rozbrojenie i podobne efekty nadal wymagają trafienia po udanym losowaniu. Przedmioty specjalne dają stałe premie; ich działanie nie jest losowane. Testy obejmują progi 0%/100%, niezależne losowania, jednoczesną aktywację, brak cyklicznego wyzwalania i częstości z 10 000 ataków. Losowość wciąż może być odtwarzana przez ziarno w symulacjach.

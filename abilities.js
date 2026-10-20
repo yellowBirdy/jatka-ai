@@ -21,3 +21,8 @@ export const abilityRules={
  'reset-stance':{shield:9,description:'Co czwarty atak: osłona pochłania do 9 obrażeń najbliższego trafienia (bez kumulacji).'},
  pace:{duration:2,accuracy:.12,power:3,description:'Co czwarty atak: dwa następne ataki nie zużywają kondycji i mają +3 siły oraz +12 pkt proc. celności.'}
 };
+for(const rule of Object.values(abilityRules)){
+ rule.chance=.25;
+ const effect=rule.description.replace(/^Co czwarty celny atak:/,'Po trafieniu:').replace(/^Co czwarty celny atak /,'Trafienie ').replace(/^Co czwarty atak po trafieniu:/,'Po trafieniu:').replace(/^Co czwarty atak: /,'');
+ rule.description=`${Math.round(rule.chance*100)}% szans na aktywację przy każdym własnym ataku. ${effect}`;
+}
