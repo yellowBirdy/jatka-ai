@@ -5,6 +5,7 @@ export function setupTutorial(context){
  const lessons={
   settings:['Ustaw swoją grę','Wybierz 1 na 1 lub 2 na 2, tryb klasyczny albo fantastyczny i długość walki. Długość zmienia HP. W sekcji Sposób walki wybierasz automat lub samodzielne wykonywanie tur. Modyfikacja Wierzchowce dodaje bestię i jej zbroję. Gdy ustawienia pasują, kliknij Dalej.','#format-settings',true],
   name:['Nadaj wojownikowi imię','Wpisz imię w podświetlonym polu. To Twoja pierwsza postać — jej wygląd i statystyki zobaczysz obok.','#fighter-name'],
+  hybridBody:['Złóż swoją hybrydę','Wybierz zwierzę dla głowy, tułowia, przednich i tylnych kończyn oraz ogona. Każda część ma własne premie i zmienia sylwetkę. Potem kliknij Dalej.','#hybrid-choices',true],
   weapon:['Wybierz broń','Kliknij inną broń spośród pięciu propozycji z puli dwudziestu. Sprawdź, jak zmieniają się jej kształt i statystyki wojownika.','[data-category="weapon"] > .option-grid'],
   material:['Zmień materiał broni','Wybierz inny materiał części bojowej lub chwytu. Premie i koszty sumują się ze statystykami, a dostępne materiały zależą od rodzaju broni.','.weapon-materials'],
   ability:['Wybierz umiejętność specjalną','Wybierz inną umiejętność i przeczytaj jej efekt. Każda ma 25% szans aktywacji przy własnym ataku; nie ma gwarantowanego wyzwolenia po kilku turach.','[data-category="ability"]'],
@@ -24,7 +25,7 @@ export function setupTutorial(context){
   turns:['Rozgrywaj kolejne tury','Kontynuuj wybór atakującego i celu. Pokonaj obu rywali, aby wygrać. Po 320 turach decyduje suma pozostałych procentów HP drużyny; równość daje remis.','#team-controls'],
   done:['Gotowe — znasz już zasady!','Wynik i przebieg walki znajdziesz na arenie. Rewanż zachowuje postacie, Zmień cechy wraca do kreatora, a Nowi wojownicy zaczyna od nowa.','#result',true]
  };
- const creatorSteps=c=>['settings','name','weapon','material','ability',...(c.mode==='fantasy'?['item','magic']:[]),...(c.mounted?['beast','beastArmor','beastSkill']:[]),'confirm'];
+ const creatorSteps=c=>['settings','name',...(c.hybrid?['hybridBody']:['weapon','material']),'ability',...(c.mode==='fantasy'?['item','magic']:[]),...(c.mounted?['beast','beastArmor','beastSkill']:[]),'confirm'];
  function close(){active=false;$('tutorial').hidden=true;highlight?.classList.remove('tutorial-highlight');highlight=null;document.body.classList.remove('tutorial-active');$('tutorial-start').setAttribute('aria-expanded','false');$('tutorial-start').focus({preventScroll:true});}
  function next(){if(step==='done'){close();return;}const steps=creatorSteps(context());step=steps[steps.indexOf(step)+1]||'confirm';refresh();}
  function refresh(event){
@@ -58,7 +59,7 @@ export function setupTutorial(context){
   else if(step==='actor'&&((changed&&node.id==='team-actor')||(card&&!card.disabled&&Math.floor(Number(card.dataset.fighter)/2)===c.activeTeam)))step='target';
   else if(step==='target'&&((changed&&node.id==='team-target')||(card&&!card.disabled&&Math.floor(Number(card.dataset.fighter)/2)!==c.activeTeam)))step='attack';
   else if(['actor','target','attack'].includes(step)&&clicked&&node.closest('#team-attack')&&c.phase==='teams')step='turns';
-  const key=`${step}:${c.player}:${c.format}:${c.mode}:${c.mounted}`;
+  const key=`${step}:${c.player}:${c.format}:${c.mode}:${c.mounted}:${c.hybrid}`;
   if(key===rendered)return;rendered=key;
   const [title,body,selector,canNext]=lessons[step];
   $('tutorial-title').textContent=title;$('tutorial-text').textContent=body;

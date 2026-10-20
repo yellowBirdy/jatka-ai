@@ -47,7 +47,7 @@ Balans jest wstępny: testy sprawdzają równe szanse identycznych postaci i pop
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie jedenaście zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
+Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie dwanaście zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
 
 ## Balans umiejętności
 
@@ -165,3 +165,13 @@ W automatycznym 2 na 2 gra losuje dostępnego wojownika i żywego przeciwnika w 
 W turowym 1 na 1 gracze przy wspólnym ekranie wykonują na zmianę po jednej akcji: **Atakuj** wybraną taktyką, **Odpocznij** (do +21 kondycji, bez ataku i losowania zdolności) lub **Broń się**. Obrona nie zadaje obrażeń: do kolejnego własnego ruchu połowi następne trafienie bronią (zaokrąglając pozostałe obrażenia w górę), po czym się zużywa. Dotyczy też premii +10 i dodatkowych ciosów bestii, ale nie magii, jadu ani podpalenia. Działa przed osłonami. Chybienie jej nie zużywa. Obrona nie kumuluje się, nie przywraca kondycji i nie uruchamia zdolności. W 2 na 2 jest także dostępna jako taktyka.
 
 Inicjatywa, obrażenia i limit 160 akcji w pojedynku zachowują istniejące reguły. Po limicie rozstrzyga procent HP, a przy równości inicjator. Jad i podpalenie mogą zakończyć walkę przed wybraną akcją. Oba sposoby obsługują wynik, rewanż i edycję. Testy obejmują przejście tur, obronę, odpoczynek, decyzję po limicie, automatyczne drużyny, magię, bestie, pomijanie animacji i interfejs mobilny.
+
+## Modyfikacja: Hybrydy
+
+Włącz **Hybrydy** w sekcji Modyfikacje gry. Zamiast wojownika tworzysz zwierzę z pięciu części: głowy, tułowia, przednich kończyn, tylnych kończyn i ogona. Dla każdej części wybierasz spośród 10 gatunków: geparda, wilka, niedźwiedzia, lwa, nosorożca, krokodyla, orła, skorpiona, węża i goryla. Możliwe jest 100 000 połączeń, w tym powtarzanie tego samego gatunku. Wszystkie opcje części są dostępne bez losowania.
+
+Każda część wnosi opisane premie i koszty do statystyk, a jej kształt i kolor są widoczne na złożonej sylwetce SVG. Głowa mocniej wpływa na celność i uderzenie, tułów na HP i ochronę, przednie kończyny na siłę, tylne na szybkość, a ogon na równowagę i przebicie. Premie sumują się przed mnożnikiem HP. Hybryda korzysta z naturalnej broni i nie dostaje ukrytych premii wcześniejszych wyborów uzbrojenia, materiałów ani pochodzenia wojownika.
+
+Osobno wybierasz instynkt specjalny z dotychczasowych umiejętności (5 losowych propozycji z puli 20). Tryb fantastyczny nadal dodaje przedmiot i moc. Hybrydy działają w obu formatach oraz automatycznie i turowo, z atakiem, odpoczynkiem, obroną i taktykami. Hybryda jest samodzielną postacią — jej włączenie wyłącza Wierzchowce. Powrót do zwykłych wojowników zachowuje wybory części do kolejnego włączenia. Edycja i rewanż również zachowują budowę, a Losuj nowe opcje wybiera nowe zwierzęta dla wszystkich części bieżącej hybrydy.
+
+Testy obejmują każdą część i gatunek, dokładne statystyki, wyłączenie premii ekwipunku, skalowanie HP, oba tryby i formaty, obie metody walki, edycję, przełączanie, samouczek oraz widok mobilny.
