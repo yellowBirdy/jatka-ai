@@ -1,4 +1,4 @@
-import {beastAbilities} from './beast-abilities.js?v=beasts-13';
+import {getBeastAbilities} from './beast-abilities.js?v=beast-choice-15';
 const beast=(id,name,icon,stats,shape,color,size=1)=>({id,name,icon,stats,shape,color,size,desc:describeStats(stats)});
 function describeStats(stats){const names={health:'bazowego HP',attack:'siły',defense:'ochrony',speed:'szybkości',accuracy:'celności',stamina:'kondycji',pierce:'przebicia'};return Object.entries(stats).map(([key,n])=>`${n>0?'+':''}${n} ${names[key]}`).join(' · ')||'Bez dodatkowych premii i kosztów.';}
 export const beasts=[
@@ -59,7 +59,7 @@ export function getBeastArmors(id){
 export function normalizeMount(picks){
  const beast=beasts.find(b=>b.id===(picks.beast??beasts[0].id));if(!beast)throw Error('Nieznana bestia.');
  const type=picks.beastArmor?.split('-').at(-1)||'none',pool=getBeastArmors(beast.id);
- return {...picks,beast:beast.id,beastArmor:(pool.find(a=>a.id===picks.beastArmor)||pool.find(a=>(a.type||a.id)===type)||pool[0]).id,beastAbility:picks.beastAbility==='none'?'none':beast.id};
+ return {...picks,beast:beast.id,beastArmor:(pool.find(a=>a.id===picks.beastArmor)||pool.find(a=>(a.type||a.id)===type)||pool[0]).id,beastAbility:picks.beastAbility==='none'?'none':getBeastAbilities(beast.id).some(a=>a.id===picks.beastAbility)?picks.beastAbility:beast.id};
 }
 export function drawMountOptions(random=Math.random){const pool=[...beasts];for(let i=pool.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}return pool.slice(0,5);}
 export function resolveMount(picks){
@@ -68,8 +68,9 @@ export function resolveMount(picks){
  const armor=pool.find(a=>a.id===armorId)||pool.find(a=>a.type===armorId);
  if(!armor)throw Error('Wybierz zbroję pasującą do bestii.');
  const ability=picks.beastAbility??beast.id;
- if(ability!=='none'&&ability!==beast.id)throw Error('Wybierz umiejętność swojej bestii.');
- return {beast,beastArmor:armor,beastAbility:ability==='none'?{id:'none',name:'Bez umiejętności',desc:'Wyłączona',stats:{},chance:0}:{id:beast.id,...beastAbilities[beast.id]}};
+ const selected=getBeastAbilities(beast.id).find(a=>a.id===ability);
+ if(ability!=='none'&&!selected)throw Error('Wybierz umiejętność swojej bestii.');
+ return {beast,beastArmor:armor,beastAbility:ability==='none'?{id:'none',name:'Bez umiejętności',desc:'Wyłączona',stats:{},chance:0}:selected};
 }
 export function mountedPortrait(rider,f){
  const b=f.traits.beast,a=f.traits.beastArmor;

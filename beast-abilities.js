@@ -22,16 +22,66 @@ export const beastAbilities={
  yak:ability('Górska niezłomność','usuń zamrożenie i korzenie oraz przygotuj osłonę jednego trafienia do 3 HP.'),
  crocodile:ability('Zacisk szczęk','dwa następne ataki celu kosztują dodatkowe 10 kondycji; natychmiast odbierz mu do 6 kondycji.')
 };
+const extraNames={
+ horse:['Kopnięcie rumaka','Czaprak strażnika','Oddech w galopie','Tratujący rozpęd'],
+ wolf:['Skok wilka','Czujność watahy','Wycie łowcy','Szarpnięcie ścięgna'],
+ boar:['Uderzenie racicą','Twarda szczecina','Zawziętość dzika','Rozjuszający kwik'],
+ bear:['Niedźwiedzia łapa','Osłona futra','Regeneracja niedźwiedzia','Przygniecenie łapą'],
+ rhino:['Boczny taran','Skóra nosorożca','Drugi oddech kolosa','Wstrząs rogu'],
+ tiger:['Skok tygrysa','Przyczajony drapieżnik','Tygrysia zaciekłość','Rozdarcie pazurem'],
+ lion:['Królewski pazur','Straż grzywy','Duma króla sawanny','Przerażający pomruk'],
+ elk:['Kopnięcie łosia','Leśna czujność','Siła mokradeł','Zaczep poroża'],
+ mammoth:['Cios trąbą','Mur tundry','Mamucia wytrwałość','Tąpnięcie olbrzyma'],
+ lizard:['Smagnięcie ogonem','Skóra warana','Ciepło drapieżnika','Paraliżujący chwyt'],
+ ostrich:['Kopnięcie biegacza','Taniec piór','Oddech stepu','Piaskowy podmuch'],
+ camel:['Kopnięcie karawany','Osłona wydm','Zapas pustyni','Dezorientujący plwacz'],
+ bison:['Cios żubrzym rogiem','Straż puszczy','Hart żubra','Zwarcie rogów'],
+ buffalo:['Bawole kopnięcie','Krąg stada','Wytrwałość sawanny','Napór rogów'],
+ hyena:['Kąsanie hieny','Czujność łupieżcy','Żarłoczna odnowa','Szyderczy skowyt'],
+ stag:['Cios królewskim porożem','Straż boru','Oddech jelenia','Splątanie rogami'],
+ panther:['Nocny pazur','Zniknięcie w zaroślach','Instynkt pantery','Rozproszenie z cienia'],
+ 'polar-bear':['Cios polarnej łapy','Futrzany bastion','Hart Arktyki','Uścisk północy'],
+ yak:['Kopnięcie jaka','Skalna postawa','Oddech przełęczy','Zepchnięcie ze szlaku'],
+ crocodile:['Uderzenie krokodylego ogona','Tarcza łusek','Rzeczna regeneracja','Śmiertelny obrót']
+};
+const effectDescriptions={
+ strike:n=>`dodatkowy cios za ${n} HP przez pancerz; osłony i kontry nadal działają.`,
+ guard:n=>`przygotuj osłonę jednego trafienia do ${n} HP i odzyskaj do 4 kondycji.`,
+ heal:n=>`odzyskaj do ${n} HP i do 6 kondycji, bez przekraczania maksimum.`,
+ drain:n=>`odbierz celowi do ${n} kondycji i osłab procentowo jego następny atak.`,
+ mark:n=>`oznacz cel na ${n} trafienia; każde z nich zadaje dodatkowe 3 obrażenia.`,
+ barrier:n=>`ustaw pulę bariery na co najmniej ${n} HP; nie kumuluje się.`,
+ focus:n=>`przygotuj +30 pkt proc. celności następnego ataku i odzyskaj do ${n} kondycji.`,
+ slow:n=>`spowolnij cel o ${n}, do limitu 8, i odbierz mu do 5 kondycji.`
+};
+const abilityPools=Object.fromEntries(Object.keys(beastAbilities).map((beast,index)=>{
+ const types=index%2===0?['strike','guard','heal','drain']:['mark','barrier','focus','slow'];
+ const powers=index%2===0?[4+index%4,5+index%5,5+index%4,9+index%6]:[2,7+index%5,10+index%7,2+index%3];
+ return [beast,[{id:beast,beast,...beastAbilities[beast]},...types.map((type,i)=>({id:`${beast}-skill-${i+2}`,beast,...ability(extraNames[beast][i],effectDescriptions[type](powers[i])),effect:type,power:powers[i]}))]];
+}));
+export function getBeastAbilities(beast){const pool=abilityPools[beast];if(!pool)throw Error('Nieznana bestia.');return pool;}
 export function applyBeastAbility({f,state,actor,target,random,strike,heal,details}){
  const id=f[actor].picks.beastAbility;
  if(!f[actor].mounted||id==='none'||state.hp[actor]<=0||state.hp[target]<=0)return null;
- const rule=beastAbilities[id];if(!rule)throw Error('Nieznana umiejętność bestii.');
+ const rule=getBeastAbilities(f[actor].picks.beast).find(a=>a.id===id);if(!rule)throw Error('Nieznana umiejętność bestii.');
  if(!rollChance(rule.chance,random))return null;
  const {hp,energy}=state,s=f[actor].stats;
  const recover=n=>{energy[actor]=Math.min(s.stamina,energy[actor]+n);};
  const drain=n=>{const amount=Math.min(n,energy[target]);energy[target]-=amount;return amount;};
  const shield=n=>{state.shield[actor]=Math.max(state.shield[actor],n);};
- switch(id){
+ if(rule.effect){
+  const n=rule.power;
+  switch(rule.effect){
+   case 'strike':strike(n);break;
+   case 'guard':shield(n);recover(4);break;
+   case 'heal':heal(n);recover(6);break;
+   case 'drain':drain(n);state.staggered[target]=true;break;
+   case 'mark':state.marked[target]=Math.max(n,state.marked[target]);break;
+   case 'barrier':state.barrier[actor]=Math.max(n,state.barrier[actor]);break;
+   case 'focus':state.focus[actor]=1;recover(n);break;
+   case 'slow':state.slow[target]=Math.max(state.slow[target],Math.min(8,state.slow[target]+n));drain(5);break;
+  }
+ }else switch(id){
   case 'horse':recover(12);state.tempo[actor]=Math.max(1,state.tempo[actor]);break;
   case 'wolf':strike(hp[target]<f[target].stats.health*.5?6:3);break;
   case 'boar':state.armorDamage[target]=Math.max(state.armorDamage[target],Math.min(9,Math.max(0,f[target].stats.defense),state.armorDamage[target]+3));break;

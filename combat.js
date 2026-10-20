@@ -1,4 +1,4 @@
-import {applyBeastAbility} from './beast-abilities.js?v=beasts-13';
+import {applyBeastAbility} from './beast-abilities.js?v=beast-choice-15';
 import {rollChance} from './probability.js?v=chance-8';
 import {magicRules} from './fantasy.js?v=fantasy-pools-9';
 import {abilityRules as rules} from './abilities.js?v=chance-8';

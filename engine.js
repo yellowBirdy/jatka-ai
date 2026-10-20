@@ -1,9 +1,9 @@
-import {resolveMount} from './mounts.js?v=mount-damage-14';
+import {resolveMount} from './mounts.js?v=beast-choice-15';
 import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=fantasy-pools-9';
 import {weaponMaterials,resolveMaterials} from './materials.js?v=weapon-families-6';
 export {weaponMaterials} from './materials.js?v=weapon-families-6';
 import {abilityRules} from './abilities.js?v=fantasy-pools-9';
-import {createCombatState,resolveTurn} from './combat.js?v=mount-damage-14';
+import {createCombatState,resolveTurn} from './combat.js?v=beast-choice-15';
 export {abilityRules} from './abilities.js?v=fantasy-pools-9';
 import {additions} from './catalog.js?v=unique-abilities-4';
 const option=(id,name,icon,desc,stats={})=>({id,name,icon,desc,stats});

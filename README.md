@@ -130,10 +130,18 @@ Testy sprawdzają 300 zestawów bestia × zbroja × długość, wszystkie kombin
 
 Każda z 20 bestii ma cztery własne zbroje i opcję „Bez zbroi”. To 80 nazwanych, dopasowanych pancerzy z indywidualnymi premiami do HP oraz zdobieniami na podglądzie. Podpunkt **1. Zbroja bestii** aktualizuje się po zmianie zwierzęcia. Zachowuje poziom pancerza, np. płytowy, ale wybiera model nowej bestii. Silnik odrzuca zbroję przypisaną innemu zwierzęciu.
 
-Podpunkt **2. Umiejętność bestii** pozwala włączyć właściwą jej zdolność lub wybrać „Bez umiejętności”. Każda ma niezależne 25% szans aktywacji po własnym ataku, jeśli jeździec i cel nadal żyją. Nie zużywa dodatkowej tury. Nie można przypisać bestii zdolności innego zwierzęcia. Zmiana bestii dopasowuje aktywną zdolność; świadome wyłączenie pozostaje wyłączone. Rewanż, edycja i wyłączenie modyfikacji zachowują wybory.
+Podpunkt **2. Umiejętność bestii** pozwala wybrać dokładnie jedną z pięciu zdolności własnych bestii. Każda ma niezależne 25% szans aktywacji po własnym ataku, jeśli jeździec i cel nadal żyją. Nie zużywa dodatkowej tury. Nie można przypisać bestii zdolności innego zwierzęcia. Zmiana bestii wybiera pierwszą zdolność nowego zwierzęcia. Rewanż, edycja i wyłączenie modyfikacji zachowują wybory.
 
 Zdolności mają różne skutki: koń wspiera tempo, wilk dobija osłabiony cel, dzik uszkadza pancerz, niedźwiedź leczy się warunkowo i osłania, nosorożec przebija, tygrys wykonuje dwa ciosy, lew odbiera kondycję i blokuje zdolność jeźdźca, łoś odsłania gardę, mamut tworzy barierę, waran zatruwa, struś przygotowuje unik, wielbłąd regeneruje kondycję i usuwa piasek, żubr osłania i kontruje, bawół naciera i męczy, hiena przejmuje kondycję i leczy, jeleń usuwa spowolnienie i zwiększa celność, pantera oznacza i uderza, niedźwiedź polarny osłabia i spowalnia, jak usuwa zimno i korzenie oraz osłania, a krokodyl zwiększa koszty ataków rywala i męczy go.
 
 Dodatkowe ciosy ignorują pancerz, lecz korzystają z istniejących osłon i kontr. Jad warana trwa dwa ataki celu, zadaje po 3 HP przez osłony i może zakończyć walkę przed atakiem zatrutej postaci. Oczyszczenie usuwa także jad. W 2 na 2 wszystkie efekty są przypisane do faktycznie wybranego celu. Aktywacje są opisane jako „Bestia” w komentarzu i historii. Testy porównują rzeczywiste zmiany stanu oraz dodatkowe ciosy wszystkich 20 zdolności, ich niezależność od magii, śmiertelne kontry, dopasowanie zbroi i przebieg w przeglądarce.
 
 Włączone Wierzchowce dają dodatkowo **+10 obrażeń na każde celne trafienie bronią jeźdźca**, także każdy cios serii. Bonus jest dodawany po obliczeniu obrażeń i zmęczenia, przed osłonami; nie zwiększa obrażeń magii, jadu, kontr ani dodatkowych ciosów zdolności bestii. Chybienie nie zadaje obrażeń. Wyłączenie modyfikacji usuwa bonus.
+
+## Pięć umiejętności na wierzchowca
+
+Każda z 20 bestii ma stały zestaw 5 własnych umiejętności: łącznie 100 nazwanych wyborów. Wszystkie pięć jest widoczne jednocześnie, bez dodatkowego losowania. Gracz wybiera dokładnie jedną; każda ma 25% szans aktywacji. Dotychczasowa zdolność pozostaje pierwszą propozycją, a cztery nowe dają alternatywy ofensywne, obronne i wspierające z opisanymi wartościami efektów.
+
+Edycja, rewanż, zmiana długości lub trybu oraz wyłączenie i ponowne włączenie Wierzchowców zachowują wybór. Zmiana bestii dopasowuje listę i wybiera jej pierwszą zdolność. Losowanie oferty również wybiera domyślną zdolność wylosowanej bestii. W walce uruchamia się wyłącznie wybrana umiejętność; premia +10 obrażeń bronią pozostaje niezależna.
+
+Testy obejmują komplet 100 wyborów, odrzucenie cudzych zdolności, zachowanie wyboru, aktywacje i zakończenie walk w obu trybach. Test przeglądarkowy sprawdza pięć kart, pojedynczy wybór, przełączanie, edycję i historię walki.
