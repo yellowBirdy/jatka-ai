@@ -3,7 +3,7 @@ export function setupTutorial(context){
  const $=id=>document.getElementById(id);
  let active=false,step='settings',firstPlayer=0,lastFormat='',lastPhase='',rendered='',highlight=null;
  const lessons={
-  settings:['Ustaw swoją grę','Wybierz 1 na 1 lub 2 na 2, tryb klasyczny albo fantastyczny i długość walki. Długość zmienia HP. Modyfikacja Wierzchowce dodaje bestię i jej zbroję. Gdy ustawienia pasują, kliknij Dalej.','#format-settings',true],
+  settings:['Ustaw swoją grę','Wybierz 1 na 1 lub 2 na 2, tryb klasyczny albo fantastyczny i długość walki. Długość zmienia HP. W sekcji Sposób walki wybierasz automat lub samodzielne wykonywanie tur. Modyfikacja Wierzchowce dodaje bestię i jej zbroję. Gdy ustawienia pasują, kliknij Dalej.','#format-settings',true],
   name:['Nadaj wojownikowi imię','Wpisz imię w podświetlonym polu. To Twoja pierwsza postać — jej wygląd i statystyki zobaczysz obok.','#fighter-name'],
   weapon:['Wybierz broń','Kliknij inną broń spośród pięciu propozycji z puli dwudziestu. Sprawdź, jak zmieniają się jej kształt i statystyki wojownika.','[data-category="weapon"] > .option-grid'],
   material:['Zmień materiał broni','Wybierz inny materiał części bojowej lub chwytu. Premie i koszty sumują się ze statystykami, a dostępne materiały zależą od rodzaju broni.','.weapon-materials'],
@@ -16,6 +16,7 @@ export function setupTutorial(context){
   confirm:['Zatwierdź wojownika','Pozostałe cechy mają już wybrane propozycje. Możesz je zmienić, a potem zatwierdzić gotową postać.','#confirm'],
   remaining:['Przygotuj kolejnych wojowników','Wybierz cechy kolejnej postaci i zatwierdź ją. W 1 na 1 potrzebujesz dwóch postaci, a w 2 na 2 — po dwóch dla drużyn A i B.','#confirm'],
   arena:['Rozpocznij walkę','Sprawdź ekwipunek i zdrowie postaci, a następnie kliknij Rozpocznij walkę. W 1 na 1 walka przebiega automatycznie. W 2 na 2 wybierasz każdy atak.','#fight'],
+  duelTurns:['Wybierz akcję pojedynku','Atakuj wybraną taktyką, odpocznij dla odzyskania do 21 kondycji albo broń się, aby połowić następne trafienie bronią. Gracze wykonują po jednej akcji na zmianę.','#duel-controls'],
   watching:['Obserwuj walkę','Paski pokazują pozostałe HP, a komentarz opisuje faktyczne zdarzenia. Możesz obejrzeć całą walkę lub pominąć animację.','#commentary'],
   actor:['Wybierz atakującego','Wskaż wojownika swojej drużyny z listy lub przyciskiem przy jego postaci. Żywi sojusznicy wykonują po jednym ruchu, zanim ta sama postać zaatakuje ponownie.','#team-actor'],
   target:['Wybierz cel ataku','Wskaż żywego przeciwnika z listy lub przyciskiem przy jego postaci. Nie możesz atakować sojuszników ani pokonanych.','#team-target'],
@@ -34,6 +35,7 @@ export function setupTutorial(context){
    if(c.phase==='creator'&&lastPhase){step='settings';firstPlayer=c.player;}
    else if(c.phase==='arena')step='arena';
    else if(c.phase==='teams')step='actor';
+   else if(c.phase==='duel-turns')step='duelTurns';
    else if(c.phase==='watching')step='watching';
    else if(c.phase==='result')step='done';
    lastPhase=c.phase;
@@ -74,6 +76,6 @@ export function setupTutorial(context){
  document.addEventListener('keydown',e=>{if(active&&e.key==='Escape'){e.preventDefault();close();}});
  for(const type of ['input','change','click'])document.addEventListener(type,event=>queueMicrotask(()=>refresh(event)));
  const observer=new MutationObserver(()=>refresh());
- for(const id of ['creator','arena','result','team-controls'])observer.observe($(id),{attributes:true,attributeFilter:['hidden']});
+ for(const id of ['creator','arena','result','team-controls','duel-controls'])observer.observe($(id),{attributes:true,attributeFilter:['hidden']});
  observer.observe($('player-label'),{childList:true});
 }

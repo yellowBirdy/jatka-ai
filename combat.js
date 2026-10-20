@@ -1,18 +1,18 @@
-import {resolveTactic} from './tactics.js?v=tactics-17';
-import {applyBeastAbility} from './beast-abilities.js?v=tactics-17';
+import {resolveTactic} from './tactics.js?v=playback-18';
+import {applyBeastAbility} from './beast-abilities.js?v=playback-18';
 import {rollChance} from './probability.js?v=chance-8';
 import {magicRules} from './fantasy.js?v=fantasy-pools-9';
 import {abilityRules as rules} from './abilities.js?v=chance-8';
 const clamp=(x,min,max)=>Math.max(min,Math.min(max,x));
 export function createCombatState(fighters){
  const state={hp:fighters.map(f=>f.stats.health),energy:fighters.map(f=>f.stats.stamina)};
- for(const key of ['tacticDefense','venom','turns','wrist','blind','exposed','armorDamage','slow','shield','tempo','focus','exposureStrength','burn','frozen','magicShield','silenced','rooted','thorns','barrier','marked','blink','battlecry','stunned','mist'])state[key]=fighters.map(()=>0);
+ for(const key of ['guard','tacticDefense','venom','turns','wrist','blind','exposed','armorDamage','slow','shield','tempo','focus','exposureStrength','burn','frozen','magicShield','silenced','rooted','thorns','barrier','marked','blink','battlecry','stunned','mist'])state[key]=fighters.map(()=>0);
  state.disarmed=fighters.map(()=>false);state.staggered=fighters.map(()=>false);return state;
 }
 export function resolveTurn(f,state,actor,random=Math.random,target=1-actor,tactic='balanced'){
  const plan=resolveTactic(tactic);
  const s=f[actor].stats,d=f[target].stats;
- const {hp,energy}=state;state.turns[actor]++;state.tacticDefense[actor]=0;
+ const {hp,energy}=state;state.turns[actor]++;state.tacticDefense[actor]=0;state.guard[actor]=0;
  let selfDamage=0;
  const burnDetails=[];
  for(const [status,label] of [['burn','Podpalenie'],['venom','Jad']])if(state[status][actor]>0){
@@ -20,9 +20,10 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor,tact
   if(hp[actor]===0)return {actor,target,damage:0,kind:status,ability:null,beastAbility:null,magic:null,magicDamage:0,selfDamage,healed:0,hp:[...hp],energy:[...energy],text:`${f[actor].name} nie może kontynuować walki.`,exhausted:false,weakened:false,strikes:[0],details:burnDetails,counterDamage:0};
  }
  state.tacticDefense[actor]=plan.defense;
- if(tactic==='rest'){
-  const restored=Math.min(21,Math.max(0,s.stamina-energy[actor]));energy[actor]+=restored;
-  return {actor,target,tactic,restored,damage:0,kind:'rest',ability:null,beastAbility:null,magic:null,magicDamage:0,selfDamage,healed:0,hp:[...hp],energy:[...energy],text:`${f[actor].name} odpoczywa i odzyskuje ${restored} kondycji.`,exhausted:false,weakened:false,strikes:[0],details:burnDetails,counterDamage:0};
+ if(tactic==='rest'||tactic==='defend'){
+  if(tactic==='defend')state.guard[actor]=1;
+  const restored=tactic==='rest'?Math.min(21,Math.max(0,s.stamina-energy[actor])):0;energy[actor]+=restored;
+  return {actor,target,tactic,restored,damage:0,kind:tactic,ability:null,beastAbility:null,magic:null,magicDamage:0,selfDamage,healed:0,hp:[...hp],energy:[...energy],text:tactic==='rest'?`${f[actor].name} odpoczywa i odzyskuje ${restored} kondycji.`:`${f[actor].name} broni się: następne trafienie bronią zada o połowę mniej obrażeń.`,exhausted:false,weakened:false,strikes:[0],details:burnDetails,counterDamage:0};
  }
  const selectedAbility=f[actor].picks.ability;
  if(!rules[selectedAbility])throw Error(`Nieznana umiejętność: ${selectedAbility}`);
@@ -61,6 +62,7 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor,tact
  const raw=(power,protection=defense)=>Math.max(2,Math.round((power-protection*.6)*scale));
  function strike(amount){let dealt=amount;
   if(amount>0&&state.marked[target]>0){state.marked[target]--;dealt+=3;details.push('Piętno słabości: +3 obrażenia.');}
+  if(state.guard[target]>0&&dealt>0){state.guard[target]=0;dealt=Math.ceil(dealt/2);details.push('Obrona zmniejsza obrażenia tego trafienia o połowę.');}
   if(state.barrier[target]>0&&dealt>0){const absorbed=Math.min(dealt,state.barrier[target]);dealt-=absorbed;state.barrier[target]-=absorbed;details.push(`Bariera pochłania ${absorbed} obrażeń.`);}
   if(state.shield[target]>0&&dealt>0){const absorbed=Math.min(dealt,state.shield[target]);dealt-=absorbed;state.shield[target]=0;details.push(`Osłona pochłania ${absorbed} obrażeń.`);}
   if(state.magicShield[target]>0&&dealt>0){const absorbed=Math.min(dealt,state.magicShield[target]);dealt-=absorbed;state.magicShield[target]=0;details.push(`Magiczna osłona pochłania ${absorbed} obrażeń.`);}

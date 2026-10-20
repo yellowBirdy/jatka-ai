@@ -47,7 +47,7 @@ Balans jest wstępny: testy sprawdzają równe szanse identycznych postaci i pop
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie dziesięć zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
+Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie jedenaście zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
 
 ## Balans umiejętności
 
@@ -155,3 +155,13 @@ W 1 na 1 każda postać wybiera przed walką stałą taktykę na karcie areny: z
 Aktywacja umiejętności bestii pokazuje nazwę zdolności na karcie jeźdźca oraz efekt odpowiadający jej działaniu: pazury na przeciwniku, tarczę, leczenie lub energię na własnej postaci, fale kontroli lub jad na wskazanym celu. Efekt odtwarza się przy każdym rzeczywistym wyzwoleniu, a poprzednie oznaczenia są usuwane przy kolejnym ruchu, rewanżu i edycji. Preferencja ograniczonego ruchu wyłącza animację, zachowując symbol i czytelną nazwę. Efekty nie wpływają na wynik walki.
 
 Testy sprawdzają zmiany siły i celności, utratę ochrony, odzyskiwanie kondycji, zużycie tury, śmierć przed odpoczynkiem, zachowanie taktyk na rewanż, animację rzeczywistej aktywacji, czyszczenie efektów, ograniczenie ruchu i widok mobilny.
+
+## Automatyczne 2 na 2 i turowe 1 na 1
+
+Przełącznik **Sposób walki** udostępnia **Automatyczny** i **Turowy** w obu formatach. Domyślnie 1 na 1 jest automatyczne, a 2 na 2 turowe. Zmiana sposobu przed rozpoczęciem walki zachowuje stworzone postacie. W trakcie walki przełącznik jest zablokowany.
+
+W automatycznym 2 na 2 gra losuje dostępnego wojownika i żywego przeciwnika w każdej turze, przestrzegając kolejności drużyn i zasady jednego ruchu każdego żywego sojusznika w cyklu. Walka ma animacje, możliwość pominięcia, wynik drużynowy oraz pełną historię. Rewanż zachowuje sposób walki. Tryb działa także z magią i bestiami.
+
+W turowym 1 na 1 gracze przy wspólnym ekranie wykonują na zmianę po jednej akcji: **Atakuj** wybraną taktyką, **Odpocznij** (do +21 kondycji, bez ataku i losowania zdolności) lub **Broń się**. Obrona nie zadaje obrażeń: do kolejnego własnego ruchu połowi następne trafienie bronią (zaokrąglając pozostałe obrażenia w górę), po czym się zużywa. Dotyczy też premii +10 i dodatkowych ciosów bestii, ale nie magii, jadu ani podpalenia. Działa przed osłonami. Chybienie jej nie zużywa. Obrona nie kumuluje się, nie przywraca kondycji i nie uruchamia zdolności. W 2 na 2 jest także dostępna jako taktyka.
+
+Inicjatywa, obrażenia i limit 160 akcji w pojedynku zachowują istniejące reguły. Po limicie rozstrzyga procent HP, a przy równości inicjator. Jad i podpalenie mogą zakończyć walkę przed wybraną akcją. Oba sposoby obsługują wynik, rewanż i edycję. Testy obejmują przejście tur, obronę, odpoczynek, decyzję po limicie, automatyczne drużyny, magię, bestie, pomijanie animacji i interfejs mobilny.
