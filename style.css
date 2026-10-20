@@ -20,3 +20,7 @@ header{background-image:linear-gradient(#111814c9,#111814e6),url('assets/texture
 .arena-floor:after{content:'';position:absolute;inset:12%;border:1px solid #e3c98c33;border-radius:50%;pointer-events:none}.arena-floor>span{color:#3e3a2570;text-shadow:1px 1px #d5bf7e33}
 .primary{background-image:linear-gradient(120deg,#efffc428,transparent 40%,#5d6b2526);box-shadow:inset 0 1px #fbffdf88,0 3px 0 #72824155}
 .health{box-shadow:inset 0 1px 3px #0008}.health i{background-image:linear-gradient(#ffffff25,transparent 55%,#0002)}
+/* Equipment cards show the actual weapon silhouette, matching the fighter. */
+.option-icon.equipment-preview{height:116px;display:flex;justify-content:center;align-items:center;margin:-4px -4px 9px;background:radial-gradient(ellipse,#b7b6871a,transparent 70%);border-bottom:1px solid #82906b22}.weapon-icon{height:112px;width:100%;overflow:visible;filter:drop-shadow(1px 3px 2px #0007)}.option:has(.weapon-icon){min-height:185px}.option:has(input:checked) .weapon-icon{filter:drop-shadow(0 0 4px #d7ec8b40)}
+@media(max-width:600px){.option-icon.equipment-preview{height:110px}.weapon-icon{height:105px}.option-grid>.option:last-child:has(.weapon-icon){grid-column:auto}.option:has(.weapon-icon){min-height:180px}}
+.option input{inset:0;margin:0;width:100%;height:100%;z-index:2;cursor:pointer}.weapon-icon{pointer-events:none}
