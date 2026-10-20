@@ -2,7 +2,7 @@ name: Test and publish game
 
 on:
   push:
-    branches: [master]
+    branches: [master, development]
   workflow_dispatch:
 
 permissions:
@@ -41,10 +41,12 @@ jobs:
           cp -R assets site/assets
           touch site/.nojekyll
       - uses: actions/upload-pages-artifact@v3
+        if: github.ref == 'refs/heads/master'
         with:
           path: site
 
   deploy:
+    if: github.ref == 'refs/heads/master'
     needs: test-and-package
     runs-on: ubuntu-latest
     permissions:

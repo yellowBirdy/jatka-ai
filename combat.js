@@ -1,10 +1,10 @@
 import {rollChance} from './probability.js?v=chance-8';
-import {magicRules} from './fantasy.js?v=chance-8';
+import {magicRules} from './fantasy.js?v=fantasy-pools-9';
 import {abilityRules as rules} from './abilities.js?v=chance-8';
 const clamp=(x,min,max)=>Math.max(min,Math.min(max,x));
 export function createCombatState(fighters){
  const state={hp:fighters.map(f=>f.stats.health),energy:fighters.map(f=>f.stats.stamina)};
- for(const key of ['turns','wrist','blind','exposed','armorDamage','slow','shield','tempo','focus','exposureStrength','burn','frozen','magicShield'])state[key]=[0,0];
+ for(const key of ['turns','wrist','blind','exposed','armorDamage','slow','shield','tempo','focus','exposureStrength','burn','frozen','magicShield','silenced','rooted','thorns','barrier','marked','blink','battlecry','stunned','mist'])state[key]=[0,0];
  state.disarmed=[false,false];state.staggered=[false,false];return state;
 }
 export function resolveTurn(f,state,actor,random=Math.random){
@@ -18,12 +18,15 @@ export function resolveTurn(f,state,actor,random=Math.random){
  }
  const selectedAbility=f[actor].picks.ability;
  if(!rules[selectedAbility])throw Error(`Nieznana umiejętność: ${selectedAbility}`);
- const ability=rollChance(rules[selectedAbility].chance,random)?selectedAbility:null;
+ const stunned=state.stunned[actor]>0;if(stunned)state.stunned[actor]--;
+ const silenced=state.silenced[actor]>0;if(silenced)state.silenced[actor]--;
+ const ability=!stunned&&rollChance(rules[selectedAbility].chance,random)?selectedAbility:null;
  const rule=ability?rules[ability]:null;
  if(ability&&!rule)throw Error(`Nieznana umiejętność: ${ability}`);
  const details=[...burnDetails],strikes=[];let healed=0,counterDamage=0;
  const heal=amount=>{const actual=Math.min(amount,s.health-hp[actor]);hp[actor]+=actual;healed+=actual;};
  if(ability==='breathing'){energy[actor]=Math.min(s.stamina,energy[actor]+rule.energy);details.push(`Odzyskano kondycję: +${rule.energy} (do limitu).`);}
+ if(state.rooted[actor]>0){state.rooted[actor]--;energy[actor]=Math.max(0,energy[actor]-10);details.push('Korzenie: dodatkowy koszt 10 kondycji.');}
  const exhausted=energy[actor]<=0;
  const tempo=state.tempo[actor]>0;
  if(!tempo)energy[actor]=Math.max(0,energy[actor]-7);
@@ -34,6 +37,7 @@ export function resolveTurn(f,state,actor,random=Math.random){
  if(state.blind[actor]>0){chance-=rules.sand.accuracy;state.blind[actor]--;details.push('Piasek utrudnia widzenie.');}
  if(state.focus[actor]>0){chance+=rules['feint-strike'].focus;state.focus[actor]--;}
  if(tempo)chance+=rules.pace.accuracy;
+ if(state.mist[target]>0){state.mist[target]--;chance-=.2;details.push('Mgła utrudnia trafienie.');}
  if(ability==='overhead')chance+=rule.accuracy;
  chance=clamp(chance,.1,.99);
  const weakened=state.disarmed[actor],staggered=state.staggered[actor];
@@ -42,23 +46,28 @@ export function resolveTurn(f,state,actor,random=Math.random){
  if(state.exposed[target]>0)state.exposed[target]--;
  let bonus=ability==='rage'?rule.power:ability==='charge'?rule.power:ability==='shoulder'?rule.power:ability==='overhead'?rule.power:ability==='breathing'?rule.power:ability==='low-cut'?rule.power:ability==='lunge'?Math.min(rule.cap,rule.power+Math.max(0,speed-enemySpeed)*rule.speedRatio):0;
  if(tempo)bonus+=rules.pace.power;
+ if(state.battlecry[actor]>0){state.battlecry[actor]--;bonus+=4;details.push('Runiczny okrzyk: +4 siły.');}
  let defense=ability==='overhead'?0:Math.max(0,d.defense-state.armorDamage[target]-s.pierce-exposure-(ability==='gap'?rule.break:0)-(ability==='precise'?rule.pierce:0));
  const strength=s.attack+(random()*8-4)+bonus-(weakened?rules.disarm.penalty:0);
  const scale=(exhausted?.65:1)*(staggered?rules.pommel.ratio:1);
  const raw=(power,protection=defense)=>Math.max(2,Math.round((power-protection*.6)*scale));
  function strike(amount){let dealt=amount;
-  if(state.shield[target]>0&&amount>0){const absorbed=Math.min(amount,state.shield[target]);dealt-=absorbed;state.shield[target]=0;details.push(`Osłona pochłania ${absorbed} obrażeń.`);}
+  if(amount>0&&state.marked[target]>0){state.marked[target]--;dealt+=3;details.push('Piętno słabości: +3 obrażenia.');}
+  if(state.barrier[target]>0&&dealt>0){const absorbed=Math.min(dealt,state.barrier[target]);dealt-=absorbed;state.barrier[target]-=absorbed;details.push(`Bariera pochłania ${absorbed} obrażeń.`);}
+  if(state.shield[target]>0&&dealt>0){const absorbed=Math.min(dealt,state.shield[target]);dealt-=absorbed;state.shield[target]=0;details.push(`Osłona pochłania ${absorbed} obrażeń.`);}
   if(state.magicShield[target]>0&&dealt>0){const absorbed=Math.min(dealt,state.magicShield[target]);dealt-=absorbed;state.magicShield[target]=0;details.push(`Magiczna osłona pochłania ${absorbed} obrażeń.`);}
   const actual=Math.min(hp[target],dealt);hp[target]-=actual;strikes.push(actual);
   if(actual>0&&hp[target]>0&&state.wrist[target]>0){
    state.wrist[target]=0;counterDamage=Math.min(hp[actor],rules['wrist-lock'].counter);hp[actor]-=counterDamage;
    details.push(`${f[target].name} kontruje za ${counterDamage} HP.`);
   }
+  if(actual>0&&hp[target]>0&&hp[actor]>0&&state.thorns[target]>0){state.thorns[target]--;const reflected=Math.min(4,hp[actor]);hp[actor]-=reflected;counterDamage+=reflected;details.push(`Ciernie odbijają ${reflected} HP.`);}
  }
- const hit=ability==='precise'||random()<chance;
+ const evaded=state.blink[target]>0;if(evaded){state.blink[target]--;details.push('Migotanie: unik całego ataku bronią.');}
+ const hit=!evaded&&(ability==='precise'||random()<chance);
  strike(hit?raw(strength):0);
- if(ability==='combo'&&hp[target]>0&&hp[actor]>0){strike(random()<chance?raw(strength*rule.ratio):0);details.push(`Seria dwóch ciosów: ${strikes.join(' + ')} HP.`);}
- if(ability==='feint-strike'&&hp[actor]>0){
+ if(ability==='combo'&&!evaded&&hp[target]>0&&hp[actor]>0){strike(random()<chance?raw(strength*rule.ratio):0);details.push(`Seria dwóch ciosów: ${strikes.join(' + ')} HP.`);}
+ if(ability==='feint-strike'&&!evaded&&hp[actor]>0){
   if(!hit)strike(Math.max(2,Math.round(raw(strength)*rule.ratio)));
   else state.focus[actor]=1;
  }
@@ -82,8 +91,14 @@ export function resolveTurn(f,state,actor,random=Math.random){
  if(ability==='reset-stance'){state.shield[actor]=rule.shield;details.push(`Osłona następnego trafienia: ${rule.shield} HP.`);}
  if(ability==='pace'){state.tempo[actor]=rule.duration;details.push('Dwa kolejne ataki w oszczędnym tempie.');}
  let magic=null,magicDamage=0;
- if(f[actor].mode==='fantasy'&&hp[actor]>0&&hp[target]>0&&rollChance(magicRules[f[actor].picks.magicPower].chance,random)){
+ if(f[actor].mode==='fantasy'&&!silenced&&hp[actor]>0&&hp[target]>0&&rollChance(magicRules[f[actor].picks.magicPower].chance,random)){
   magic=f[actor].picks.magicPower;
+  details.push(`Magia: ${magicRules[magic].name}.`);
+  const magicHit=power=>{
+   let amount=power;
+   if(state.magicShield[target]>0){const absorbed=Math.min(amount,state.magicShield[target]);amount-=absorbed;state.magicShield[target]=0;details.push(`Magiczna osłona pochłania ${absorbed} obrażeń.`);}
+   const dealt=Math.min(hp[target],amount);hp[target]-=dealt;magicDamage+=dealt;return dealt;
+  };
   switch(magic){
    case 'fire':state.burn[target]=2;details.push('Płomień: podpalenie rywala na dwa jego ataki.');break;
    case 'frost':state.frozen[target]=2;details.push('Uścisk lodu: −8 szybkości rywala na dwa jego ataki.');break;
@@ -93,6 +108,21 @@ export function resolveTurn(f,state,actor,random=Math.random){
    }
    case 'healing':heal(12);details.push('Odnowa przywraca zdrowie do jego maksymalnego poziomu.');break;
    case 'earth':state.magicShield[actor]=8;details.push('Kamienna aura: osłona jednego trafienia do 8 HP.');break;
+   case 'life-drain':{const stolen=magicHit(6);heal(stolen);details.push(`Kradzież życia: ${stolen} HP.`);break;}
+   case 'silence':magicHit(3);state.silenced[target]=2;details.push('Cisza blokuje dwa kolejne losowania magii rywala.');break;
+   case 'cleanse':for(const key of ['burn','frozen','blind','silenced','rooted','disarmed','staggered','stunned'])state[key][actor]=typeof state[key][actor]==='boolean'?false:0;heal(4);details.push('Usunięto negatywne efekty; oczyszczenie leczy do 4 HP.');break;
+   case 'mana':{const amount=Math.min(32,s.stamina-energy[actor]);energy[actor]+=amount;details.push(`Przypływ energii: +${amount} kondycji.`);break;}
+   case 'meteor':magicHit(16);{const recoil=Math.min(4,hp[actor]-1);hp[actor]-=recoil;selfDamage+=recoil;details.push(`Meteor: odrzut odbiera ${recoil} HP rzucającemu.`);}break;
+   case 'roots':state.rooted[target]=2;state.magicShield[actor]=Math.max(state.magicShield[actor],4);details.push('Korzenie zwiększają koszt dwóch ataków; osłona do 4 HP.');break;
+   case 'thorns':state.thorns[actor]=2;details.push('Ciernie przygotowane na dwa trafienia.');break;
+   case 'barrier':state.barrier[actor]=12;details.push('Bariera: pula 12 punktów ochrony przed bronią.');break;
+   case 'mark':state.marked[target]=2;details.push('Dwa kolejne trafienia w rywala mają +3 obrażenia.');break;
+   case 'blink':state.blink[actor]=1;details.push('Migotanie przygotowuje unik następnego ataku.');break;
+   case 'battlecry':state.battlecry[actor]=2;details.push('Runiczny okrzyk wzmacnia dwa kolejne ataki.');break;
+   case 'dispel':for(const key of ['shield','magicShield','barrier','thorns','wrist'])state[key][target]=0;magicHit(4);details.push('Osłony i przygotowane kontry rywala rozproszone.');break;
+   case 'entropy':{const stolen=Math.min(20,energy[target]);energy[target]-=stolen;const recovered=Math.min(stolen,s.stamina-energy[actor]);energy[actor]+=recovered;details.push(`Kondycja rywala −${stolen}, własna +${recovered}.`);break;}
+   case 'thunder':magicHit(3);state.stunned[target]=1;details.push('Grom blokuje następną specjalną umiejętność rywala.');break;
+   case 'mist':state.mist[actor]=2;details.push('Mgła chroni przed dwoma kolejnymi atakami.');break;
    default:throw Error(`Nieznana moc: ${magic}`);
   }
  }

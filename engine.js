@@ -1,9 +1,9 @@
-import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=chance-8';
+import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=fantasy-pools-9';
 import {weaponMaterials,resolveMaterials} from './materials.js?v=weapon-families-6';
 export {weaponMaterials} from './materials.js?v=weapon-families-6';
-import {abilityRules} from './abilities.js?v=chance-8';
-import {createCombatState,resolveTurn} from './combat.js?v=chance-8';
-export {abilityRules} from './abilities.js?v=chance-8';
+import {abilityRules} from './abilities.js?v=fantasy-pools-9';
+import {createCombatState,resolveTurn} from './combat.js?v=fantasy-pools-9';
+export {abilityRules} from './abilities.js?v=fantasy-pools-9';
 import {additions} from './catalog.js?v=unique-abilities-4';
 const option=(id,name,icon,desc,stats={})=>({id,name,icon,desc,stats});
 export const categories=[

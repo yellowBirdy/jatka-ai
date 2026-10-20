@@ -35,7 +35,7 @@ Każdy gracz otrzymuje osobną ofertę: 5 różnych cech z puli 20 w każdej z 8
 
 Długość jest wspólna dla obu wojowników: **krótka — 65% HP**, **średnia — 100% HP**, **długa — 160% HP**. Mnożnik jest stosowany po bonusach cech, z zaokrągleniem do całego punktu. Pozostałe statystyki i tempo animacji pozostają takie same. Zmiana długości aktualizuje także zatwierdzonego wojownika; podczas walki ustawienie jest zablokowane.
 
-W katalogu jest 160 nazwanych cech. Każda z 20 specjalnych umiejętności ma własny efekt: od kontry i uszkadzania pancerza po odbieranie kondycji, spowalnianie, dwucios, warunkowe leczenie i oszczędzanie sił. Opis karty jest zgodny z regułą w `abilities.js`, a faktyczne skutki są widoczne w dzienniku walki.
+Katalog klasyczny ma 160 nazwanych cech, a tryb fantastyczny dodaje 40 kolejnych. Każda z 20 specjalnych umiejętności ma własny efekt: od kontry i uszkadzania pancerza po odbieranie kondycji, spowalnianie, dwucios, warunkowe leczenie i oszczędzanie sił. Opis karty jest zgodny z regułą w `abilities.js`, a faktyczne skutki są widoczne w dzienniku walki.
 
 ## Zasady walki
 
@@ -77,7 +77,7 @@ Każdy materiał ma własny opis bonusów i kosztów. Silnik odrzuca niedozwolon
 
 ## Tryb fantastyczny
 
-Przełącznik nad kreatorem wybiera wspólny dla obu wojowników tryb: **Klasyczny** (8 cech, bez magii) albo **Fantastyczny** (10 cech). W fantastycznym dochodzą dwa sloty, po pięć stale dostępnych opcji:
+Przełącznik nad kreatorem wybiera wspólny dla obu wojowników tryb: **Klasyczny** (8 cech, bez magii) albo **Fantastyczny** (10 cech). W fantastycznym dochodzą dwa sloty, każdy z pulą 20 opcji. Dla każdego gracza losowanych jest po 5 różnych propozycji. Przykłady:
 
 - Przedmiot specjalny: amulet żywotności (+14 bazowego HP), talizman skupienia (+8 celności), buty wędrowca (+4 szybkości), sztandar wytrwałości (+20 kondycji), pas olbrzyma (+3 siły).
 - Moc magiczna: płomień (podpalenie na dwa ataki), uścisk lodu (tymczasowe spowolnienie), błyskawica (obrażenia przez pancerz), odnowa (leczenie), kamienna aura (jednorazowa osłona).
@@ -89,3 +89,11 @@ Zmiana trybu przelicza statystyki obu wojowników. Klasyczny ignoruje premie i m
 ## Procentowe aktywacje
 
 Procent na karcie jest szansą uruchomienia efektu, a nie gwarancją trafienia: rozbrojenie i podobne efekty nadal wymagają trafienia po udanym losowaniu. Przedmioty specjalne dają stałe premie; ich działanie nie jest losowane. Testy obejmują progi 0%/100%, niezależne losowania, jednoczesną aktywację, brak cyklicznego wyzwalania i częstości z 10 000 ataków. Losowość wciąż może być odtwarzana przez ziarno w symulacjach.
+
+## Losowane pule fantastyczne (development)
+
+Przedmiot specjalny i moc magiczna mają osobne pule po 20 opcji. Oferty po 5 są losowane niezależnie dla każdego gracza, bez powtórzeń w slocie. Wybór opcji ani zmiana trybu nie losują ponownie oferty. Edycja i rewanż zachowują ofertę oraz wybory. „Losuj nowe opcje” odświeża wszystkie oferty bieżącego gracza, a nowi wojownicy otrzymują nowe oferty. Losowanie nie zmienia oferty drugiego gracza. Materiały zachowują dotychczasowe zasady zgodności z bronią.
+
+Nowe moce obejmują kradzież życia, ciszę, oczyszczenie, odzyskiwanie kondycji, meteor, korzenie, ciernie, trwałą pulę bariery, piętno, migotanie, runiczny okrzyk, rozproszenie, pochłanianie kondycji, grom i mgłę. Wszystkie mają opis efektu i szansę aktywacji (10–30%). Nowe przedmioty dają różne zestawy premii i kosztów statystyk.
+
+Testy obejmują wszystkie 400 zestawów przedmiotu i mocy w trzech długościach, unikalność efektów, ograniczenia zasobów, czas działania stanów, losowanie i zachowanie ofert w przeglądarce. GitHub Actions testuje gałąź `development`; publikacja Pages uruchamia się wyłącznie z `master`.
