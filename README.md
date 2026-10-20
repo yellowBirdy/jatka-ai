@@ -47,7 +47,7 @@ Balans jest wstępny: testy sprawdzają równe szanse identycznych postaci i pop
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie cztery zestawy testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
+Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie pięć zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
 
 ## Balans umiejętności
 
@@ -74,3 +74,14 @@ Testy obejmują 25 kombinacji modyfikatorów, ich rzeczywisty wpływ na obrażen
 | Kostury i maczugi | twarde drewno, drewno wzmacniane, bambus, drewno żelazne, rattan | jesion, skórzany oplot, len, surowa skóra, orzech |
 
 Każdy materiał ma własny opis bonusów i kosztów. Silnik odrzuca niedozwolone kombinacje zamiast potajemnie naliczać ich premie. Testy sprawdzają dostępność dla wszystkich 20 broni oraz komplet 500 legalnych kombinacji.
+
+## Tryb fantastyczny
+
+Przełącznik nad kreatorem wybiera wspólny dla obu wojowników tryb: **Klasyczny** (8 cech, bez magii) albo **Fantastyczny** (10 cech). W fantastycznym dochodzą dwa sloty, po pięć stale dostępnych opcji:
+
+- Przedmiot specjalny: amulet żywotności (+14 bazowego HP), talizman skupienia (+8 celności), buty wędrowca (+4 szybkości), sztandar wytrwałości (+20 kondycji), pas olbrzyma (+3 siły).
+- Moc magiczna: płomień (podpalenie na dwa ataki), uścisk lodu (tymczasowe spowolnienie), błyskawica (obrażenia przez pancerz), odnowa (leczenie), kamienna aura (jednorazowa osłona).
+
+Magia aktywuje się po co piątym własnym ataku, jeśli obaj wojownicy nadal żyją; umiejętność niemagiczna zachowuje cykl czterech ataków. Leczenie nie przekracza maksimum i nie wskrzesza. Magiczna osłona działa przeciw broni i błyskawicy, ale podpalenie ją omija. Podpalenie i zamrożenie odświeżają czas działania zamiast się kumulować. Szczegóły są na kartach i w dzienniku walki.
+
+Zmiana trybu przelicza statystyki obu wojowników. Klasyczny ignoruje premie i moce z dodatkowych slotów. Powrót do fantastycznego, edycja i rewanż zachowują wcześniejsze wybory. W trakcie walki przełącznik trybu jest zablokowany. Fioletowa aura i znak przedmiotu odróżniają postacie fantastyczne.

@@ -1,7 +1,8 @@
+import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=fantasy-mode-7';
 import {weaponMaterials,resolveMaterials} from './materials.js?v=weapon-families-6';
 export {weaponMaterials} from './materials.js?v=weapon-families-6';
 import {abilityRules} from './abilities.js?v=unique-abilities-4';
-import {createCombatState,resolveTurn} from './combat.js?v=unique-abilities-4';
+import {createCombatState,resolveTurn} from './combat.js?v=fantasy-mode-7';
 export {abilityRules} from './abilities.js?v=unique-abilities-4';
 import {additions} from './catalog.js?v=unique-abilities-4';
 const option=(id,name,icon,desc,stats={})=>({id,name,icon,desc,stats});
@@ -36,7 +37,8 @@ export function drawOptions(random=Math.random){
   return [category.id,pool.slice(0,5)];
  }));
 }
-export function createFighter(name,picks,duration='medium'){
+export function createFighter(name,picks,duration='medium',mode='classic'){
+ if(!Object.hasOwn(gameModes,mode))throw Error('Wybierz poprawny tryb gry.');
  if(!Object.hasOwn(durations,duration))throw Error('Wybierz poprawną długość gry.');
  if(typeof name!=='string'||!name.trim()||name.trim().length>24)throw Error('Imię musi mieć od 1 do 24 znaków.');
  const stats={health:100,attack:17,defense:5,speed:15,accuracy:75,stamina:90,pierce:0};const traits={};
@@ -46,8 +48,11 @@ export function createFighter(name,picks,duration='medium'){
   traits[key]=material;
   for(const [stat,value]of Object.entries(material.stats))stats[stat]+=value;
  }
+ if(mode==='fantasy')for(const [key,item]of Object.entries(resolveFantasy(picks))){
+  traits[key]=item;for(const [stat,value]of Object.entries(item.stats))stats[stat]+=value;
+ }
  stats.health=Math.max(1,Math.round(stats.health*durations[duration].multiplier));
- return {name:name.trim(),picks:{...picks,...Object.fromEntries(Object.entries(materials).map(([key,value])=>[key,value.id]))},traits,stats,duration};
+ return {name:name.trim(),picks:{...fantasyDefaults,...picks,...Object.fromEntries(Object.entries(materials).map(([key,value])=>[key,value.id]))},traits,stats,duration,mode};
 }
 export function seededRandom(seed){let s=seed>>>0;return ()=>{s+=0x6D2B79F5;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296;};}
 export function simulate(a,b,random=Math.random){
