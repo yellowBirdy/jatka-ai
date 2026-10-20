@@ -1,0 +1,16 @@
+const {chromium}=require('playwright');
+const assert=require('node:assert/strict');
+(async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});try{
+const page=await browser.newPage({viewport:{width:1440,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:8000');
+await page.screenshot({path:'/tmp/jatka-creator.png',fullPage:true});
+await page.locator('#fighter-name').fill(' ');await page.getByRole('button',{name:'Zatwierdź wojownika'}).click();assert.ok(await page.locator('#error').innerText());await page.locator('#fighter-name').fill('<Ragnar>');
+await page.locator('input[name="weapon"][value="axe"]').check();assert.match(await page.locator('#portrait svg').getAttribute('aria-label'),/Topór/);
+await page.getByRole('button',{name:'Zatwierdź wojownika'}).click();await page.getByRole('button',{name:'Zatwierdź wojownika'}).click();await page.getByRole('button',{name:'Rozpocznij walkę'}).click();
+await page.waitForFunction(()=>document.querySelector('#hp0').textContent.split(' / ')[0]!==document.querySelector('#hp0').textContent.split(' / ')[1].split(' ')[0]||document.querySelector('#hp1').textContent.split(' / ')[0]!==document.querySelector('#hp1').textContent.split(' / ')[1].split(' ')[0]);
+await page.locator('#result').waitFor({state:'visible',timeout:115000});assert.ok((await page.locator('#result').innerText()).includes('Zwycięża'));await page.waitForTimeout(400);await page.screenshot({path:'/tmp/jatka-desktop.png',fullPage:true});
+for(const bar of await page.locator('.health').all()){const hp=Number(await bar.getAttribute('aria-valuenow'));assert.ok(hp>=0);if(hp===0)assert.equal(await bar.locator('i').evaluate(e=>e.getBoundingClientRect().width),0);}
+await page.getByRole('button',{name:'Rewanż'}).click();await page.getByRole('button',{name:'Pomiń animację'}).click();await page.getByRole('button',{name:'Zmień cechy'}).click();assert.equal(await page.locator('.category').count(),8);assert.equal(await page.locator('#fighter-name').inputValue(),'<Ragnar>');
+await page.setViewportSize({width:390,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:'/tmp/jatka-mobile.png',fullPage:true});
+await page.getByRole('button',{name:'Zatwierdź wojownika'}).click();await page.getByRole('button',{name:'Zatwierdź wojownika'}).click();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.getByRole('button',{name:'Rozpocznij walkę'}).click();await page.getByRole('button',{name:'Pomiń animację'}).click();await page.getByRole('button',{name:'Nowi wojownicy'}).click();assert.equal(await page.locator('#fighter-name').inputValue(),'Ragnar');
+await page.getByRole('button',{name:'Jak grać'}).click();assert.ok(await page.locator('dialog').isVisible());await page.getByRole('button',{name:'Rozumiem'}).click();assert.deepEqual(errors,[]);console.log('PASS: walidacja, zmiana wyglądu, pełna animowana walka, HP, rewanż, pominięcie, edycja, mobile, reset, instrukcja, brak błędów JS');
+}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

@@ -1,0 +1,13 @@
+{
+  "name": "jatka-arena",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/engine.test.js",
+    "start": "python3 -m http.server 8000 --bind 0.0.0.0",
+    "test:browser": "node tests/browser.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}
