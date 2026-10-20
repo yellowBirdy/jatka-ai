@@ -1,3 +1,5 @@
+import {weaponMaterials,resolveMaterials} from './materials.js?v=weapon-materials-5';
+export {weaponMaterials} from './materials.js?v=weapon-materials-5';
 import {abilityRules} from './abilities.js?v=unique-abilities-4';
 import {createCombatState,resolveTurn} from './combat.js?v=unique-abilities-4';
 export {abilityRules} from './abilities.js?v=unique-abilities-4';
@@ -39,8 +41,13 @@ export function createFighter(name,picks,duration='medium'){
  if(typeof name!=='string'||!name.trim()||name.trim().length>24)throw Error('Imię musi mieć od 1 do 24 znaków.');
  const stats={health:100,attack:17,defense:5,speed:15,accuracy:75,stamina:90,pierce:0};const traits={};
  for(const c of categories){const o=c.options.find(o=>o.id===picks[c.id]);if(!o)throw Error(`Wybierz: ${c.name}`);traits[c.id]=o;for(const [k,v]of Object.entries(o.stats))stats[k]+=v;}
+ const materials=resolveMaterials(picks);
+ for(const [key,material] of Object.entries(materials)){
+  traits[key]=material;
+  for(const [stat,value]of Object.entries(material.stats))stats[stat]+=value;
+ }
  stats.health=Math.max(1,Math.round(stats.health*durations[duration].multiplier));
- return {name:name.trim(),picks:{...picks},traits,stats,duration};
+ return {name:name.trim(),picks:{...picks,...Object.fromEntries(Object.entries(materials).map(([key,value])=>[key,value.id]))},traits,stats,duration};
 }
 export function seededRandom(seed){let s=seed>>>0;return ()=>{s+=0x6D2B79F5;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296;};}
 export function simulate(a,b,random=Math.random){

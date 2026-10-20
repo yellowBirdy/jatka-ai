@@ -1,6 +1,14 @@
 // Local SVG equipment: all materials share the warrior's unique pattern namespace.
-export function weaponSvg(id, prefix, secondary = false) {
- const fill = material => `url(#${prefix}-${material})`;
+export function weaponSvg(id, prefix, secondary = false, materials = {}) {
+ const fill = material => {
+  let texture=material;
+  if(!secondary){
+   if(material==='steel'||material==='darksteel')texture=materials.headTexture||material;
+   if(material==='wood')texture=['staff','club','baton','tonfa'].includes(id)?materials.headTexture||material:materials.gripTexture||material;
+   if(material==='wrap')texture=materials.gripTexture||material;
+  }
+  return `url(#${prefix}-${texture})`;
+ };
  const part = (d, material='steel', extra='') => `<path d="${d}" fill="${fill(material)}" stroke="#25332d" stroke-width="1.6" stroke-linejoin="round" ${extra}/>`;
  const rod = (top=-95,bottom=65) => part(`M-4 ${top}H4V${bottom}H-4Z`,'wood');
  const grip = part('M-5 -12H5V27H-5Z','wrap') + part('M-7 25H7V32H-7Z','bronze');
@@ -46,8 +54,8 @@ export function weaponSvg(id, prefix, secondary = false) {
  return `<g data-weapon="${id}" transform="${secondary?'translate(62 173) rotate(-18) scale(.52)':'translate(219 160)'}">${shape}</g>`;
 }
 
-export function weaponIcon(id){
+export function weaponIcon(id,materials={}){
  const prefix=`equipment-${id}`;
- const defs=['steel','darksteel','bronze','wood','wrap'].map(material=>`<pattern id="${prefix}-${material}" patternUnits="userSpaceOnUse" width="80" height="80"><image href="assets/textures/${material}.svg" width="80" height="80"/></pattern>`).join('');
- return `<svg class="weapon-icon" viewBox="145 -5 150 310" aria-hidden="true" focusable="false"><defs>${defs}</defs>${weaponSvg(id,prefix)}</svg>`;
+ const defs=['steel','darksteel','bronze','wood','wrap','ash','birch','walnut','tempered'].map(material=>`<pattern id="${prefix}-${material}" patternUnits="userSpaceOnUse" width="80" height="80"><image href="assets/textures/${material}.svg" width="80" height="80"/></pattern>`).join('');
+ return `<svg class="weapon-icon" viewBox="145 -5 150 310" aria-hidden="true" focusable="false"><defs>${defs}</defs>${weaponSvg(id,prefix,false,materials)}</svg>`;
 }

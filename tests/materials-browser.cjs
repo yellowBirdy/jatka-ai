@@ -1,0 +1,17 @@
+const {chromium}=require('playwright');
+const assert=require('node:assert/strict');
+(async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||(process.env.CI?chromium.executablePath():'/usr/bin/chromium'),headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});try{
+const page=await browser.newPage({viewport:{width:1440,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:8000');
+assert.equal(await page.locator('.weapon-materials .material-group').count(),2);assert.equal(await page.locator('.weapon-materials input').count(),10);
+const stats=()=>page.locator('#stats b').evaluateAll(nodes=>nodes.map(n=>Number(n.textContent)));const before=await stats();
+await page.locator('input[name="headMaterial"][value="tempered"]').check();assert.deepEqual(await stats(),before.map((n,i)=>n+[3,0,-2,0,0,2,-6][i]));
+await page.locator('input[name="headMaterial"][value="bronze"]').check();await page.locator('input[name="gripMaterial"][value="birch"]').check();
+const head=await page.locator('#portrait [data-weapon]').first().innerHTML();assert.match(head,/-bronze/);assert.match(head,/-birch/);
+await page.locator('input[name="weapon"]').nth(1).check();assert.ok(await page.locator('input[name="headMaterial"][value="bronze"]').isChecked());
+await page.getByRole('button',{name:'Losuj nowe opcje'}).click();assert.ok(await page.locator('input[name="gripMaterial"][value="birch"]').isChecked());
+await page.getByRole('button',{name:'Zatwierdź wojownika'}).click();assert.ok(await page.locator('input[name="headMaterial"][value="steel"]').isChecked());
+await page.locator('input[name="headMaterial"][value="tempered"]').check();await page.locator('input[name="gripMaterial"][value="oak"]').check();await page.getByRole('button',{name:'Zatwierdź wojownika'}).click();
+assert.match(await page.locator('#combatant0 .loadout').innerText(),/Brąz.*Brzoza/);assert.match(await page.locator('#combatant1 .loadout').innerText(),/Stal hartowana.*Dąb/);
+await page.getByRole('button',{name:'Rozpocznij walkę'}).click();await page.getByRole('button',{name:'Pomiń animację'}).click();await page.getByRole('button',{name:'Rewanż'}).click();await page.getByRole('button',{name:'Pomiń animację'}).click();await page.getByRole('button',{name:'Zmień cechy'}).click();assert.ok(await page.locator('input[name="headMaterial"][value="bronze"]').isChecked());assert.ok(await page.locator('input[name="gripMaterial"][value="birch"]').isChecked());
+await page.setViewportSize({width:390,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.locator('.weapon-materials').screenshot({path:'/tmp/jatka-materials-mobile.png'});await page.getByRole('button',{name:'Zatwierdź wojownika'}).click();await page.getByRole('button',{name:'Zatwierdź wojownika'}).click();await page.getByRole('button',{name:'Rozpocznij walkę'}).click();await page.getByRole('button',{name:'Pomiń animację'}).click();await page.getByRole('button',{name:'Nowi wojownicy'}).click();assert.ok(await page.locator('input[name="headMaterial"][value="steel"]').isChecked());assert.ok(await page.locator('input[name="gripMaterial"][value="ash"]').isChecked());assert.deepEqual(errors,[]);console.log('PASS: materiały, zmiana statystyk i wyglądu, osobne wybory, losowanie, rewanż, edycja, mobile');
+}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

@@ -47,10 +47,18 @@ Balans jest wstępny: testy sprawdzają równe szanse identycznych postaci i pop
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie trzy zestawy testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
+Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie cztery zestawy testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
 
 ## Balans umiejętności
 
 Każda umiejętność aktywuje się co czwarty własny atak. Warunki trafienia, czasy trwania, limity trwałych osłabień i zakaz leczenia po śmiertelnej kontrze mają osobne testy. Test porównuje też przebiegi walki wszystkich 20 umiejętności, aby zmiana samego opisu nie mogła udawać unikalnej mechaniki.
 
 `npm run balance` wykonuje 547 200 deterministycznych walk: 20 umiejętności, wszystkie pary, 40 losowych zestawów pozostałych cech, 12 ziaren walki, obie strony i trzy długości. Porównujemy identyczne zestawy różniące się umiejętnością, aby oddzielić jej wpływ od przewagi ekwipunku. Test regresji używa osobnej próby 24 zestawów i 8 ziaren. Raport w `docs/balans-umiejetnosci.md` nie gwarantuje równowagi każdego możliwego zestawu.
+
+## Materiały głównej broni
+
+Pod bronią są dwa podpunkty: **część bojowa (ostrze / głowica)** i **rękojeść / drzewce**. Każdy ma pięć stale dostępnych materiałów. Opisy pokazują dodatnie i ujemne modyfikatory; oba wybory sumują się ze statystykami wojownika i zmieniają tekstury głównej broni. Dotyczy to także broni drewnianej, którą można wykonać z innego materiału. Broń dodatkowa zachowuje swój materiał.
+
+Stal i jesion to domyślne materiały bez premii. Stal hartowana zwiększa siłę i przebicie kosztem szybkości i kondycji; lekka brzoza zwiększa szybkość kosztem siły. Kreator pokazuje teraz także celność, przebicie i kondycję. Losowanie cech oraz zmiana rodzaju broni zachowują materiały. Każdy gracz wybiera je osobno, edycja i rewanż je zachowują, a nowi wojownicy zaczynają od stali i jesionu.
+
+Testy obejmują 25 kombinacji modyfikatorów, ich rzeczywisty wpływ na obrażenia, 500 kombinacji rodzaju broni i materiałów oraz pełne przejście przez wybór, wygląd, statystyki, rewanż, edycję i reset w przeglądarce.
