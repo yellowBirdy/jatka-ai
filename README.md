@@ -47,7 +47,7 @@ Balans jest wstępny: testy sprawdzają równe szanse identycznych postaci i pop
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie siedem zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
+Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie osiem zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
 
 ## Balans umiejętności
 
@@ -115,3 +115,13 @@ Przycisk **Samouczek ▷** w nagłówku uruchamia przewodnik na bieżącym ekran
 Przewodnik można uruchomić także na arenie lub po zakończeniu walki. „Zamknij ×” oraz Escape wyłączają wskazówki bez resetowania postaci, ofert, ustawień i trwającej walki. Samouczek działa z klawiaturą i na telefonie; nie uruchamia się automatycznie.
 
 Test przeglądarkowy przechodzi przez pełny samouczek pojedynku, dodatkowe sloty fantastyczne i pierwszą turę drużynową. Sprawdza też zamknięcie, ponowne uruchomienie, zachowanie wyborów i szerokość mobilną.
+
+## Modyfikacja: Wierzchowce
+
+W sekcji **Modyfikacje gry** zaznacz **Wierzchowce**. Jest to opcja wspólna dla wszystkich wojowników, niezależna od formatu 1 na 1 / 2 na 2 oraz trybu klasycznego / fantastycznego. Każdy wojownik wybiera własną bestię spośród pięciu losowych propozycji z puli dwudziestu. Pod nią jest **Zbroja bestii**: bez zbroi, skórzana, kolczuga, łuskowa lub płytowa.
+
+Bestia i jeździec walczą jako jedna postać ze wspólnym HP. Opisy pokazują dokładne premie i koszty; bonusy bestii i zbroi sumują się z pozostałymi statystykami przed skalowaniem HP przez długość gry. Ciężka zbroja daje więcej ochrony kosztem szybkości i kondycji. Bestia nie wykonuje osobnego ataku ani nie ma osobnego paska zdrowia. W 2 na 2 wybierasz cel dla całej postaci.
+
+Podgląd i arena pokazują jeźdźca na bestii, z różnymi sylwetkami zwierząt i widocznym opancerzeniem. Wyłączenie modyfikacji usuwa premie i przywraca wygląd pieszego wojownika, zachowując wcześniejsze wybory do ponownego włączenia. Rewanż i edycja zachowują wybory oraz oferty. Losowanie odświeża ofertę bestii bieżącej postaci i zachowuje jej zbroję. Nowi wojownicy dostają nowe oferty i zaczynają bez zbroi bestii. Podczas walki modyfikacja jest zablokowana. Samouczek obejmuje oba nowe wybory.
+
+Testy sprawdzają 300 zestawów bestia × zbroja × długość, wszystkie kombinacje w walkach klasycznych i fantastycznych, walkę drużynową, zachowanie wyborów, wyłączenie premii oraz przejście przez interfejs z widokiem mobilnym i samouczkiem.

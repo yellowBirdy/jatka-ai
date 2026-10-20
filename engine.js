@@ -1,3 +1,4 @@
+import {resolveMount} from './mounts.js?v=mounts-12';
 import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=fantasy-pools-9';
 import {weaponMaterials,resolveMaterials} from './materials.js?v=weapon-families-6';
 export {weaponMaterials} from './materials.js?v=weapon-families-6';
@@ -37,7 +38,7 @@ export function drawOptions(random=Math.random){
   return [category.id,pool.slice(0,5)];
  }));
 }
-export function createFighter(name,picks,duration='medium',mode='classic'){
+export function createFighter(name,picks,duration='medium',mode='classic',mounted=false){
  if(!Object.hasOwn(gameModes,mode))throw Error('Wybierz poprawny tryb gry.');
  if(!Object.hasOwn(durations,duration))throw Error('Wybierz poprawną długość gry.');
  if(typeof name!=='string'||!name.trim()||name.trim().length>24)throw Error('Imię musi mieć od 1 do 24 znaków.');
@@ -51,8 +52,9 @@ export function createFighter(name,picks,duration='medium',mode='classic'){
  if(mode==='fantasy')for(const [key,item]of Object.entries(resolveFantasy(picks))){
   traits[key]=item;for(const [stat,value]of Object.entries(item.stats))stats[stat]+=value;
  }
+ if(mounted)for(const [key,item]of Object.entries(resolveMount(picks))){traits[key]=item;for(const [stat,value]of Object.entries(item.stats))stats[stat]+=value;}
  stats.health=Math.max(1,Math.round(stats.health*durations[duration].multiplier));
- return {name:name.trim(),picks:{...fantasyDefaults,...picks,...Object.fromEntries(Object.entries(materials).map(([key,value])=>[key,value.id]))},traits,stats,duration,mode};
+ return {name:name.trim(),picks:{...fantasyDefaults,...picks,...(mounted?Object.fromEntries(['beast','beastArmor'].map(key=>[key,traits[key].id])):{}),...Object.fromEntries(Object.entries(materials).map(([key,value])=>[key,value.id]))},traits,stats,duration,mode,mounted};
 }
 export function seededRandom(seed){let s=seed>>>0;return ()=>{s+=0x6D2B79F5;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296;};}
 export function simulate(a,b,random=Math.random){
