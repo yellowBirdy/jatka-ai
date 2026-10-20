@@ -12,6 +12,7 @@ export function setupTutorial(context){
   magic:['Wybierz moc magiczną','Wybierz inną moc i sprawdź procent na karcie. Magia i umiejętność specjalna mają niezależne szanse aktywacji.','fieldset.fantasy-category:has(input[name="magicPower"])'],
   beast:['Wybierz bestię','Wybierz inną bestię spośród pięciu propozycji z puli dwudziestu. Jej premie i koszty zmieniają statystyki całej postaci.','input[name="beast"]:checked + span'],
   beastArmor:['Wybierz zbroję bestii','Wybierz inną zbroję bestii. Cięższy pancerz chroni mocniej, ale obniża szybkość i kondycję. Bestia i jeździec mają wspólne HP.','.beast-armor-group'],
+  beastSkill:['Sprawdź umiejętność bestii','Każda bestia ma własny efekt z 25% szans aktywacji po ataku. Zdolność jest niezależna od umiejętności jeźdźca i magii. Zostaw ją włączoną lub wybierz Bez umiejętności, a potem kliknij Dalej.','.beast-ability-group',true],
   confirm:['Zatwierdź wojownika','Pozostałe cechy mają już wybrane propozycje. Możesz je zmienić, a potem zatwierdzić gotową postać.','#confirm'],
   remaining:['Przygotuj kolejnych wojowników','Wybierz cechy kolejnej postaci i zatwierdź ją. W 1 na 1 potrzebujesz dwóch postaci, a w 2 na 2 — po dwóch dla drużyn A i B.','#confirm'],
   arena:['Rozpocznij walkę','Sprawdź ekwipunek i zdrowie postaci, a następnie kliknij Rozpocznij walkę. W 1 na 1 walka przebiega automatycznie. W 2 na 2 wybierasz każdy atak.','#fight'],
@@ -22,7 +23,7 @@ export function setupTutorial(context){
   turns:['Rozgrywaj kolejne tury','Kontynuuj wybór atakującego i celu. Pokonaj obu rywali, aby wygrać. Po 320 turach decyduje suma pozostałych procentów HP drużyny; równość daje remis.','#team-controls'],
   done:['Gotowe — znasz już zasady!','Wynik i przebieg walki znajdziesz na arenie. Rewanż zachowuje postacie, Zmień cechy wraca do kreatora, a Nowi wojownicy zaczyna od nowa.','#result',true]
  };
- const creatorSteps=c=>['settings','name','weapon','material','ability',...(c.mode==='fantasy'?['item','magic']:[]),...(c.mounted?['beast','beastArmor']:[]),'confirm'];
+ const creatorSteps=c=>['settings','name','weapon','material','ability',...(c.mode==='fantasy'?['item','magic']:[]),...(c.mounted?['beast','beastArmor','beastSkill']:[]),'confirm'];
  function close(){active=false;$('tutorial').hidden=true;highlight?.classList.remove('tutorial-highlight');highlight=null;document.body.classList.remove('tutorial-active');$('tutorial-start').setAttribute('aria-expanded','false');$('tutorial-start').focus({preventScroll:true});}
  function next(){if(step==='done'){close();return;}const steps=creatorSteps(context());step=steps[steps.indexOf(step)+1]||'confirm';refresh();}
  function refresh(event){

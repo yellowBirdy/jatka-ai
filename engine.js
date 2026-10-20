@@ -1,9 +1,9 @@
-import {resolveMount} from './mounts.js?v=mounts-12';
+import {resolveMount} from './mounts.js?v=beasts-13';
 import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=fantasy-pools-9';
 import {weaponMaterials,resolveMaterials} from './materials.js?v=weapon-families-6';
 export {weaponMaterials} from './materials.js?v=weapon-families-6';
 import {abilityRules} from './abilities.js?v=fantasy-pools-9';
-import {createCombatState,resolveTurn} from './combat.js?v=teams-10';
+import {createCombatState,resolveTurn} from './combat.js?v=beasts-13';
 export {abilityRules} from './abilities.js?v=fantasy-pools-9';
 import {additions} from './catalog.js?v=unique-abilities-4';
 const option=(id,name,icon,desc,stats={})=>({id,name,icon,desc,stats});
@@ -54,7 +54,7 @@ export function createFighter(name,picks,duration='medium',mode='classic',mounte
  }
  if(mounted)for(const [key,item]of Object.entries(resolveMount(picks))){traits[key]=item;for(const [stat,value]of Object.entries(item.stats))stats[stat]+=value;}
  stats.health=Math.max(1,Math.round(stats.health*durations[duration].multiplier));
- return {name:name.trim(),picks:{...fantasyDefaults,...picks,...(mounted?Object.fromEntries(['beast','beastArmor'].map(key=>[key,traits[key].id])):{}),...Object.fromEntries(Object.entries(materials).map(([key,value])=>[key,value.id]))},traits,stats,duration,mode,mounted};
+ return {name:name.trim(),picks:{...fantasyDefaults,...picks,...(mounted?Object.fromEntries(['beast','beastArmor','beastAbility'].map(key=>[key,traits[key].id])):{}),...Object.fromEntries(Object.entries(materials).map(([key,value])=>[key,value.id]))},traits,stats,duration,mode,mounted};
 }
 export function seededRandom(seed){let s=seed>>>0;return ()=>{s+=0x6D2B79F5;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296;};}
 export function simulate(a,b,random=Math.random){

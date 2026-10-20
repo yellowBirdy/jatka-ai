@@ -47,7 +47,7 @@ Balans jest wstępny: testy sprawdzają równe szanse identycznych postaci i pop
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie osiem zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
+Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie dziewięć zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
 
 ## Balans umiejętności
 
@@ -125,3 +125,13 @@ Bestia i jeździec walczą jako jedna postać ze wspólnym HP. Opisy pokazują d
 Podgląd i arena pokazują jeźdźca na bestii, z różnymi sylwetkami zwierząt i widocznym opancerzeniem. Wyłączenie modyfikacji usuwa premie i przywraca wygląd pieszego wojownika, zachowując wcześniejsze wybory do ponownego włączenia. Rewanż i edycja zachowują wybory oraz oferty. Losowanie odświeża ofertę bestii bieżącej postaci i zachowuje jej zbroję. Nowi wojownicy dostają nowe oferty i zaczynają bez zbroi bestii. Podczas walki modyfikacja jest zablokowana. Samouczek obejmuje oba nowe wybory.
 
 Testy sprawdzają 300 zestawów bestia × zbroja × długość, wszystkie kombinacje w walkach klasycznych i fantastycznych, walkę drużynową, zachowanie wyborów, wyłączenie premii oraz przejście przez interfejs z widokiem mobilnym i samouczkiem.
+
+## Zbroje i wyjątkowe umiejętności bestii
+
+Każda z 20 bestii ma cztery własne zbroje i opcję „Bez zbroi”. To 80 nazwanych, dopasowanych pancerzy z indywidualnymi premiami do HP oraz zdobieniami na podglądzie. Podpunkt **1. Zbroja bestii** aktualizuje się po zmianie zwierzęcia. Zachowuje poziom pancerza, np. płytowy, ale wybiera model nowej bestii. Silnik odrzuca zbroję przypisaną innemu zwierzęciu.
+
+Podpunkt **2. Umiejętność bestii** pozwala włączyć właściwą jej zdolność lub wybrać „Bez umiejętności”. Każda ma niezależne 25% szans aktywacji po własnym ataku, jeśli jeździec i cel nadal żyją. Nie zużywa dodatkowej tury. Nie można przypisać bestii zdolności innego zwierzęcia. Zmiana bestii dopasowuje aktywną zdolność; świadome wyłączenie pozostaje wyłączone. Rewanż, edycja i wyłączenie modyfikacji zachowują wybory.
+
+Zdolności mają różne skutki: koń wspiera tempo, wilk dobija osłabiony cel, dzik uszkadza pancerz, niedźwiedź leczy się warunkowo i osłania, nosorożec przebija, tygrys wykonuje dwa ciosy, lew odbiera kondycję i blokuje zdolność jeźdźca, łoś odsłania gardę, mamut tworzy barierę, waran zatruwa, struś przygotowuje unik, wielbłąd regeneruje kondycję i usuwa piasek, żubr osłania i kontruje, bawół naciera i męczy, hiena przejmuje kondycję i leczy, jeleń usuwa spowolnienie i zwiększa celność, pantera oznacza i uderza, niedźwiedź polarny osłabia i spowalnia, jak usuwa zimno i korzenie oraz osłania, a krokodyl zwiększa koszty ataków rywala i męczy go.
+
+Dodatkowe ciosy ignorują pancerz, lecz korzystają z istniejących osłon i kontr. Jad warana trwa dwa ataki celu, zadaje po 3 HP przez osłony i może zakończyć walkę przed atakiem zatrutej postaci. Oczyszczenie usuwa także jad. W 2 na 2 wszystkie efekty są przypisane do faktycznie wybranego celu. Aktywacje są opisane jako „Bestia” w komentarzu i historii. Testy porównują rzeczywiste zmiany stanu oraz dodatkowe ciosy wszystkich 20 zdolności, ich niezależność od magii, śmiertelne kontry, dopasowanie zbroi i przebieg w przeglądarce.

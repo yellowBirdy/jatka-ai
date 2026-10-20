@@ -1,10 +1,11 @@
+import {applyBeastAbility} from './beast-abilities.js?v=beasts-13';
 import {rollChance} from './probability.js?v=chance-8';
 import {magicRules} from './fantasy.js?v=fantasy-pools-9';
 import {abilityRules as rules} from './abilities.js?v=chance-8';
 const clamp=(x,min,max)=>Math.max(min,Math.min(max,x));
 export function createCombatState(fighters){
  const state={hp:fighters.map(f=>f.stats.health),energy:fighters.map(f=>f.stats.stamina)};
- for(const key of ['turns','wrist','blind','exposed','armorDamage','slow','shield','tempo','focus','exposureStrength','burn','frozen','magicShield','silenced','rooted','thorns','barrier','marked','blink','battlecry','stunned','mist'])state[key]=fighters.map(()=>0);
+ for(const key of ['venom','turns','wrist','blind','exposed','armorDamage','slow','shield','tempo','focus','exposureStrength','burn','frozen','magicShield','silenced','rooted','thorns','barrier','marked','blink','battlecry','stunned','mist'])state[key]=fighters.map(()=>0);
  state.disarmed=fighters.map(()=>false);state.staggered=fighters.map(()=>false);return state;
 }
 export function resolveTurn(f,state,actor,random=Math.random,target=1-actor){
@@ -12,9 +13,9 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor){
  const {hp,energy}=state;state.turns[actor]++;
  let selfDamage=0;
  const burnDetails=[];
- if(state.burn[actor]>0){
-  state.burn[actor]--;selfDamage=Math.min(3,hp[actor]);hp[actor]-=selfDamage;burnDetails.push(`Podpalenie: ${f[actor].name} traci ${selfDamage} HP.`);
-  if(hp[actor]===0)return {actor,target,damage:0,kind:'burn',ability:null,magic:null,magicDamage:0,selfDamage,healed:0,hp:[...hp],energy:[...energy],text:`${f[actor].name} nie może kontynuować walki po podpaleniu.`,exhausted:false,weakened:false,strikes:[0],details:burnDetails,counterDamage:0};
+ for(const [status,label] of [['burn','Podpalenie'],['venom','Jad']])if(state[status][actor]>0){
+  state[status][actor]--;const amount=Math.min(3,hp[actor]);selfDamage+=amount;hp[actor]-=amount;burnDetails.push(`${label}: ${f[actor].name} traci ${amount} HP.`);
+  if(hp[actor]===0)return {actor,target,damage:0,kind:status,ability:null,beastAbility:null,magic:null,magicDamage:0,selfDamage,healed:0,hp:[...hp],energy:[...energy],text:`${f[actor].name} nie może kontynuować walki.`,exhausted:false,weakened:false,strikes:[0],details:burnDetails,counterDamage:0};
  }
  const selectedAbility=f[actor].picks.ability;
  if(!rules[selectedAbility])throw Error(`Nieznana umiejętność: ${selectedAbility}`);
@@ -90,6 +91,7 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor){
  if(ability==='rally'&&hp[actor]>0&&hp[actor]<s.health*rule.threshold)heal(rule.heal);
  if(ability==='reset-stance'){state.shield[actor]=rule.shield;details.push(`Osłona następnego trafienia: ${rule.shield} HP.`);}
  if(ability==='pace'){state.tempo[actor]=rule.duration;details.push('Dwa kolejne ataki w oszczędnym tempie.');}
+ const beastAbility=applyBeastAbility({f,state,actor,target,random,strike,heal,details});
  let magic=null,magicDamage=0;
  if(f[actor].mode==='fantasy'&&!silenced&&hp[actor]>0&&hp[target]>0&&rollChance(magicRules[f[actor].picks.magicPower].chance,random)){
   magic=f[actor].picks.magicPower;
@@ -110,7 +112,7 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor){
    case 'earth':state.magicShield[actor]=8;details.push('Kamienna aura: osłona jednego trafienia do 8 HP.');break;
    case 'life-drain':{const stolen=magicHit(6);heal(stolen);details.push(`Kradzież życia: ${stolen} HP.`);break;}
    case 'silence':magicHit(3);state.silenced[target]=2;details.push('Cisza blokuje dwa kolejne losowania magii rywala.');break;
-   case 'cleanse':for(const key of ['burn','frozen','blind','silenced','rooted','disarmed','staggered','stunned'])state[key][actor]=typeof state[key][actor]==='boolean'?false:0;heal(4);details.push('Usunięto negatywne efekty; oczyszczenie leczy do 4 HP.');break;
+   case 'cleanse':for(const key of ['venom','burn','frozen','blind','silenced','rooted','disarmed','staggered','stunned'])state[key][actor]=typeof state[key][actor]==='boolean'?false:0;heal(4);details.push('Usunięto negatywne efekty; oczyszczenie leczy do 4 HP.');break;
    case 'mana':{const amount=Math.min(32,s.stamina-energy[actor]);energy[actor]+=amount;details.push(`Przypływ energii: +${amount} kondycji.`);break;}
    case 'meteor':magicHit(16);{const recoil=Math.min(4,hp[actor]-1);hp[actor]-=recoil;selfDamage+=recoil;details.push(`Meteor: odrzut odbiera ${recoil} HP rzucającemu.`);}break;
    case 'roots':state.rooted[target]=2;state.magicShield[actor]=Math.max(state.magicShield[actor],4);details.push('Korzenie zwiększają koszt dwóch ataków; osłona do 4 HP.');break;
@@ -129,5 +131,5 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor){
  const damage=strikes.reduce((sum,n)=>sum+n,0);
  const kind=damage>0?(damage<8?'block':'hit'):hit?'block':'dodge';
  const text=damage>0?`${f[actor].name}: ${kind==='block'?'cios częściowo zablokowany':'trafienie'} −${damage} HP.`:hit?`${f[target].name} blokuje atak ${f[actor].name}.`:`${f[target].name} unika ataku ${f[actor].name}.`;
- return {actor,target,damage,kind,ability,healed,hp:[...hp],energy:[...energy],text,exhausted,weakened,strikes,details,counterDamage,magic,magicDamage,selfDamage};
+ return {actor,target,damage,kind,ability,beastAbility,healed,hp:[...hp],energy:[...energy],text,exhausted,weakened,strikes,details,counterDamage,magic,magicDamage,selfDamage};
 }
