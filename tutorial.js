@@ -19,7 +19,7 @@ export function setupTutorial(context){
   watching:['Obserwuj walkę','Paski pokazują pozostałe HP, a komentarz opisuje faktyczne zdarzenia. Możesz obejrzeć całą walkę lub pominąć animację.','#commentary'],
   actor:['Wybierz atakującego','Wskaż wojownika swojej drużyny z listy lub przyciskiem przy jego postaci. Żywi sojusznicy wykonują po jednym ruchu, zanim ta sama postać zaatakuje ponownie.','#team-actor'],
   target:['Wybierz cel ataku','Wskaż żywego przeciwnika z listy lub przyciskiem przy jego postaci. Nie możesz atakować sojuszników ani pokonanych.','#team-target'],
-  attack:['Atakuj wybrany cel','Sprawdź strzałkę z imionami i kliknij Atakuj. Po rozstrzygnięciu ruchu kolej przejdzie na drugą drużynę.','#team-attack'],
+  attack:['Atakuj wybrany cel','Sprawdź strzałkę z imionami, wybierz taktykę i kliknij Atakuj. Odpoczynek zamiast ciosu odzyskuje kondycję. Po rozstrzygnięciu ruchu kolej przejdzie na drugą drużynę.','#team-attack'],
   turns:['Rozgrywaj kolejne tury','Kontynuuj wybór atakującego i celu. Pokonaj obu rywali, aby wygrać. Po 320 turach decyduje suma pozostałych procentów HP drużyny; równość daje remis.','#team-controls'],
   done:['Gotowe — znasz już zasady!','Wynik i przebieg walki znajdziesz na arenie. Rewanż zachowuje postacie, Zmień cechy wraca do kreatora, a Nowi wojownicy zaczyna od nowa.','#result',true]
  };

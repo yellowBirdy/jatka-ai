@@ -1,21 +1,28 @@
-import {applyBeastAbility} from './beast-abilities.js?v=beast-choice-15';
+import {resolveTactic} from './tactics.js?v=tactics-17';
+import {applyBeastAbility} from './beast-abilities.js?v=tactics-17';
 import {rollChance} from './probability.js?v=chance-8';
 import {magicRules} from './fantasy.js?v=fantasy-pools-9';
 import {abilityRules as rules} from './abilities.js?v=chance-8';
 const clamp=(x,min,max)=>Math.max(min,Math.min(max,x));
 export function createCombatState(fighters){
  const state={hp:fighters.map(f=>f.stats.health),energy:fighters.map(f=>f.stats.stamina)};
- for(const key of ['venom','turns','wrist','blind','exposed','armorDamage','slow','shield','tempo','focus','exposureStrength','burn','frozen','magicShield','silenced','rooted','thorns','barrier','marked','blink','battlecry','stunned','mist'])state[key]=fighters.map(()=>0);
+ for(const key of ['tacticDefense','venom','turns','wrist','blind','exposed','armorDamage','slow','shield','tempo','focus','exposureStrength','burn','frozen','magicShield','silenced','rooted','thorns','barrier','marked','blink','battlecry','stunned','mist'])state[key]=fighters.map(()=>0);
  state.disarmed=fighters.map(()=>false);state.staggered=fighters.map(()=>false);return state;
 }
-export function resolveTurn(f,state,actor,random=Math.random,target=1-actor){
+export function resolveTurn(f,state,actor,random=Math.random,target=1-actor,tactic='balanced'){
+ const plan=resolveTactic(tactic);
  const s=f[actor].stats,d=f[target].stats;
- const {hp,energy}=state;state.turns[actor]++;
+ const {hp,energy}=state;state.turns[actor]++;state.tacticDefense[actor]=0;
  let selfDamage=0;
  const burnDetails=[];
  for(const [status,label] of [['burn','Podpalenie'],['venom','Jad']])if(state[status][actor]>0){
   state[status][actor]--;const amount=Math.min(3,hp[actor]);selfDamage+=amount;hp[actor]-=amount;burnDetails.push(`${label}: ${f[actor].name} traci ${amount} HP.`);
   if(hp[actor]===0)return {actor,target,damage:0,kind:status,ability:null,beastAbility:null,magic:null,magicDamage:0,selfDamage,healed:0,hp:[...hp],energy:[...energy],text:`${f[actor].name} nie może kontynuować walki.`,exhausted:false,weakened:false,strikes:[0],details:burnDetails,counterDamage:0};
+ }
+ state.tacticDefense[actor]=plan.defense;
+ if(tactic==='rest'){
+  const restored=Math.min(21,Math.max(0,s.stamina-energy[actor]));energy[actor]+=restored;
+  return {actor,target,tactic,restored,damage:0,kind:'rest',ability:null,beastAbility:null,magic:null,magicDamage:0,selfDamage,healed:0,hp:[...hp],energy:[...energy],text:`${f[actor].name} odpoczywa i odzyskuje ${restored} kondycji.`,exhausted:false,weakened:false,strikes:[0],details:burnDetails,counterDamage:0};
  }
  const selectedAbility=f[actor].picks.ability;
  if(!rules[selectedAbility])throw Error(`Nieznana umiejętność: ${selectedAbility}`);
@@ -24,7 +31,7 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor){
  const ability=!stunned&&rollChance(rules[selectedAbility].chance,random)?selectedAbility:null;
  const rule=ability?rules[ability]:null;
  if(ability&&!rule)throw Error(`Nieznana umiejętność: ${ability}`);
- const details=[...burnDetails],strikes=[];let healed=0,counterDamage=0;
+ const details=[...burnDetails,...(tactic==='balanced'?[]:[`Taktyka: ${plan.name}. ${plan.desc}`])],strikes=[];let healed=0,counterDamage=0;
  const heal=amount=>{const actual=Math.min(amount,s.health-hp[actor]);hp[actor]+=actual;healed+=actual;};
  if(ability==='breathing'){energy[actor]=Math.min(s.stamina,energy[actor]+rule.energy);details.push(`Odzyskano kondycję: +${rule.energy} (do limitu).`);}
  if(state.rooted[actor]>0){state.rooted[actor]--;energy[actor]=Math.max(0,energy[actor]-10);details.push('Korzenie: dodatkowy koszt 10 kondycji.');}
@@ -40,7 +47,7 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor){
  if(tempo)chance+=rules.pace.accuracy;
  if(state.mist[target]>0){state.mist[target]--;chance-=.2;details.push('Mgła utrudnia trafienie.');}
  if(ability==='overhead')chance+=rule.accuracy;
- chance=clamp(chance,.1,.99);
+ chance=clamp(chance+plan.accuracy,.1,.99);
  const weakened=state.disarmed[actor],staggered=state.staggered[actor];
  state.disarmed[actor]=false;state.staggered[actor]=false;
  const exposure=state.exposed[target]>0?state.exposureStrength[target]:0;
@@ -48,8 +55,8 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor){
  let bonus=ability==='rage'?rule.power:ability==='charge'?rule.power:ability==='shoulder'?rule.power:ability==='overhead'?rule.power:ability==='breathing'?rule.power:ability==='low-cut'?rule.power:ability==='lunge'?Math.min(rule.cap,rule.power+Math.max(0,speed-enemySpeed)*rule.speedRatio):0;
  if(tempo)bonus+=rules.pace.power;
  if(state.battlecry[actor]>0){state.battlecry[actor]--;bonus+=4;details.push('Runiczny okrzyk: +4 siły.');}
- let defense=ability==='overhead'?0:Math.max(0,d.defense-state.armorDamage[target]-s.pierce-exposure-(ability==='gap'?rule.break:0)-(ability==='precise'?rule.pierce:0));
- const strength=s.attack+(random()*8-4)+bonus-(weakened?rules.disarm.penalty:0);
+ let defense=ability==='overhead'?0:Math.max(0,d.defense+state.tacticDefense[target]-state.armorDamage[target]-s.pierce-exposure-(ability==='gap'?rule.break:0)-(ability==='precise'?rule.pierce:0));
+ const strength=s.attack+plan.attack+(random()*8-4)+bonus-(weakened?rules.disarm.penalty:0);
  const scale=(exhausted?.65:1)*(staggered?rules.pommel.ratio:1);
  const raw=(power,protection=defense)=>Math.max(2,Math.round((power-protection*.6)*scale));
  function strike(amount){let dealt=amount;
@@ -132,5 +139,5 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor){
  const damage=strikes.reduce((sum,n)=>sum+n,0);
  const kind=damage>0?(damage<8?'block':'hit'):hit?'block':'dodge';
  const text=damage>0?`${f[actor].name}: ${kind==='block'?'cios częściowo zablokowany':'trafienie'} −${damage} HP.`:hit?`${f[target].name} blokuje atak ${f[actor].name}.`:`${f[target].name} unika ataku ${f[actor].name}.`;
- return {actor,target,damage,kind,ability,beastAbility,healed,hp:[...hp],energy:[...energy],text,exhausted,weakened,strikes,details,counterDamage,magic,magicDamage,selfDamage};
+ return {actor,target,tactic,damage,kind,ability,beastAbility,healed,hp:[...hp],energy:[...energy],text,exhausted,weakened,strikes,details,counterDamage,magic,magicDamage,selfDamage};
 }

@@ -47,7 +47,7 @@ Balans jest wstępny: testy sprawdzają równe szanse identycznych postaci i pop
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie dziewięć zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
+Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie dziesięć zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
 
 ## Balans umiejętności
 
@@ -147,3 +147,11 @@ Edycja, rewanż, zmiana długości lub trybu oraz wyłączenie i ponowne włącz
 Testy obejmują komplet 100 wyborów, odrzucenie cudzych zdolności, zachowanie wyboru, aktywacje i zakończenie walk w obu trybach. Test przeglądarkowy sprawdza pięć kart, pojedynczy wybór, przełączanie, edycję i historię walki.
 
 U góry gry znajduje się tabela siedmiu statystyk z liczbowymi przelicznikami oraz rozwijanymi przykładami trafienia, obrażeń, zmęczenia, inicjatywy i wpływu wierzchowców. Na telefonie szeroką tabelę można przewijać poziomo.
+
+## Taktyki i animacje bestii
+
+W 1 na 1 każda postać wybiera przed walką stałą taktykę na karcie areny: zrównoważoną, agresywną lub ostrożną. W 2 na 2 wybierasz taktykę przed każdym ruchem; dostępny jest również odpoczynek. Agresywna daje +5 siły i −4 ochrony do kolejnego własnego ruchu tej postaci. Ostrożna daje −3 siły i +15 pkt proc. celności (z końcowym limitem 99%). Zrównoważona zachowuje zwykłe reguły. Odpoczynek zużywa turę i miejsce w kolejce drużyny, odzyskuje do 21 kondycji, pomija atak oraz losowania wszystkich zdolności i magii. Podpalenie i jad nadal działają przed odpoczynkiem. Po ruchu 2 na 2 wybór taktyki wraca do zrównoważonej. Karty pokazują aktualną kondycję.
+
+Aktywacja umiejętności bestii pokazuje nazwę zdolności na karcie jeźdźca oraz efekt odpowiadający jej działaniu: pazury na przeciwniku, tarczę, leczenie lub energię na własnej postaci, fale kontroli lub jad na wskazanym celu. Efekt odtwarza się przy każdym rzeczywistym wyzwoleniu, a poprzednie oznaczenia są usuwane przy kolejnym ruchu, rewanżu i edycji. Preferencja ograniczonego ruchu wyłącza animację, zachowując symbol i czytelną nazwę. Efekty nie wpływają na wynik walki.
+
+Testy sprawdzają zmiany siły i celności, utratę ochrony, odzyskiwanie kondycji, zużycie tury, śmierć przed odpoczynkiem, zachowanie taktyk na rewanż, animację rzeczywistej aktywacji, czyszczenie efektów, ograniczenie ruchu i widok mobilny.

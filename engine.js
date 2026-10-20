@@ -1,9 +1,9 @@
-import {resolveMount} from './mounts.js?v=beast-choice-15';
+import {resolveMount} from './mounts.js?v=tactics-17';
 import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=fantasy-pools-9';
 import {weaponMaterials,resolveMaterials} from './materials.js?v=weapon-families-6';
 export {weaponMaterials} from './materials.js?v=weapon-families-6';
 import {abilityRules} from './abilities.js?v=fantasy-pools-9';
-import {createCombatState,resolveTurn} from './combat.js?v=beast-choice-15';
+import {createCombatState,resolveTurn} from './combat.js?v=tactics-17';
 export {abilityRules} from './abilities.js?v=fantasy-pools-9';
 import {additions} from './catalog.js?v=unique-abilities-4';
 const option=(id,name,icon,desc,stats={})=>({id,name,icon,desc,stats});
@@ -60,7 +60,7 @@ export function seededRandom(seed){let s=seed>>>0;return ()=>{s+=0x6D2B79F5;let 
 export function simulate(a,b,random=Math.random){
  const fighters=[a,b],state=createCombatState(fighters),events=[];
  const first=random()<(0.5+(a.stats.speed-b.stats.speed)/100)?0:1;
- for(let turn=0;turn<160&&state.hp.every(h=>h>0);turn++)events.push(resolveTurn(fighters,state,(first+turn)%2,random));
+ for(let turn=0;turn<160&&state.hp.every(h=>h>0);turn++)events.push(resolveTurn(fighters,state,(first+turn)%2,random,1-(first+turn)%2,fighters[(first+turn)%2].picks.tactic??'balanced'));
  const reason=state.hp.every(h=>h>0)?'decision':'knockout';
  const scores=state.hp.map((h,i)=>h/fighters[i].stats.health);
  const winner=reason==='decision'?(scores[0]===scores[1]?first:scores[0]>scores[1]?0:1):(state.hp[0]>0?0:1);
