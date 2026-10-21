@@ -1,0 +1,6 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {emptyProgress,buyBox,rewardProfiles,applyUpgrades} from '../progression.js';
+test('box requires EXP, spends 100 and gives a bounded upgrade',()=>{const p=emptyProgress();assert.equal(buyBox(p,0,()=>0),null);p[0].xp=200;assert.equal(buyBox(p,0,()=>0),'attack');assert.equal(p[0].xp,100);assert.equal(p[0].attack,1);});
+test('one reward per profile per match, best result counts, bots and guests get none',()=>{const p=emptyProgress();const rewards=rewardProfiles(p,['0','0','','1'],[false,true,false,false]);assert.equal(p[0].xp,60);assert.equal(p[1].xp,30);assert.equal(rewards.length,2);});
+test('bonuses copy fighter stats and do not mutate original',()=>{const f={stats:{attack:17,defense:5,health:100}};const p=emptyProgress()[0];p.attack=2;p.defense=1;p.health=3;const upgraded=applyUpgrades(f,p);assert.deepEqual(upgraded.stats,{attack:19,defense:6,health:115});assert.equal(f.stats.attack,17);});
+test('caps prevent endless stacking and full collection does not spend EXP',()=>{const p=emptyProgress();Object.assign(p[0],{xp:100,attack:10,defense:10,health:10});assert.equal(buyBox(p,0),null);assert.equal(p[0].xp,100);});

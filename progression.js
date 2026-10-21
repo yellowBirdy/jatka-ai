@@ -1,0 +1,7 @@
+const key='jatka.progress.v1';
+export const emptyProgress=()=>Array.from({length:4},()=>({xp:0,attack:0,defense:0,health:0}));
+export function readProgress(storage){const out=emptyProgress();try{const data=JSON.parse(storage.getItem(key));for(let i=0;i<4;i++)for(const stat of ['xp','attack','defense','health']){const n=data?.[i]?.[stat];if(Number.isSafeInteger(n)&&n>=0)out[i][stat]=Math.min(n,stat==='xp'?1000000:10);}}catch{}return out;}
+export function saveProgress(storage,progress){try{storage.setItem(key,JSON.stringify(progress));return true;}catch{return false;}}
+export function buyBox(progress,id,random=Math.random){const p=progress[id];if(!p||p.xp<100)return null;const pool=['attack','defense','health'].filter(stat=>p[stat]<10);if(!pool.length)return null;const stat=pool[Math.min(pool.length-1,Math.floor(random()*pool.length))];p.xp-=100;p[stat]++;return stat;}
+export function rewardProfiles(progress,owners,wins){const rewards=new Map();owners.forEach((id,i)=>{if(id===''||!progress[id])return;const amount=wins[i]===null?40:wins[i]?60:30;rewards.set(id,Math.max(rewards.get(id)||0,amount));});for(const [id,amount] of rewards)progress[id].xp=Math.min(1000000,progress[id].xp+amount);return [...rewards];}
+export function applyUpgrades(fighter,p){if(!p)return fighter;return {...fighter,stats:{...fighter.stats,attack:fighter.stats.attack+p.attack,defense:fighter.stats.defense+p.defense,health:fighter.stats.health+5*p.health}};}

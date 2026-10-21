@@ -2,6 +2,12 @@
 
 Lokalna gra dla dwóch osób przy jednym ekranie. Każdy wybiera imię i po jednej cesze w ośmiu kategoriach (w każdym slocie oferta 5 wylosowanych cech z puli 20). Potem oglądacie automatyczny pojedynek i opis oparty na zdarzeniach walki. Dostępne są rewanż, edycja postaci i rozpoczęcie od nowa. Interfejs po polsku, responsywne postacie SVG, bez zewnętrznych obrazów, fontów i usług.
 
+## Profile, EXP i boxy
+
+U góry gry można nazwać cztery lokalne profile, a w kreatorze przypisać profil do każdej postaci. Po walce profil dostaje 60 EXP za wygraną, 30 za porażkę lub 40 za remis, raz na walkę również przy kilku postaciach tego samego profilu. Goście i boty nie dostają EXP.
+
+W kreatorze można otworzyć box za 100 EXP: losuje stałe +1 siły, +1 ochrony lub +5 HP dla postaci profilu (do 10 ulepszeń każdego rodzaju). Premie wchodzą do kolejnej walki. Nazwy i postęp zapisują się w localStorage tej przeglądarki, bez logowania i synchronizacji między urządzeniami. Zmiana nazwy profilu zachowuje jego postęp.
+
 ## Uruchomienie
 
 W katalogu repozytorium:
