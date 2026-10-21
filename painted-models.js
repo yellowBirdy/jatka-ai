@@ -9,5 +9,5 @@ export function paintMounted(svg,f){
  const texture={leather:'leather',mail:'chainmail',scale:'bronze',plate:'steel'}[type];
  const tack=texture?`<defs><pattern id="${id}" patternUnits="userSpaceOnUse" width="45" height="45"><image href="assets/textures/${texture}.svg" width="45" height="45"/></pattern></defs><path class="painted-beast-armor" d="M155 267Q223 244 296 270L302 309Q234 331 158 309Z" fill="url(#${id})" fill-opacity=".88" stroke="#b6c3ad" stroke-width="2"/><path d="M175 267l5 46M220 260v61M270 266l-4 49" stroke="#9d8058" stroke-width="5"/>`:'';
  const picture=animalSprite(f.traits.beast.id,65,170,370,232)+tack+'<path d="M203 255h62l10 20h-79Z" fill="#473326" stroke="#a1865d" stroke-width="2"/>';
- return svg.replace(/<g fill="(#[a-fA-F0-9]+)" stroke="#29312b"/,'<g opacity="0" fill="$1" stroke="#29312b"').replace('<svg x="105"',picture+'<svg x="105"');
+ return svg.replace(/<g fill="(#[a-fA-F0-9]+)" stroke="#29312b"/,'<g opacity="0" fill="$1" stroke="#29312b"').replace('<svg class="rider-viewport"',picture+'<svg class="rider-viewport"');
 }
