@@ -211,3 +211,6 @@ W turach kierujesz swoją stroną. Bot wykonuje swój ruch po krótkiej chwili; 
 Automatyczny PvE także jest dostępny: w pojedynku Twoja postać stosuje wybraną stałą taktykę, a bot dobiera własne akcje. W automatycznej walce drużynowej obie strony podejmują proste decyzje. To lokalny bot oparty na regułach; gra nie wymaga konta, klucza API ani połączenia z modelem AI.
 
 Rewanż zachowuje przeciwników i Twoje postacie. Edycja pozwala zmienić Twoją stronę, a „Nowi wojownicy” losuje także nowych botów. Timery bota są kasowane przy końcu walki i powrocie do kreatora. Testy obejmują legalne konfiguracje bez ukrytych premii, decyzje, wybór żywych postaci, granice tur, serie PvE w obu formatach i trybach, blokadę przejęcia ruchu bota, wyniki, rewanż, edycję i zachowanie gry lokalnej.
+
+
+Każda z 220 cech i zbroi oraz 100 umiejętności bestii ma własną ilustrację. Karty umiejętności są wyższe i pokazują efekt działania. Wojownik, trzymana broń i wierzchowiec korzystają z malowanych modeli z przezroczystym tłem; wybór wyposażenia i animacje walki pozostają aktywne.

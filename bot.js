@@ -1,10 +1,10 @@
-import {createFighter} from './engine.js?v=creatures-31';
+import {createFighter} from './engine.js?v=unique-art-33';
 import {normalizeMaterials,getWeaponMaterials} from './materials.js?v=weapon-families-6';
-import {getBeastArmors} from './mounts.js?v=creatures-31';
+import {getBeastArmors} from './mounts.js?v=unique-art-33';
 import {getBeastAbilities} from './beast-abilities.js?v=playback-18';
-import {hybridParts,hybridAnimals} from './hybrids.js?v=creatures-31';
-import {createDuelBattle,takeDuelTurn} from './turns.js?v=creatures-31';
-import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn} from './teams.js?v=creatures-31';
+import {hybridParts,hybridAnimals} from './hybrids.js?v=unique-art-33';
+import {createDuelBattle,takeDuelTurn} from './turns.js?v=unique-art-33';
+import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn} from './teams.js?v=unique-art-33';
 const pick=(pool,random)=>pool[Math.floor(random()*pool.length)];
 export function createBotFighter(config,random=Math.random){
  let picks=Object.fromEntries(Object.entries(config.offers).map(([key,pool])=>[key,pick(pool,random).id]));

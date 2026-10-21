@@ -1,5 +1,5 @@
 import {createCombatState,resolveTurn} from './combat.js?v=creatures-31';
-import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn} from './teams.js?v=creatures-31';
+import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn} from './teams.js?v=unique-art-33';
 import {resolveTactic} from './tactics.js?v=playback-18';
 export function createDuelBattle(fighters,random=Math.random){
  if(fighters.length!==2)throw Error('Pojedynek wymaga dwóch wojowników.');
