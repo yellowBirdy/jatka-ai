@@ -1,6 +1,6 @@
-import {createCombatState,resolveTurn} from './combat.js?v=shop-40';
-import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn} from './teams.js?v=shop-40';
-import {resolveTactic} from './tactics.js?v=shop-40';
+import {createCombatState,resolveTurn} from './combat.js?v=god-41';
+import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn} from './teams.js?v=god-41';
+import {resolveTactic} from './tactics.js?v=god-41';
 export function createDuelBattle(fighters,random=Math.random){
  if(fighters.length!==2)throw Error('Pojedynek wymaga dwóch wojowników.');
  const first=random()<(0.5+(fighters[0].stats.speed-fighters[1].stats.speed)/100)?0:1;

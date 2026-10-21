@@ -1,20 +1,20 @@
-import {readProgress,saveProgress,buyBoxes,rewardProfiles,lootArmors,drawArmorOffer,redeemCode} from './progression.js?v=shop-40';
-import {readProfiles,writeProfiles} from './profiles.js?v=shop-40';
-import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=shop-40';
-import {textureAnimalSvg} from './surface-textures.js?v=shop-40';
-import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=shop-40';
-import {hybridParts,hybridAnimals,hybridDefaults,hybridOption,hybridSvg} from './hybrids.js?v=shop-40';
-import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=shop-40';
-import {tactics} from './tactics.js?v=shop-40';
-import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=shop-40';
-import {getBeastAbilities} from './beast-abilities.js?v=shop-40';
-import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait,beastSkins,beastLootArmors,allBeasts,lootBeasts} from './mounts.js?v=shop-40';
-import {setupTutorial} from './tutorial.js?v=shop-40';
-import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=shop-40';
-import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=shop-40';
-import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=shop-40';
-import {weaponSvg,weaponIcon} from './weapons.js?v=shop-40';
-import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=shop-40';
+import {readProgress,saveProgress,buyBoxes,rewardProfiles,lootArmors,drawArmorOffer,redeemCode,claimGod} from './progression.js?v=god-41';
+import {readProfiles,writeProfiles} from './profiles.js?v=god-41';
+import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=god-41';
+import {textureAnimalSvg} from './surface-textures.js?v=god-41';
+import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=god-41';
+import {hybridParts,hybridAnimals,hybridDefaults,hybridOption,hybridSvg} from './hybrids.js?v=god-41';
+import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=god-41';
+import {tactics} from './tactics.js?v=god-41';
+import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=god-41';
+import {getBeastAbilities} from './beast-abilities.js?v=god-41';
+import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait,beastSkins,beastLootArmors,allBeasts,lootBeasts} from './mounts.js?v=god-41';
+import {setupTutorial} from './tutorial.js?v=god-41';
+import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=god-41';
+import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=god-41';
+import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=god-41';
+import {weaponSvg,weaponIcon} from './weapons.js?v=god-41';
+import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=god-41';
 const $=id=>document.getElementById(id);
 let player=0,picks={},fighters=[],names=['Ragnar','Akira'],timer,result,index=0;
 let opponent='local',botTimer=null,rematchBattle=false;
@@ -80,6 +80,7 @@ function renderShop(){
   const count=p.codes.includes('x10box')?Number(document.querySelector(`[data-box-count="${i}"]`)?.value||1):1;
   button.disabled=$('creator').hidden||p.xp<100*count;button.textContent=`Otwórz ${count===1?'box':count+' boxów'} · ${count*100} EXP`;
   card.append(label,button);
+  if(p.codes.includes('god')&&!p.godClaimed){const reward=document.createElement('button');reward.type='button';reward.className='quiet';reward.dataset.godReward=i;reward.textContent='GOD · wybierz 2 zbroje i 2 skiny';reward.disabled=$('creator').hidden;card.append(reward);}
   if(p.codes.includes('x10box')){const countLabel=document.createElement('label');countLabel.textContent='Skrzynki naraz';const select=document.createElement('select');select.dataset.boxCount=i;select.setAttribute('aria-label',`Liczba skrzynek — ${name}`);select.replaceChildren(...Array.from({length:10},(_,n)=>new Option(`${n+1} · ${(n+1)*100} EXP`,String(n+1))));select.value=String(count);select.disabled=$('creator').hidden;countLabel.append(select);card.append(countLabel);}
   const species=document.createElement('select');species.dataset.boxSpecies=i;species.setAttribute('aria-label',`Gatunek dla skrzynki skinów — ${name}`);
   const previous=document.querySelector(`[data-box-species="${i}"]`)?.value;
@@ -329,5 +330,25 @@ $('code-form').addEventListener('submit',e=>{
  const saved=outcome.ok?saveProgress(profileStorage,progress):true;
  $('code-status').textContent=outcome.message+(saved?'':' Zapis niedostępny — nagroda pozostanie do zamknięcia strony.');
  $('code-status').dataset.success=String(outcome.ok);
- if(outcome.ok){$('redeem-code').value='';renderShop();}
+ if(outcome.ok){$('redeem-code').value='';renderShop();if(outcome.reward==='god'&&!$('creator').hidden)openGod(id);}
 });
+
+let godOwner=null;
+function openGod(id){
+ if(!profiles[id]||!progress[id].codes.includes('god')||progress[id].godClaimed||$('creator').hidden)return;
+ godOwner=id;$('god-profile').textContent=profiles[id];$('god-error').textContent='';
+ for(const [target,pool,owned] of [['god-armors',lootArmors,progress[id].armors],['god-skins',beastSkins.filter(s=>!lootBeasts.some(b=>b.id===s.beast)||progress[id].beasts.includes(s.beast)),progress[id].beastSkins]]){
+  $(target).replaceChildren(...pool.filter(a=>a.rarity==='Legendarna').map(item=>{const card=document.createElement('label');card.className='god-choice';const input=document.createElement('input'),name=document.createElement('b'),desc=document.createElement('span');input.type='checkbox';input.name=target;input.value=item.id;name.textContent=item.name+(owned.includes(item.id)?' (już posiadasz)':'');desc.textContent=item.desc;if(item.color)card.style.setProperty('--skin-color',item.color);card.append(input,name,desc);return card;}));
+ }
+ updateGodCounts();$('god-dialog').showModal();
+}
+function updateGodCounts(){for(const category of ['armors','skins']){const count=$('god-'+category).querySelectorAll(':checked').length;$('god-'+category+'-count').textContent=`${count} / 2`;for(const input of $('god-'+category).querySelectorAll('input'))input.disabled=count>=2&&!input.checked;}}
+$('profile-shop').addEventListener('click',e=>{const button=e.target.closest('[data-god-reward]');if(button&&!button.disabled)openGod(button.dataset.godReward);});
+$('god-form').addEventListener('change',updateGodCounts);
+$('god-form').addEventListener('submit',e=>{
+ e.preventDefault();if($('creator').hidden)return;
+ const ids=target=>[...$(target).querySelectorAll(':checked')].map(input=>input.value);
+ const result=claimGod(progress,godOwner,ids('god-armors'),ids('god-skins'));$('god-error').textContent=result.message;if(!result.ok)return;
+ const saved=saveProgress(profileStorage,progress);$('profile-status').textContent=result.message+(saved?' Zapisano.':' Zapis niedostępny.');$('god-dialog').close();renderCreator();
+});
+$('god-later').onclick=()=>$('god-dialog').close();
