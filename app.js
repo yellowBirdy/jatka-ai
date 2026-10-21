@@ -1,20 +1,20 @@
-import {readProgress,saveProgress,buyBox,rewardProfiles,lootArmors,drawArmorOffer,redeemCode} from './progression.js?v=creatures-36';
-import {readProfiles,writeProfiles} from './profiles.js?v=creatures-36';
-import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=creatures-36';
-import {textureAnimalSvg} from './surface-textures.js?v=creatures-36';
-import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=creatures-36';
-import {hybridParts,hybridAnimals,hybridDefaults,hybridOption,hybridSvg} from './hybrids.js?v=creatures-36';
-import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=creatures-36';
-import {tactics} from './tactics.js?v=creatures-36';
-import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=creatures-36';
-import {getBeastAbilities} from './beast-abilities.js?v=creatures-36';
-import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait} from './mounts.js?v=creatures-36';
-import {setupTutorial} from './tutorial.js?v=creatures-36';
-import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=creatures-36';
-import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=creatures-36';
-import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=creatures-36';
-import {weaponSvg,weaponIcon} from './weapons.js?v=creatures-36';
-import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=creatures-36';
+import {readProgress,saveProgress,buyBox,buyBeastBox,rewardProfiles,lootArmors,drawArmorOffer,redeemCode} from './progression.js?v=anatomy-37';
+import {readProfiles,writeProfiles} from './profiles.js?v=anatomy-37';
+import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=anatomy-37';
+import {textureAnimalSvg} from './surface-textures.js?v=anatomy-37';
+import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=anatomy-37';
+import {hybridParts,hybridAnimals,hybridDefaults,hybridOption,hybridSvg} from './hybrids.js?v=anatomy-37';
+import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=anatomy-37';
+import {tactics} from './tactics.js?v=anatomy-37';
+import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=anatomy-37';
+import {getBeastAbilities} from './beast-abilities.js?v=anatomy-37';
+import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait,beastSkins,beastLootArmors} from './mounts.js?v=anatomy-37';
+import {setupTutorial} from './tutorial.js?v=anatomy-37';
+import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=anatomy-37';
+import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=anatomy-37';
+import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=anatomy-37';
+import {weaponSvg,weaponIcon} from './weapons.js?v=anatomy-37';
+import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=anatomy-37';
 const $=id=>document.getElementById(id);
 let player=0,picks={},fighters=[],names=['Ragnar','Akira'],timer,result,index=0;
 let opponent='local',botTimer=null,rematchBattle=false;
@@ -34,7 +34,7 @@ function chosenTextures(weapon=picks.weapon){const m=resolveMaterials(normalizeM
 let materialNotice='';
 function renderMaterials(){const groups=getWeaponMaterials(picks.weapon);return `<div class="weapon-materials"><p>Materiały: ${groups.headMaterial.family} <small>Opcje dopasowane do rodzaju broni.</small><small role="status">${materialNotice}</small></p>${Object.entries(groups).map(([key,group],i)=>`<fieldset class="material-group"><legend>${i+1}. ${group.name}</legend><div class="material-options">${group.options.map(m=>`<label class="option material-option"><input type="radio" name="${key}" value="${m.id}" ${picks[key]===m.id?'checked':''}><span class="material-swatch" style="background-image:url('assets/textures/${m.texture}.svg')"></span><span class="option-name">${m.name}</span><span class="option-desc">${m.desc}</span></label>`).join('')}</div></fieldset>`).join('')}</div>`;}
 let portraitSequence=0;
-function warrior(f,side=0){if(f.hybrid)return textureAnimalSvg(hybridSvg(f),hybridAnimals);const rider=footWarrior(f,side);return f.mounted?textureAnimalSvg(mountedPortrait(rider,f),[{id:f.traits.beast.id,color:f.traits.beast.color}]):rider;}
+function warrior(f,side=0){if(f.hybrid)return textureAnimalSvg(hybridSvg(f),hybridAnimals);const rider=footWarrior(f,side);return f.mounted?textureAnimalSvg(mountedPortrait(rider,f),[{id:f.traits.beast.id,color:f.traits.beastSkin?.color||f.traits.beast.color}]):rider;}
 function footWarrior(f,side=0){
 const texturePrefix=`warrior-${++portraitSequence}`;
 const material=f.traits.armor.texture||(['mail','reinforced-mail','ring','scale','lamellar'].includes(f.picks.armor)?'chainmail':['leather','hardened','studded','hide'].includes(f.picks.armor)?'leather':['cloth','linen','quilted','bamboo'].includes(f.picks.armor)?'cloth':'steel');
@@ -78,15 +78,19 @@ function renderShop(){
   label.textContent=`${name} · ${p.xp} EXP · Zdobyte zbroje: ${p.armors.length}/20 · ${p.armors.map(id=>lootArmors.find(a=>a.id===id).name).join(', ')||'brak'}`;
   button.type='button';button.className='quiet';button.textContent='Otwórz box · 100 EXP';button.dataset.box=i;
   button.disabled=$('creator').hidden||p.xp<100;
-  card.append(label,button);return [card];
+  card.append(label,button);
+  for(const [kind,title,field] of [['armor','Box zbroi bestii','beastArmors'],['skin','Box skinów bestii','beastSkins']]){
+   const extra=document.createElement('button');extra.type='button';extra.className='quiet';extra.dataset.beastBox=kind;extra.dataset.profile=i;
+   extra.textContent=`${title} · 100 EXP (${p[field].length}/5)`;extra.disabled=$('creator').hidden||p.xp<100;card.append(extra);
+  }return [card];
  }));
 }
 $('profile-shop').addEventListener('click',e=>{
- const button=e.target.closest('[data-box]');if(!button||$('creator').hidden)return;
- const drop=buyBox(progress,Number(button.dataset.box));if(!drop)return;
+ const button=e.target.closest('[data-box],[data-beast-box]');if(!button||$('creator').hidden)return;
+ const owner=button.dataset.profile??button.dataset.box;const drop=button.dataset.beastBox?buyBeastBox(progress,Number(owner),button.dataset.beastBox):buyBox(progress,Number(owner));if(!drop)return;
  const saved=saveProgress(profileStorage,progress);
- $('profile-status').textContent=`${drop.armor.rarity}: ${drop.armor.name} (${drop.armor.chance}%). ${drop.duplicate?'Duplikat — zwrot 25 EXP.':'Dodano do puli zbroi tego profilu!'}${saved?' Zapisano.':' Zapis niedostępny.'}`;
- renderCreator();openBox(drop,button.dataset.box);
+ $('profile-status').textContent=`${drop.armor.rarity}: ${drop.armor.name} (${drop.armor.chance}%). ${drop.duplicate?'Duplikat — zwrot 25 EXP.':drop.kind?'Odblokowano w wyposażeniu bestii tego profilu!':'Dodano do puli zbroi tego profilu!'}${saved?' Zapisano.':' Zapis niedostępny.'}`;
+ renderCreator();openBox(drop,owner);
 });
 function grantRewards(battle){
  if(rewarded.has(battle))return;rewarded.add(battle);
@@ -105,7 +109,7 @@ function syncArmorOffer(){
   if(!offers[player].armor.some(a=>a.id===picks.armor))picks.armor=offers[player].armor[0].id;
  }
 }
-function renderCreator(){syncArmorOffer();refreshProfiles();cancelBotMove();clearCombatVisuals();clearBeastEffects();steps(player);$('creator').hidden=false;renderShop();$('arena').hidden=true;$('player-label').textContent=format==='teams'?`DRUŻYNA ${teamOf(player)===0?'A':'B'} · WOJOWNIK ${player%2+1} / 2`:`GRACZ 0${player+1}`;$('fighter-name').value=names[player];$('error').textContent='';
+function renderCreator(){if(mounted){const owned=profiles[owners[player]]?progress[owners[player]]:null;if(picks.beastSkin!=='natural'&&!owned?.beastSkins.includes(picks.beastSkin))picks.beastSkin='natural';if(picks.beastArmor?.includes('-relic-')&&!owned?.beastArmors.some(id=>picks.beastArmor.endsWith('-'+id)))picks.beastArmor='none';}syncArmorOffer();refreshProfiles();cancelBotMove();clearCombatVisuals();clearBeastEffects();steps(player);$('creator').hidden=false;renderShop();$('arena').hidden=true;$('player-label').textContent=format==='teams'?`DRUŻYNA ${teamOf(player)===0?'A':'B'} · WOJOWNIK ${player%2+1} / 2`:`GRACZ 0${player+1}`;$('fighter-name').value=names[player];$('error').textContent='';
 $('categories').innerHTML=(hybrid?categories.filter(c=>c.id==='ability'):categories).map(c=>`<fieldset class="category" data-category="${c.id}"><legend><span>${c.icon}</span> ${hybrid&&c.id==='ability'?'Instynkt specjalny':c.name}${c.id==='armor'?` <small>5 z ${20+(profiles[owners[player]]?progress[owners[player]].armors.length:0)}</small>`:''}</legend><div class="option-grid">${offers[player][c.id].map(o=>`<label class="option"><input type="radio" name="${c.id}" value="${o.id}" ${picks[c.id]===o.id?'checked':''}><span class="option-icon ${['weapon','secondary'].includes(c.id)?'equipment-preview':''}">${['weapon','secondary'].includes(c.id)?weaponIcon(o.id,c.id==='weapon'?chosenTextures(o.id):{}):o.icon}</span>${c.id==='ability'?`<span class="chance-badge">${Math.round(abilityRules[o.id].chance*100)}%</span>`:''}${o.chance!==undefined?`<span class="chance-badge">${Math.round(o.chance*100)}%</span>`:''}<span class="option-name">${o.name}</span><span class="option-desc">${o.desc}${c.id==='armor'&&o.chance!==undefined?` · ${o.chance}% w boxie · ${o.rarity}`:''}</span></label>`).join('')}</div>${c.id==='weapon'?renderMaterials():''}</fieldset>`).join('');renderFantasy();preview();}
 function preview(){const f=createFighter($('fighter-name').value.trim()||'Wojownik',picks,duration,mode,mounted,hybrid);$('portrait').innerHTML=warrior(f,sideOf(player));for(const card of document.querySelectorAll('[data-category="weapon"] > .option-grid .option'))card.querySelector('.option-icon').innerHTML=weaponIcon(card.querySelector('input').value,chosenTextures(card.querySelector('input').value));$('armor-stats').textContent=hybrid?'':`${f.traits.armor.name}: ochrona +${f.traits.armor.stats?.defense||0}, Szybkość ${(f.traits.armor.stats?.speed||0)>=0?'+':''}${f.traits.armor.stats?.speed||0}, HP ${(f.traits.armor.stats?.health||0)>=0?'+':''}${f.traits.armor.stats?.health||0}. Zastępuje premie poprzedniej zbroi.${f.traits.armor.skill?` ✦ ${f.traits.armor.skill.name}: ${f.traits.armor.skill.description}`:''}`;$('stats').innerHTML=[['Siła',f.stats.attack,40],['Ochrona',f.stats.defense,30],['Szybkość',f.stats.speed,35],['Zdrowie',f.stats.health,260],['Celność',f.stats.accuracy,120],['Przebicie',f.stats.pierce,25],['Kondycja',f.stats.stamina,150]].map(([label,value,max])=>`<div><span>${label}</span><b>${value}</b><i style="--value:${Math.max(0,value)/max*100}%"></i></div>`).join('');}
 $('categories').addEventListener('change',e=>{if(e.target.matches('input')){const before={...picks};picks[e.target.name]=e.target.value;
@@ -174,7 +178,7 @@ setupTutorial(()=>({format,mode,mounted,hybrid,player,activeTeam:teamBattle?.act
 
 function renderMounts(){
  $('mount-choices').hidden=!mounted;
- $('mount-choices').innerHTML=mounted?`<fieldset class="mount-category"><legend>♞ Wierzchowiec <small>5 z 20</small></legend><p>Bestia i jeździec walczą jako jedna postać ze wspólnym HP. Premie sumują się ze statystykami. Wierzchowiec dodaje +10 obrażeń do każdego trafienia bronią (przed osłonami).</p><div class="option-grid">${mountOffers[player].map(o=>`<label class="option"><input type="radio" name="beast" value="${o.id}" ${picks.beast===o.id?'checked':''}><span class="option-icon">${o.icon}</span><span class="option-name">${o.name}</span><span class="option-desc">${o.desc}</span></label>`).join('')}</div><fieldset class="beast-armor-group"><legend>1. Zbroja bestii — ${createFighter('Podgląd',picks,duration,mode,mounted,hybrid).traits.beast.name}</legend><div class="option-grid">${getBeastArmors(picks.beast).map(o=>`<label class="option"><input type="radio" name="beastArmor" value="${o.id}" ${picks.beastArmor===o.id?'checked':''}><span class="option-icon">${o.icon}</span><span class="option-name">${o.name}</span><span class="option-desc">${o.desc}</span></label>`).join('')}</div></fieldset><fieldset class="beast-ability-group"><legend>2. Umiejętność bestii — wybierz 1 z 5</legend><div class="option-grid">${getBeastAbilities(picks.beast).map(o=>`<label class="option"><input type="radio" name="beastAbility" value="${o.id}" ${picks.beastAbility===o.id?'checked':''}><span class="option-icon">✺</span><span class="chance-badge">${Math.round(o.chance*100)}%</span><span class="option-name">${o.name}</span><span class="option-desc">${o.desc}</span></label>`).join('')}</div></fieldset></fieldset>`:'';
+ $('mount-choices').innerHTML=mounted?`<fieldset class="mount-category"><legend>♞ Wierzchowiec <small>5 z 20</small></legend><p>Bestia i jeździec walczą jako jedna postać ze wspólnym HP. Premie sumują się ze statystykami. Wierzchowiec dodaje +10 obrażeń do każdego trafienia bronią (przed osłonami).</p><div class="option-grid">${mountOffers[player].map(o=>`<label class="option"><input type="radio" name="beast" value="${o.id}" ${picks.beast===o.id?'checked':''}><span class="option-icon">${o.icon}</span><span class="option-name">${o.name}</span><span class="option-desc">${o.desc}</span></label>`).join('')}</div><fieldset class="beast-armor-group"><legend>1. Zbroja bestii — ${createFighter('Podgląd',picks,duration,mode,mounted,hybrid).traits.beast.name}</legend><div class="option-grid">${getBeastArmors(picks.beast,profiles[owners[player]]?progress[owners[player]].beastArmors:[]).map(o=>`<label class="option"><input type="radio" name="beastArmor" value="${o.id}" ${picks.beastArmor===o.id?'checked':''}><span class="option-icon">${o.icon}</span><span class="option-name">${o.name}</span><span class="option-desc">${o.desc}</span></label>`).join('')}</div></fieldset><fieldset class="beast-skin-group"><legend>Skin bestii — wygląd bez premii</legend><p>Box odblokowuje wariant dla wszystkich gatunków. Zbroje i skiny: po 100 EXP; duplikat zwraca 25 EXP.</p><div class="option-grid">${[{id:'natural',name:'Naturalna',desc:'Oryginalne umaszczenie',color:null},...beastSkins.filter(s=>profiles[owners[player]]&&progress[owners[player]].beastSkins.includes(s.id))].map(s=>`<label class="option"><input type="radio" name="beastSkin" value="${s.id}" ${(picks.beastSkin||'natural')===s.id?'checked':''}><span class="animal-swatch" style="--animal-color:${s.color||'#8d7964'}"></span><span class="option-name">${s.name}</span><span class="option-desc">${s.desc}</span></label>`).join('')}</div></fieldset><fieldset class="beast-ability-group"><legend>2. Umiejętność bestii — wybierz 1 z 5</legend><div class="option-grid">${getBeastAbilities(picks.beast).map(o=>`<label class="option"><input type="radio" name="beastAbility" value="${o.id}" ${picks.beastAbility===o.id?'checked':''}><span class="option-icon">✺</span><span class="chance-badge">${Math.round(o.chance*100)}%</span><span class="option-name">${o.name}</span><span class="option-desc">${o.desc}</span></label>`).join('')}</div></fieldset></fieldset>`:'';
 }
 $('mount-choices').addEventListener('change',e=>{if(e.target.matches('input')){picks[e.target.name]=e.target.value;if(e.target.name==='beast'){picks=normalizeMount(picks);renderMounts();}preview();}});
 $('mounts-enabled').addEventListener('change',e=>{
@@ -286,10 +290,10 @@ function openBox(drop,owner){
  dialog.dataset.phase='opening';dialog.dataset.rarity=armor.rarity==='Legendarna'?'legendary':armor.rarity==='Epicka'?'epic':armor.rarity==='Rzadka'?'rare':'common';
  $('box-result').replaceChildren();$('box-title').textContent='Otwieranie skrzyni…';$('box-close').hidden=true;$('box-skip').hidden=false;
  boxReveal=()=>{
-  if(dialog.dataset.phase==='revealed')return;clearTimeout(boxTimer);dialog.dataset.phase='revealed';$('box-title').textContent=drop.duplicate?'Znana zbroja, nowa nagroda!':'Nowa zbroja w Twojej puli!';
+  if(dialog.dataset.phase==='revealed')return;clearTimeout(boxTimer);dialog.dataset.phase='revealed';$('box-title').textContent=drop.kind?(drop.duplicate?'Duplikat — zwrot EXP!':drop.kind==='skin'?'Nowy skin bestii!':'Nowa zbroja bestii!'):(drop.duplicate?'Znana zbroja, nowa nagroda!':'Nowa zbroja w Twojej puli!');
   const rarity=document.createElement('span'),name=document.createElement('h3'),stats=document.createElement('p'),note=document.createElement('p');
   rarity.className='box-rarity';rarity.textContent=`${armor.rarity} · ${armor.chance}% szansy`;
-  name.textContent=armor.name;stats.textContent=armor.desc;note.textContent=drop.duplicate?'Duplikat — zwrot 25 EXP.':'Dodano do puli zbroi tego profilu. Wylosuj ją w zwykłym slocie Zbroja!';
+  name.textContent=armor.name;stats.textContent=armor.desc;note.textContent=drop.kind&&!drop.duplicate?'Odblokowano dla tego profilu. Włącz Wierzchowce i wybierz przedmiot pod bestią.':drop.duplicate?'Duplikat — zwrot 25 EXP.':'Dodano do puli zbroi tego profilu. Wylosuj ją w zwykłym slocie Zbroja!';
   $('box-result').append(rarity,name,stats,note);$('box-skip').hidden=true;$('box-close').hidden=false;$('box-close').focus();
  };
  dialog.showModal();if(matchMedia('(prefers-reduced-motion: reduce)').matches)boxReveal();else boxTimer=setTimeout(boxReveal,1500);

@@ -1,13 +1,13 @@
-import {lootArmors} from './progression.js?v=creatures-36';
-import {resolveHybrid} from './hybrids.js?v=creatures-36';
-import {resolveMount} from './mounts.js?v=creatures-36';
-import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=creatures-36';
-import {weaponMaterials,resolveMaterials} from './materials.js?v=creatures-36';
-export {weaponMaterials} from './materials.js?v=creatures-36';
-import {abilityRules} from './abilities.js?v=creatures-36';
-import {createCombatState,resolveTurn} from './combat.js?v=creatures-36';
-export {abilityRules} from './abilities.js?v=creatures-36';
-import {additions} from './catalog.js?v=creatures-36';
+import {lootArmors} from './progression.js?v=anatomy-37';
+import {resolveHybrid} from './hybrids.js?v=anatomy-37';
+import {resolveMount} from './mounts.js?v=anatomy-37';
+import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=anatomy-37';
+import {weaponMaterials,resolveMaterials} from './materials.js?v=anatomy-37';
+export {weaponMaterials} from './materials.js?v=anatomy-37';
+import {abilityRules} from './abilities.js?v=anatomy-37';
+import {createCombatState,resolveTurn} from './combat.js?v=anatomy-37';
+export {abilityRules} from './abilities.js?v=anatomy-37';
+import {additions} from './catalog.js?v=anatomy-37';
 const option=(id,name,icon,desc,stats={})=>({id,name,icon,desc,stats});
 export const categories=[
 {id:'weapon',name:'Broń',icon:'⚔',options:[option('sword','Miecz','⚔','Wszechstronny i celny.',{attack:4,accuracy:8}),option('axe','Topór','🪓','Silne, lecz wolniejsze ciosy.',{attack:9,speed:-3}),option('spear','Włócznia','↗','Zasięg i pierwszeństwo.',{attack:3,speed:5,accuracy:4}),option('hammer','Młot','🔨','Przełamuje ciężką ochronę.',{attack:7,pierce:7,speed:-5})]},
@@ -58,7 +58,7 @@ export function createFighter(name,picks,duration='medium',mode='classic',mounte
  if(hybrid){for(const [key,part]of Object.entries(resolveHybrid(picks))){traits[key]=part;for(const [stat,value]of Object.entries(part.stats))stats[stat]+=value;}traits.weapon={name:'Naturalna broń',icon:'✦'};traits.armor={name:'Skóra i budowa ciała'};traits.origin={name:'Hybryda zwierząt'};traits.style={name:'Kły, pazury i kończyny'};}
  if(mounted)for(const [key,item]of Object.entries(resolveMount(picks))){traits[key]=item;for(const [stat,value]of Object.entries(item.stats))stats[stat]+=value;}
  stats.health=Math.max(1,Math.round(stats.health*durations[duration].multiplier));
- return {name:name.trim(),picks:{...fantasyDefaults,...picks,...(hybrid?{ability:traits.ability.id,...Object.fromEntries(Object.entries(resolveHybrid(picks)).map(([key,part])=>[key,part.id]))}:{}),...(mounted?Object.fromEntries(['beast','beastArmor','beastAbility'].map(key=>[key,traits[key].id])):{}),...Object.fromEntries(Object.entries(materials).map(([key,value])=>[key,value.id]))},traits,stats,duration,mode,mounted,hybrid};
+ return {name:name.trim(),picks:{...fantasyDefaults,...picks,...(hybrid?{ability:traits.ability.id,...Object.fromEntries(Object.entries(resolveHybrid(picks)).map(([key,part])=>[key,part.id]))}:{}),...(mounted?Object.fromEntries(['beast','beastArmor','beastAbility','beastSkin'].map(key=>[key,traits[key].id])):{}),...Object.fromEntries(Object.entries(materials).map(([key,value])=>[key,value.id]))},traits,stats,duration,mode,mounted,hybrid};
 }
 export function seededRandom(seed){let s=seed>>>0;return ()=>{s+=0x6D2B79F5;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296;};}
 export function simulate(a,b,random=Math.random){

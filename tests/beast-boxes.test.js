@@ -1,0 +1,8 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {emptyProgress,buyBeastBox,readProgress} from '../progression.js';
+import {beastLootArmors,beastSkins,resolveMount,normalizeMount,getBeastArmors} from '../mounts.js';
+test('beast boxes cost 100 EXP, refund duplicates and isolate profiles',()=>{for(const type of ['armor','skin']){const p=emptyProgress();assert.equal(buyBeastBox(p,0,type),null);p[0].xp=300;const first=buyBeastBox(p,0,type,()=>0);assert.equal(p[0].xp,200);assert.equal(first.duplicate,false);assert.equal(buyBeastBox(p,0,type,()=>0).duplicate,true);assert.equal(p[0].xp,125);assert.equal(p[1][type==='armor'?'beastArmors':'beastSkins'].length,0);assert.equal(buyBeastBox(p,0,'fake'),null);}});
+test('beast unlocks survive reload and discard invalid items',()=>{const p=readProgress({getItem:()=>JSON.stringify([{xp:300,beastArmors:[beastLootArmors[0].id,'fake'],beastSkins:[beastSkins[0].id]}])});assert.deepEqual(p[0].beastArmors,[beastLootArmors[0].id]);assert.deepEqual(p[0].beastSkins,[beastSkins[0].id]);});
+test('unlocked beast armor fits species and skin has no stat bonus',()=>{for(const b of ['wolf','horse','crocodile']){const armor=getBeastArmors(b,[beastLootArmors[0].id]).at(-1);const picks={beast:b,beastArmor:armor.id,beastSkin:beastSkins[0].id};assert.equal(normalizeMount(picks).beastArmor,armor.id);const mount=resolveMount(picks);assert.equal(mount.beastArmor.id,armor.id);assert.deepEqual(mount.beastSkin.stats,{});assert.equal(mount.beastSkin.id,beastSkins[0].id);}});
+
+test('changing species keeps an unlocked armor blueprint',()=>{assert.equal(normalizeMount({beast:'wolf',beastArmor:'horse-relic-tracker'}).beastArmor,'wolf-relic-tracker');});
