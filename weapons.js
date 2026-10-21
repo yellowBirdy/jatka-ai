@@ -1,5 +1,3 @@
-import {weaponSprites} from './weapon-sprite-manifest.js?v=unique-art-33';
-let equipmentSequence=0;
 // Local SVG equipment: all materials share the warrior's unique pattern namespace.
 export function weaponSvg(id, prefix, secondary = false, materials = {}) {
  const fill = material => {
@@ -53,17 +51,11 @@ export function weaponSvg(id, prefix, secondary = false, materials = {}) {
   if(id==='rapier')shape+='<ellipse cy="-16" rx="25" ry="11" fill="none" stroke="'+fill('bronze')+'" stroke-width="4"/>';
 
  }
- const index=weaponSprites[`${secondary?'secondary':'weapon'}:${id}`]??weaponSprites[`secondary:${id}`];
- const short=['dagger','hatchet','stiletto','dart','baton','tonfa','knuckles','cestus','buckler'].includes(id),height=short?115:210,width=short?55:76;
- const col=index%5,row=Math.floor(index/5),paintId=`${prefix}-${id}-${secondary?'off':'main'}-paint`;
- const textureOverlay=index===undefined||secondary||!materials.headTexture?'':`<defs><mask id="${paintId}-alpha" maskUnits="userSpaceOnUse" x="${col}" y="${row}" width="1" height="1" style="mask-type:alpha"><image href="assets/choices/weapon-sprites.webp" width="5" height="8" preserveAspectRatio="none"/></mask>${[['head',materials.headTexture],['grip',materials.gripTexture||'wood']].map(([part,texture])=>`<pattern id="${paintId}-${part}" patternUnits="userSpaceOnUse" width=".2" height=".2"><image href="assets/textures/${texture}.svg" width=".2" height=".2" preserveAspectRatio="none"/></pattern>`).join('')}</defs><g mask="url(#${paintId}-alpha)" opacity=".28"><rect x="${col}" y="${row}" width="1" height=".7" fill="url(#${paintId}-head)"/><rect x="${col}" y="${row+.7}" width="1" height=".3" fill="url(#${paintId}-grip)"/></g>`;
- const picture=index===undefined?'':`<svg overflow="hidden" data-painted-weapon="${id}" x="${-width/2}" y="${-height*.8}" width="${width}" height="${height}" viewBox="${col} ${row} 1 1" preserveAspectRatio="none"><image href="assets/choices/weapon-sprites.webp" width="5" height="8" preserveAspectRatio="none"/>${textureOverlay}</svg>`;
- return `<g data-weapon="${id}" transform="${secondary?'translate(62 173) rotate(-18) scale(.52)':'translate(219 160)'}"><g ${picture?'opacity="0"':''}>${shape}</g>${picture}</g>`;
-
+ return `<g data-weapon="${id}" transform="${secondary?'translate(62 173) rotate(-18) scale(.52)':'translate(219 160)'}">${shape}</g>`;
 }
 
 export function weaponIcon(id,materials={}){
- const prefix=`equipment-${id}-${++equipmentSequence}`;
+ const prefix=`equipment-${id}`;
  const defs=['steel','darksteel','bronze','wood','wrap','ash','birch','walnut','tempered','damascus','flint','bone','granite','bamboo','ironwood','rattan'].map(material=>`<pattern id="${prefix}-${material}" patternUnits="userSpaceOnUse" width="80" height="80"><image href="assets/textures/${material}.svg" width="80" height="80"/></pattern>`).join('');
  return `<svg class="weapon-icon" viewBox="145 -5 150 310" aria-hidden="true" focusable="false"><defs>${defs}</defs>${weaponSvg(id,prefix,false,materials)}</svg>`;
 }

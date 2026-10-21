@@ -213,4 +213,5 @@ Automatyczny PvE także jest dostępny: w pojedynku Twoja postać stosuje wybran
 Rewanż zachowuje przeciwników i Twoje postacie. Edycja pozwala zmienić Twoją stronę, a „Nowi wojownicy” losuje także nowych botów. Timery bota są kasowane przy końcu walki i powrocie do kreatora. Testy obejmują legalne konfiguracje bez ukrytych premii, decyzje, wybór żywych postaci, granice tur, serie PvE w obu formatach i trybach, blokadę przejęcia ruchu bota, wyniki, rewanż, edycję i zachowanie gry lokalnej.
 
 
-Każda z 220 cech i zbroi oraz 100 umiejętności bestii ma własną ilustrację. Karty umiejętności są wyższe i pokazują efekt działania. Wojownik, trzymana broń i wierzchowiec korzystają z malowanych modeli z przezroczystym tłem; wybór wyposażenia i animacje walki pozostają aktywne.
+
+Gra korzysta z klasycznych postaci i wyposażenia SVG oraz prostych kart cech. Ilustrowane menu areny zachowuje ciemny, turkusowy styl.

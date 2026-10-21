@@ -1,2 +1,0 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {animalArtwork} from '../creature-art.js';import {beasts} from '../mounts.js';import {hybridAnimals} from '../hybrids.js';
-test('every mount and hybrid species has its own art cell',()=>{const ids=new Set([...beasts,...hybridAnimals].map(a=>a.id));const positions=new Set();for(const id of ids){const art=animalArtwork(id);assert.ok(art,id);positions.add(art.position);}assert.equal(positions.size,25);assert.equal(animalArtwork('unknown'),null);});
