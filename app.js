@@ -1,4 +1,4 @@
-import {readProgress,saveProgress,buyBox,rewardProfiles,lootArmors,drawArmorOffer} from './progression.js?v=loot-25';
+import {readProgress,saveProgress,buyBox,rewardProfiles,lootArmors,drawArmorOffer} from './progression.js?v=menu-26';
 import {readProfiles,writeProfiles} from './profiles.js?v=loot-25';
 import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=pve-23';
 import {textureAnimalSvg} from './surface-textures.js?v=impact-22';
@@ -14,10 +14,10 @@ import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf
 import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=fantasy-pools-9';
 import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=weapon-families-6';
 import {weaponSvg,weaponIcon} from './weapons.js?v=weapon-families-6';
-import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=loot-25';
+import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=menu-26';
 const $=id=>document.getElementById(id);
 let player=0,picks={},fighters=[],names=['Ragnar','Akira'],timer,result,index=0;
-let opponent='local',botTimer=null;
+let opponent='local',botTimer=null,rematchBattle=false;
 let playback='auto',duelBattle=null,duelSpeed=1;
 const duelDelay=()=>1200/duelSpeed;
 let duelTactics=['balanced','balanced'];
@@ -81,12 +81,12 @@ $('profile-shop').addEventListener('click',e=>{
  const drop=buyBox(progress,Number(button.dataset.box));if(!drop)return;
  const saved=saveProgress(profileStorage,progress);
  $('profile-status').textContent=`${drop.armor.rarity}: ${drop.armor.name} (${drop.armor.chance}%). ${drop.duplicate?'Duplikat — zwrot 25 EXP.':'Dodano do puli zbroi tego profilu!'}${saved?' Zapisano.':' Zapis niedostępny.'}`;
- renderCreator();
+ renderCreator();openBox(drop,button.dataset.box);
 });
 function grantRewards(battle){
  if(rewarded.has(battle))return;rewarded.add(battle);
  const ids=fighters.map((_,i)=>opponent==='bot'&&sideOf(i)===1?'':owners[i]);
- const rewards=rewardProfiles(progress,ids,fighters.map((_,i)=>battle.winner===null?null:sideOf(i)===battle.winner));
+ const rewards=rewardProfiles(progress,ids,fighters.map((_,i)=>battle.winner===null?null:sideOf(i)===battle.winner),rematchBattle?30:60);
  const saved=saveProgress(profileStorage,progress);
  $('reward-note').textContent=rewards.map(([id,amount])=>`${profiles[id]}: +${amount} EXP`).join(' · ')+(rewards.length&&!saved?' (zapis niedostępny)':'');renderShop();
 }
@@ -118,8 +118,8 @@ function paint(e){clearCombatVisuals();clearBeastEffects();basePaint(e);animateB
 function basePaint(e){$('round').textContent=format==='teams'?`TURA ${playback==='auto'?index:teamBattle.events.length} / ${playback==='auto'?result.events.length:320}`:playback==='turns'?`TURA ${duelBattle.events.length} / 160`:`WYMIANA ${index} / ${result.events.length}`;$('commentary').textContent=(format==='teams'?`${fighters[e.actor].name} → ${fighters[e.target].name}: `:'')+e.text+(e.details?.length?' '+e.details.join(' '):'')+(e.weakened?' Osłabiony cios po rozbrojeniu.':'')+(e.ability?` ${fighters[e.actor].traits.ability.name}!`:'')+(e.healed?` +${e.healed} HP.`:'');for(let i=0;i<fighters.length;i++){const card=$('combatant'+i);card.className=`combatant side${sideOf(i)} ${i===e.actor?(e.kind==='defend'?'defending':e.kind==='rest'?'resting':e.magic?'attack casting':'attack'):i===e.target?(['rest','defend'].includes(e.kind)?'':e.kind==='dodge'?'dodge':'hit'):''} ${e.hp[i]===0?'defeated':''}`;const bar=card.querySelector('.health');bar.setAttribute('aria-valuenow',e.hp[i]);bar.querySelector('i').style.width=`${e.hp[i]/fighters[i].stats.health*100}%`;$('hp'+i).textContent=`${e.hp[i]} / ${fighters[i].stats.health} HP`;$('energy'+i).textContent=`Kondycja: ${e.energy[i]} / ${fighters[i].stats.stamina}`;$('damage'+i).textContent=i===e.target?(['rest','defend'].includes(e.kind)?'':(e.damage+(e.magicDamage||0))?`−${e.damage+(e.magicDamage||0)}`:e.kind==='dodge'?'UNIK':'BLOK'):i!==e.actor?'':(e.selfDamage||e.counterDamage)?`−${(e.selfDamage||0)+(e.counterDamage||0)}`:e.healed?`+${e.healed}`:'';}}
 function finish(){cancelBotMove();clearTimeout(timer);$('duel-controls').hidden=true;if(format==='teams'){index=result.events.length;paint(result.events.at(-1));$('skip').hidden=true;finishTeams();return;}settingsLocked(false);grantRewards(result);index=result.events.length;paint(result.events.at(-1));$('skip').hidden=true;$('result').hidden=false;$('winner').textContent=`Zwycięża ${fighters[result.winner].name}`;$('summary').textContent=describe(result,fighters);$('round').textContent='KONIEC POJEDYNKU';$('combatant'+result.winner).classList.add('victor');$('history').replaceChildren(...result.events.map(e=>{const li=document.createElement('li');li.textContent=e.text+(e.details?.length?' '+e.details.join(' '):'')+(e.weakened?' Osłabiony cios po rozbrojeniu.':'')+(e.ability?` Umiejętność: ${fighters[e.actor].traits.ability.name}.`:'');return li;}));}
 function tick(){if(index>=result.events.length){finish();return;}paint(result.events[index++]);timer=setTimeout(tick,format==='duel'?duelDelay():650);}
-function fight(){cancelBotMove();clearTimeout(timer);showArena();if(playback==='turns'){if(format==='teams')startTeams();else startDuelTurns();return;}if(format==='teams'){teamBattle=opponent==='bot'?simulateBotTeams(fighters):simulateTeamBattle(fighters);result=teamBattle;}else if(opponent==='bot')result=simulateBotDuel(fighters,duelTactics[0]);else result=simulate(...fighters.map((f,i)=>({...f,picks:{...f.picks,tactic:duelTactics[i]}})));settingsLocked(true);index=0;$('fight').hidden=true;$('skip').hidden=false;if(matchMedia('(prefers-reduced-motion: reduce)').matches)finish();else tick();}
-$('fight').onclick=fight;$('skip').onclick=finish;$('rematch').onclick=fight;
+function fight(replay=false){rematchBattle=replay===true;cancelBotMove();clearTimeout(timer);showArena();if(playback==='turns'){if(format==='teams')startTeams();else startDuelTurns();return;}if(format==='teams'){teamBattle=opponent==='bot'?simulateBotTeams(fighters):simulateTeamBattle(fighters);result=teamBattle;}else if(opponent==='bot')result=simulateBotDuel(fighters,duelTactics[0]);else result=simulate(...fighters.map((f,i)=>({...f,picks:{...f.picks,tactic:duelTactics[i]}})));settingsLocked(true);index=0;$('fight').hidden=true;$('skip').hidden=false;if(matchMedia('(prefers-reduced-motion: reduce)').matches)finish();else tick();}
+$('fight').onclick=()=>fight();$('skip').onclick=finish;$('rematch').onclick=()=>fight(true);
 $('edit').onclick=()=>{clearTimeout(timer);player=0;materialNotice='';picks={...fighters[0].picks};renderCreator();};
 function resetRoster(){cancelBotMove();clearTimeout(timer);teamBattle=null;duelBattle=null;duelTactics=['balanced','balanced'];player=0;materialNotice='';fighters=[];armorPools.length=0;owners=['','','',''];names=format==='teams'?['Ragnar','Bjorn','Akira','Yuna']:['Ragnar','Akira'];offers=names.map(()=>drawOptions());fantasyOffers=names.map(()=>drawFantasyOptions());mountOffers=names.map(()=>drawMountOptions());settingsLocked(false);picks=defaults();renderCreator();}
 $('reset').onclick=resetRoster;
@@ -256,3 +256,28 @@ $('opponent-settings').addEventListener('change',e=>{
  if(opponent==='bot'){playback='turns';document.querySelector('input[name="playback"][value="turns"]').checked=true;}
  resetRoster();
 });
+
+// Settings summary reads the actual controls, including automatic mode changes.
+function updateSettingsSummary(){
+ const label=name=>document.querySelector(`input[name="${name}"]:checked`)?.parentElement.querySelector('b').textContent;
+ $('settings-summary').textContent=[opponent==='bot'?'Bot PvE':'Lokalnie',label('format'),label('playback'),label('mode'),label('duration')].join(' · ');
+}
+document.querySelector('.match-settings').addEventListener('change',updateSettingsSummary);updateSettingsSummary();
+let boxTimer=null,boxReveal=null,boxOwner=null;
+function openBox(drop,owner){
+ clearTimeout(boxTimer);boxOwner=owner;
+ const dialog=$('box-dialog'),armor=drop.armor;
+ dialog.dataset.phase='opening';dialog.dataset.rarity=armor.rarity==='Legendarna'?'legendary':armor.rarity==='Epicka'?'epic':armor.rarity==='Rzadka'?'rare':'common';
+ $('box-result').replaceChildren();$('box-title').textContent='Otwieranie skrzyni…';$('box-close').hidden=true;$('box-skip').hidden=false;
+ boxReveal=()=>{
+  if(dialog.dataset.phase==='revealed')return;clearTimeout(boxTimer);dialog.dataset.phase='revealed';$('box-title').textContent=drop.duplicate?'Znana zbroja, nowa nagroda!':'Nowa zbroja w Twojej puli!';
+  const rarity=document.createElement('span'),name=document.createElement('h3'),stats=document.createElement('p'),note=document.createElement('p');
+  rarity.className='box-rarity';rarity.textContent=`${armor.rarity} · ${armor.chance}% szansy`;
+  name.textContent=armor.name;stats.textContent=armor.desc;note.textContent=drop.duplicate?'Duplikat — zwrot 25 EXP.':'Dodano do puli zbroi tego profilu. Wylosuj ją w zwykłym slocie Zbroja!';
+  $('box-result').append(rarity,name,stats,note);$('box-skip').hidden=true;$('box-close').hidden=false;$('box-close').focus();
+ };
+ dialog.showModal();if(matchMedia('(prefers-reduced-motion: reduce)').matches)boxReveal();else boxTimer=setTimeout(boxReveal,1500);
+}
+$('box-skip').onclick=()=>boxReveal?.();$('box-close').onclick=()=>$('box-dialog').close();
+$('box-dialog').addEventListener('cancel',()=>{boxReveal?.();});
+$('box-dialog').addEventListener('close',()=>{clearTimeout(boxTimer);boxReveal=null;document.querySelector(`[data-box="${boxOwner}"]`)?.focus();});

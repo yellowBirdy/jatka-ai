@@ -4,7 +4,7 @@ Lokalna gra dla dwóch osób przy jednym ekranie. Każdy wybiera imię i po jedn
 
 ## Profile, EXP i boxy
 
-U góry gry można nazwać cztery lokalne profile, a w kreatorze przypisać profil do każdej postaci. Po walce profil dostaje 60 EXP za wygraną, 30 za porażkę lub 40 za remis, raz na walkę również przy kilku postaciach tego samego profilu. Goście i boty nie dostają EXP.
+U góry gry można nazwać cztery lokalne profile, a w kreatorze przypisać profil do każdej postaci. Po walce profil dostaje 60 EXP za wygraną, 30 za porażkę lub 40 za remis, raz na walkę również przy kilku postaciach tego samego profilu. Za wygraną w rewanżu nagroda wynosi 30 EXP. Goście i boty nie dostają EXP.
 
 W kreatorze można otworzyć box za 100 EXP. Pula zawiera 20 zbroi, od zwykłej (50%) do wyjątkowo silnej legendarnej (0,4%). Pełne szanse i statystyki są widoczne w grze. Zdobyta zbroja dołącza do standardowej puli zbroi profilu, z której losuje się 5 ofert w zwykłym slocie Zbroja. Duplikat zwraca 25 EXP. Postęp i nazwy zapisują się w localStorage tej przeglądarki, bez logowania i synchronizacji między urządzeniami. Zmiana nazwy profilu zachowuje jego postęp.
 
