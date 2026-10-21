@@ -47,7 +47,7 @@ Balans jest wstępny: testy sprawdzają równe szanse identycznych postaci i pop
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie piętnaście zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
+Workflow `.github/workflows/pages.yml` uruchamia testy silnika oraz wszystkie szesnaście zestawów testów przeglądarkowych przed publikacją. Dopiero gdy przejdą, publikuje pliki gry i lokalne tekstury SVG po pushu do `master`. W repozytorium w **Settings → Pages → Build and deployment → Source** wybierz **GitHub Actions**. Jeśli pierwszy workflow uruchomił się przed włączeniem Pages, uruchom go ponownie w **Actions → Test and publish game → Run workflow**. Adres witryny po udanym wdrożeniu: https://yellowbirdy.github.io/jatka-ai/ .
 
 ## Balans umiejętności
 
@@ -191,3 +191,13 @@ Automatyczne 1 na 1 ma przełącznik prędkości **×1 / ×2 / ×3**: odpowiedni
 Trafienie jest oznaczone jako mocne, jeśli faktycznie odebrało co najmniej 30 HP albo co najmniej 25% maksymalnego zdrowia celu i minimum 18 HP. Liczą się łączne obrażenia broni i magii danej akcji. To opis siły istniejącego trafienia, bez dodatkowej premii do obrażeń. Pojawia się napis „MOCNE TRAFIENIE”, fala uderzenia i pojedynczy, krótki wstrząs areny. Na telefonie wstrząs jest słabszy, a przy preferencji ograniczonego ruchu nie występuje; napisy pozostają widoczne. Efekt jest czyszczony przed kolejną akcją, rewanżem i edycją.
 
 Animacja ciosu ma wyraźniejszy zamach i doskok, a trafiona postać reaguje odrzutem. Skóra wojownika ma cieniowanie, tkanina nowy splot, a wzory futra, łusek, piór i skóry zwierząt zyskały gradienty oraz mocniejsze szczegóły. Tekstury i wstrząsy nie zmieniają mechaniki walki.
+
+## PvE — gracz kontra bot
+
+W sekcji **Przeciwnik** wybierz **Gracz kontra bot (PvE)**. W 1 na 1 tworzysz tylko swoją postać; w 2 na 2 tworzysz dwóch sojuszników drużyny A. Przeciwników bot dobiera automatycznie z własnych ofert według tych samych zasad i bez dodatkowych premii. Działa z magią, wierzchowcami, hybrydami i każdą długością walki. Zmiana przeciwnika rozpoczyna tworzenie nowych postaci, a PvE domyślnie wybiera walkę turową.
+
+W turach kierujesz swoją stroną. Bot wykonuje swój ruch po krótkiej chwili; panel pokazuje „Bot wybiera ruch…”, a sterowanie przeciwnikiem jest wtedy zablokowane. Odpoczywa przy kondycji poniżej 7, jeśli nie jest na skraju porażki, stara się dobijać osłabione cele, czasem broni się przy niskim HP oraz dobiera agresywną lub ostrożną taktykę. W drużynie wybiera dostępnego wojownika i żywego przeciwnika z najmniejszym pozostałym HP. Nie korzysta z przyszłych losowań walki.
+
+Automatyczny PvE także jest dostępny: w pojedynku Twoja postać stosuje wybraną stałą taktykę, a bot dobiera własne akcje. W automatycznej walce drużynowej obie strony podejmują proste decyzje. To lokalny bot oparty na regułach; gra nie wymaga konta, klucza API ani połączenia z modelem AI.
+
+Rewanż zachowuje przeciwników i Twoje postacie. Edycja pozwala zmienić Twoją stronę, a „Nowi wojownicy” losuje także nowych botów. Timery bota są kasowane przy końcu walki i powrocie do kreatora. Testy obejmują legalne konfiguracje bez ukrytych premii, decyzje, wybór żywych postaci, granice tur, serie PvE w obu formatach i trybach, blokadę przejęcia ruchu bota, wyniki, rewanż, edycję i zachowanie gry lokalnej.

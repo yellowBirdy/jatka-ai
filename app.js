@@ -1,3 +1,4 @@
+import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=pve-23';
 import {textureAnimalSvg} from './surface-textures.js?v=impact-22';
 import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=impact-22';
 import {hybridParts,hybridAnimals,hybridDefaults,hybridOption,hybridSvg} from './hybrids.js?v=hybrids-19';
@@ -14,6 +15,7 @@ import {weaponSvg,weaponIcon} from './weapons.js?v=weapon-families-6';
 import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=hybrids-19';
 const $=id=>document.getElementById(id);
 let player=0,picks={},fighters=[],names=['Ragnar','Akira'],timer,result,index=0;
+let opponent='local',botTimer=null;
 let playback='auto',duelBattle=null,duelSpeed=1;
 const duelDelay=()=>1200/duelSpeed;
 let duelTactics=['balanced','balanced'];
@@ -21,7 +23,7 @@ let mode='classic',format='duel',teamBattle=null,mounted=false,hybrid=false;
 let mountOffers=[drawMountOptions(),drawMountOptions()];
 const rosterSize=()=>format==='teams'?4:2;
 const sideOf=i=>format==='teams'?teamOf(i):i;
-function settingsLocked(locked){document.querySelectorAll('.combatants .duel-tactic select').forEach(n=>n.disabled=locked);for(const id of ['playback-settings','format-settings','mode-settings','duration-settings','modification-settings'])$(id).disabled=locked;}
+function settingsLocked(locked){document.querySelectorAll('.combatants .duel-tactic select').forEach(n=>n.disabled=locked);for(const id of ['opponent-settings','playback-settings','format-settings','mode-settings','duration-settings','modification-settings'])$(id).disabled=locked;}
 let duration='medium',offers=[drawOptions(),drawOptions()];
 let fantasyOffers=[drawFantasyOptions(),drawFantasyOptions()];
 const defaults=()=>normalizeMaterials({...hybridDefaults,beast:mountOffers[player][0].id,beastArmor:'none',beastAbility:mountOffers[player][0].id,...Object.fromEntries(fantasySlots.map(slot=>[slot.id,fantasyOffers[player][slot.id][0].id])),...Object.fromEntries(categories.map(c=>[c.id,offers[player][c.id][0].id]))});
@@ -37,13 +39,13 @@ const material=['mail','reinforced-mail','ring','scale','lamellar'].includes(f.p
 const textureDefs=`<defs><radialGradient id="${texturePrefix}-skin" cx=".3" cy=".25" r=".8"><stop stop-color="#edc59d"/><stop offset=".5" stop-color="#c39672"/><stop offset="1" stop-color="#7e513b"/></radialGradient>${['steel','leather','cloth','chainmail','wood','wrap','bronze','darksteel','ash','birch','walnut','tempered','damascus','flint','bone','granite','bamboo','ironwood','rattan'].map(type=>`<pattern id="${texturePrefix}-${type}" patternUnits="userSpaceOnUse" width="${type==='chainmail'?16:type==='cloth'?12:80}" height="${type==='chainmail'?16:type==='cloth'?12:80}"><image href="assets/textures/${type}.svg?v=impact-22" width="${type==='chainmail'?16:type==='cloth'?12:80}" height="${type==='chainmail'?16:type==='cloth'?12:80}"/></pattern>`).join('')}</defs>`;
 const armor=f.picks.armor;const color=side?'#b45d45':'#93a98a';
 return `<svg viewBox="0 0 300 350" role="img" aria-label="Wojownik: ${escape(f.traits.weapon.name)}, zbroja ${escape(f.traits.armor.name)}, część bojowa ${escape(f.traits.headMaterial.name)}, chwyt ${escape(f.traits.gripMaterial.name)}">${textureDefs}<ellipse cx="148" cy="327" rx="90" ry="12" fill="#000" opacity=".22"/><path d="M111 141 Q65 179 74 289 L119 272 L150 170 L181 279 L213 290 Q213 185 177 142Z" fill="${color}" opacity=".85"/><path d="M111 141 Q65 179 74 289 L119 272 L150 170 L181 279 L213 290 Q213 185 177 142Z" fill="url(#${texturePrefix}-cloth)" opacity=".3"/><path d="${f.mounted?'M124 222 L109 250 L124 280 L144 280 L132 251 L151 236 L175 250 L163 281 L185 281 L196 248 L178 222':'M124 222 L116 303 L100 321 L139 321 L151 234 L163 304 L159 321 L197 321 L185 299 L178 222'}" fill="url(#${texturePrefix}-leather)" stroke="#171e1d" stroke-width="5"/><path d="M111 141 L178 141 L191 233 Q149 250 102 233Z" fill="url(#${texturePrefix}-${material})" stroke="#202725" stroke-width="5"/><path d="M122 145 L148 211 L177 146 M109 216 L183 216" fill="none" stroke="#d0b480" stroke-width="7"/><path d="M118 157 L111 227 M171 157 L182 227" stroke="#e9ddb5" stroke-width="1.5" opacity=".35" stroke-dasharray="2 5"/><circle cx="148" cy="104" r="32" fill="url(#${texturePrefix}-skin)"/><path d="M115 104 Q108 62 148 61 Q187 63 181 108 L166 91 L119 92" fill="${armor==='plate'?'#9da9a5':'#403b30'}"/><path d="M124 110 L139 109 M155 109 L169 110" stroke="#282b28" stroke-width="5"/><path d="M132 127 L149 145 L168 125" fill="#4a3c30"/><path d="M111 156 L88 198 L62 173 M179 157 L198 195 L222 153" fill="none" stroke="url(#${texturePrefix}-${material})" stroke-width="23" stroke-linecap="round"/><circle cx="62" cy="173" r="12" fill="url(#${texturePrefix}-skin)"/>${weaponSvg(f.picks.weapon,texturePrefix,false,{headTexture:f.traits.headMaterial.texture,gripTexture:f.traits.gripMaterial.texture})}${weaponSvg(f.picks.secondary,texturePrefix,true)}<circle cx="220" cy="160" r="10" fill="url(#${texturePrefix}-skin)"/><circle cx="62" cy="173" r="10" fill="url(#${texturePrefix}-skin)"/>${f.mode==='fantasy'?`<ellipse cx="148" cy="322" rx="78" ry="17" fill="none" stroke="#b8a0f1" stroke-width="2" opacity=".7"/><g class="special-item-badge"><circle cx="91" cy="215" r="14" fill="#433454" stroke="#cdb2fa" stroke-width="2"/><text x="91" y="220" text-anchor="middle" fill="#eee0ff" font-size="17">${f.traits.specialItem.icon}</text></g>`:''}</svg>`;}
-function steps(n){for(let i=0;i<3;i++)$('step'+i).classList.toggle('active',i===(format==='teams'?(n>=4?2:teamOf(n)):n));$('step0').querySelector('b').textContent=format==='teams'?'Drużyna A':'Pierwszy wojownik';$('step1').querySelector('b').textContent=format==='teams'?'Drużyna B':'Drugi wojownik';}
+function steps(n){for(let i=0;i<3;i++)$('step'+i).classList.toggle('active',i===(format==='teams'?(n>=4?2:teamOf(n)):n));$('step0').querySelector('b').textContent=format==='teams'?'Drużyna A':'Pierwszy wojownik';$('step1').querySelector('b').textContent=opponent==='bot'?(format==='teams'?'Drużyna bota':'Bot'):format==='teams'?'Drużyna B':'Drugi wojownik';}
 function renderFantasy(){
  $('fantasy-choices').innerHTML=mode==='fantasy'?fantasySlots.map(slot=>`<fieldset class="fantasy-category"><legend>${slot.icon} ${slot.name} <small>5 z 20</small></legend><div class="option-grid">${fantasyOffers[player][slot.id].map(o=>`<label class="option fantasy-option"><input type="radio" name="${slot.id}" value="${o.id}" ${picks[slot.id]===o.id?'checked':''}><span class="option-icon">${o.icon}</span>${o.chance!==undefined?`<span class="chance-badge">${Math.round(o.chance*100)}%</span>`:''}<span class="option-name">${o.name}</span><span class="option-desc">${o.desc}</span></label>`).join('')}</div></fieldset>`).join(''):'';
  const count=(hybrid?6:8)+(mode==='fantasy'?2:0)+(mounted?3:0);$('trait-count').textContent=`${count} / ${count} cech wybranych`;renderMounts();renderHybrid();
  document.body.dataset.mode=mode;
 }
-function renderCreator(){clearCombatVisuals();clearBeastEffects();steps(player);$('creator').hidden=false;$('arena').hidden=true;$('player-label').textContent=format==='teams'?`DRUŻYNA ${teamOf(player)===0?'A':'B'} · WOJOWNIK ${player%2+1} / 2`:`GRACZ 0${player+1}`;$('fighter-name').value=names[player];$('error').textContent='';
+function renderCreator(){cancelBotMove();clearCombatVisuals();clearBeastEffects();steps(player);$('creator').hidden=false;$('arena').hidden=true;$('player-label').textContent=format==='teams'?`DRUŻYNA ${teamOf(player)===0?'A':'B'} · WOJOWNIK ${player%2+1} / 2`:`GRACZ 0${player+1}`;$('fighter-name').value=names[player];$('error').textContent='';
 $('categories').innerHTML=(hybrid?categories.filter(c=>c.id==='ability'):categories).map(c=>`<fieldset class="category" data-category="${c.id}"><legend><span>${c.icon}</span> ${hybrid&&c.id==='ability'?'Instynkt specjalny':c.name}</legend><div class="option-grid">${offers[player][c.id].map(o=>`<label class="option"><input type="radio" name="${c.id}" value="${o.id}" ${picks[c.id]===o.id?'checked':''}><span class="option-icon ${['weapon','secondary'].includes(c.id)?'equipment-preview':''}">${['weapon','secondary'].includes(c.id)?weaponIcon(o.id,c.id==='weapon'?chosenTextures(o.id):{}):o.icon}</span>${c.id==='ability'?`<span class="chance-badge">${Math.round(abilityRules[o.id].chance*100)}%</span>`:''}${o.chance!==undefined?`<span class="chance-badge">${Math.round(o.chance*100)}%</span>`:''}<span class="option-name">${o.name}</span><span class="option-desc">${o.desc}</span></label>`).join('')}</div>${c.id==='weapon'?renderMaterials():''}</fieldset>`).join('');renderFantasy();preview();}
 function preview(){const f=createFighter($('fighter-name').value.trim()||'Wojownik',picks,duration,mode,mounted,hybrid);$('portrait').innerHTML=warrior(f,sideOf(player));for(const card of document.querySelectorAll('[data-category="weapon"] > .option-grid .option'))card.querySelector('.option-icon').innerHTML=weaponIcon(card.querySelector('input').value,chosenTextures(card.querySelector('input').value));$('stats').innerHTML=[['Siła',f.stats.attack,40],['Ochrona',f.stats.defense,30],['Szybkość',f.stats.speed,35],['Zdrowie',f.stats.health,260],['Celność',f.stats.accuracy,120],['Przebicie',f.stats.pierce,25],['Kondycja',f.stats.stamina,150]].map(([label,value,max])=>`<div><span>${label}</span><b>${value}</b><i style="--value:${Math.max(0,value)/max*100}%"></i></div>`).join('');}
 $('categories').addEventListener('change',e=>{if(e.target.matches('input')){const before={...picks};picks[e.target.name]=e.target.value;
@@ -54,25 +56,25 @@ if(e.target.name==='weapon'){
 $('fantasy-choices').addEventListener('change',e=>{if(e.target.matches('input')){picks[e.target.name]=e.target.value;preview();}});
 $('fighter-name').addEventListener('input',()=>{names[player]=$('fighter-name').value;preview();});
 $('randomize').onclick=()=>{const materials=Object.fromEntries(Object.keys(weaponMaterials).map(key=>[key,picks[key]]));offers[player]=drawOptions();fantasyOffers[player]=drawFantasyOptions();mountOffers[player]=drawMountOptions();const candidate={...defaults(),...(hybrid?Object.fromEntries(hybridParts.map(part=>[part.id,hybridAnimals[Math.floor(Math.random()*hybridAnimals.length)].id])):{}),...materials,beastArmor:picks.beastArmor||'none',beastAbility:picks.beastAbility==='none'?'none':mountOffers[player][0].id};picks=normalizeMount(normalizeMaterials(candidate));materialNotice=Object.keys(materials).some(key=>candidate[key]!==picks[key])?'Po losowaniu dopasowano materiały do nowej broni.':'';renderCreator();};
-$('confirm').onclick=()=>{try{fighters[player]=createFighter($('fighter-name').value,picks,duration,mode,mounted,hybrid);names[player]=fighters[player].name;if(player<rosterSize()-1){player++;materialNotice='';picks=fighters[player]?.picks?{...fighters[player].picks}:defaults();renderCreator();$('fighter-name').focus();}else showArena();}catch(e){$('error').textContent=e.message;$('fighter-name').focus();}};
-function showArena(){$('speed-controls').hidden=!(format==='duel'&&playback==='auto');clearCombatVisuals();clearBeastEffects();fighters=fighters.map(f=>createFighter(f.name,f.picks,duration,mode,mounted,hybrid));settingsLocked(false);$('team-controls').hidden=true;$('duel-controls').hidden=true;steps(rosterSize());$('creator').hidden=true;$('arena').hidden=false;$('result').hidden=true;$('fight').hidden=false;$('skip').hidden=true;$('round').textContent='PRZED POJEDYNKIEM';$('commentary').textContent=format==='teams'?'Dwie drużyny. Czterech wojowników. Wybierz, kto zaatakuje którego przeciwnika.':'Dwaj wojownicy. Jedna arena. Czas sprawdzić swoje wybory.';
-$('combatants').classList.toggle('team-grid',format==='teams');$('combatants').innerHTML=fighters.map((f,i)=>`<article id="combatant${i}" class="combatant side${sideOf(i)}"><div class="fighter-heading"><span>${format==='teams'?`DRUŻYNA ${teamOf(i)===0?'A':'B'} · ${i%2+1}`:`GRACZ 0${i+1}`}</span><h2>${escape(f.name)}</h2><p>${f.traits.origin.name} · ${f.traits.style.name}</p><div class="health" role="progressbar" aria-label="Zdrowie ${escape(f.name)}" aria-valuemin="0" aria-valuemax="${f.stats.health}" aria-valuenow="${f.stats.health}"><i></i></div><small id="hp${i}">${f.stats.health} / ${f.stats.health} HP</small><small class="combat-energy" id="energy${i}">Kondycja: ${f.stats.stamina} / ${f.stats.stamina}</small></div><div class="arena-warrior">${warrior(f,sideOf(i))}<span class="damage" id="damage${i}"></span></div><span class="loadout">${f.hybrid?hybridParts.map(part=>`${part.name}: ${f.traits[part.id].name}`).join('<br>'):`${f.traits.weapon.icon} ${f.traits.weapon.name} / ${f.traits.armor.name}<small>${f.traits.headMaterial.name} / ${f.traits.gripMaterial.name}</small>`}${f.mounted?`<small class="mount-loadout">${f.traits.beast.icon} ${f.traits.beast.name} · ${f.traits.beastArmor.name}<br>✺ ${f.traits.beastAbility.name} (${Math.round(f.traits.beastAbility.chance*100)}%)</small>`:''}${f.mode==='fantasy'?`<small class="fantasy-loadout">${f.traits.specialItem.icon} ${f.traits.specialItem.name} · ${f.traits.magicPower.icon} ${f.traits.magicPower.name}</small>`:''}</span>${format==='duel'&&playback==='auto'?`<label class="duel-tactic">Taktyka ${escape(f.name)}<select data-tactic-player="${i}" aria-label="Taktyka ${escape(f.name)}">${tacticOptions(false,duelTactics[i])}</select><small id="duel-tactic-note${i}">${tactics[duelTactics[i]].desc}</small></label>`:''}${format==='teams'?`<button class="secondary fighter-select" data-fighter="${i}" hidden>Wybierz ${escape(f.name)}</button>`:''}</article>`).join('');$('arena').scrollIntoView({behavior:'smooth',block:'start'});}
+$('confirm').onclick=()=>{try{fighters[player]=createFighter($('fighter-name').value,picks,duration,mode,mounted,hybrid);names[player]=fighters[player].name;if(opponent==='bot'&&player===(format==='teams'?1:0)){prepareBotRoster();showArena();return;}if(player<rosterSize()-1){player++;materialNotice='';picks=fighters[player]?.picks?{...fighters[player].picks}:defaults();renderCreator();$('fighter-name').focus();}else showArena();}catch(e){$('error').textContent=e.message;$('fighter-name').focus();}};
+function showArena(){$('arena').dataset.opponent=opponent;cancelBotMove();$('speed-controls').hidden=!(format==='duel'&&playback==='auto');clearCombatVisuals();clearBeastEffects();fighters=fighters.map(f=>createFighter(f.name,f.picks,duration,mode,mounted,hybrid));settingsLocked(false);$('team-controls').hidden=true;$('duel-controls').hidden=true;steps(rosterSize());$('creator').hidden=true;$('arena').hidden=false;$('result').hidden=true;$('fight').hidden=false;$('skip').hidden=true;$('round').textContent='PRZED POJEDYNKIEM';$('commentary').textContent=format==='teams'?'Dwie drużyny. Czterech wojowników. Wybierz, kto zaatakuje którego przeciwnika.':'Dwaj wojownicy. Jedna arena. Czas sprawdzić swoje wybory.';
+$('combatants').classList.toggle('team-grid',format==='teams');$('combatants').innerHTML=fighters.map((f,i)=>`<article id="combatant${i}" class="combatant side${sideOf(i)}"><div class="fighter-heading"><span>${opponent==='bot'&&sideOf(i)===1?'BOT · ':''}${format==='teams'?`DRUŻYNA ${teamOf(i)===0?'A':'B'} · ${i%2+1}`:`GRACZ 0${i+1}`}</span><h2>${escape(f.name)}</h2><p>${f.traits.origin.name} · ${f.traits.style.name}</p><div class="health" role="progressbar" aria-label="Zdrowie ${escape(f.name)}" aria-valuemin="0" aria-valuemax="${f.stats.health}" aria-valuenow="${f.stats.health}"><i></i></div><small id="hp${i}">${f.stats.health} / ${f.stats.health} HP</small><small class="combat-energy" id="energy${i}">Kondycja: ${f.stats.stamina} / ${f.stats.stamina}</small></div><div class="arena-warrior">${warrior(f,sideOf(i))}<span class="damage" id="damage${i}"></span></div><span class="loadout">${f.hybrid?hybridParts.map(part=>`${part.name}: ${f.traits[part.id].name}`).join('<br>'):`${f.traits.weapon.icon} ${f.traits.weapon.name} / ${f.traits.armor.name}<small>${f.traits.headMaterial.name} / ${f.traits.gripMaterial.name}</small>`}${f.mounted?`<small class="mount-loadout">${f.traits.beast.icon} ${f.traits.beast.name} · ${f.traits.beastArmor.name}<br>✺ ${f.traits.beastAbility.name} (${Math.round(f.traits.beastAbility.chance*100)}%)</small>`:''}${f.mode==='fantasy'?`<small class="fantasy-loadout">${f.traits.specialItem.icon} ${f.traits.specialItem.name} · ${f.traits.magicPower.icon} ${f.traits.magicPower.name}</small>`:''}</span>${format==='duel'&&playback==='auto'&&!(opponent==='bot'&&i===1)?`<label class="duel-tactic">Taktyka ${escape(f.name)}<select data-tactic-player="${i}" aria-label="Taktyka ${escape(f.name)}">${tacticOptions(false,duelTactics[i])}</select><small id="duel-tactic-note${i}">${tactics[duelTactics[i]].desc}</small></label>`:''}${format==='teams'?`<button class="secondary fighter-select" data-fighter="${i}" hidden>Wybierz ${escape(f.name)}</button>`:''}</article>`).join('');$('arena').scrollIntoView({behavior:'smooth',block:'start'});}
 function paint(e){clearCombatVisuals();clearBeastEffects();basePaint(e);animateBeastSkill(e,fighters);decorateCombat(e,fighters);}
 function basePaint(e){$('round').textContent=format==='teams'?`TURA ${playback==='auto'?index:teamBattle.events.length} / ${playback==='auto'?result.events.length:320}`:playback==='turns'?`TURA ${duelBattle.events.length} / 160`:`WYMIANA ${index} / ${result.events.length}`;$('commentary').textContent=(format==='teams'?`${fighters[e.actor].name} → ${fighters[e.target].name}: `:'')+e.text+(e.details?.length?' '+e.details.join(' '):'')+(e.weakened?' Osłabiony cios po rozbrojeniu.':'')+(e.ability?` ${fighters[e.actor].traits.ability.name}!`:'')+(e.healed?` +${e.healed} HP.`:'');for(let i=0;i<fighters.length;i++){const card=$('combatant'+i);card.className=`combatant side${sideOf(i)} ${i===e.actor?(e.kind==='defend'?'defending':e.kind==='rest'?'resting':e.magic?'attack casting':'attack'):i===e.target?(['rest','defend'].includes(e.kind)?'':e.kind==='dodge'?'dodge':'hit'):''} ${e.hp[i]===0?'defeated':''}`;const bar=card.querySelector('.health');bar.setAttribute('aria-valuenow',e.hp[i]);bar.querySelector('i').style.width=`${e.hp[i]/fighters[i].stats.health*100}%`;$('hp'+i).textContent=`${e.hp[i]} / ${fighters[i].stats.health} HP`;$('energy'+i).textContent=`Kondycja: ${e.energy[i]} / ${fighters[i].stats.stamina}`;$('damage'+i).textContent=i===e.target?(['rest','defend'].includes(e.kind)?'':(e.damage+(e.magicDamage||0))?`−${e.damage+(e.magicDamage||0)}`:e.kind==='dodge'?'UNIK':'BLOK'):i!==e.actor?'':(e.selfDamage||e.counterDamage)?`−${(e.selfDamage||0)+(e.counterDamage||0)}`:e.healed?`+${e.healed}`:'';}}
-function finish(){clearTimeout(timer);$('duel-controls').hidden=true;if(format==='teams'){index=result.events.length;paint(result.events.at(-1));$('skip').hidden=true;finishTeams();return;}settingsLocked(false);index=result.events.length;paint(result.events.at(-1));$('skip').hidden=true;$('result').hidden=false;$('winner').textContent=`Zwycięża ${fighters[result.winner].name}`;$('summary').textContent=describe(result,fighters);$('round').textContent='KONIEC POJEDYNKU';$('combatant'+result.winner).classList.add('victor');$('history').replaceChildren(...result.events.map(e=>{const li=document.createElement('li');li.textContent=e.text+(e.details?.length?' '+e.details.join(' '):'')+(e.weakened?' Osłabiony cios po rozbrojeniu.':'')+(e.ability?` Umiejętność: ${fighters[e.actor].traits.ability.name}.`:'');return li;}));}
+function finish(){cancelBotMove();clearTimeout(timer);$('duel-controls').hidden=true;if(format==='teams'){index=result.events.length;paint(result.events.at(-1));$('skip').hidden=true;finishTeams();return;}settingsLocked(false);index=result.events.length;paint(result.events.at(-1));$('skip').hidden=true;$('result').hidden=false;$('winner').textContent=`Zwycięża ${fighters[result.winner].name}`;$('summary').textContent=describe(result,fighters);$('round').textContent='KONIEC POJEDYNKU';$('combatant'+result.winner).classList.add('victor');$('history').replaceChildren(...result.events.map(e=>{const li=document.createElement('li');li.textContent=e.text+(e.details?.length?' '+e.details.join(' '):'')+(e.weakened?' Osłabiony cios po rozbrojeniu.':'')+(e.ability?` Umiejętność: ${fighters[e.actor].traits.ability.name}.`:'');return li;}));}
 function tick(){if(index>=result.events.length){finish();return;}paint(result.events[index++]);timer=setTimeout(tick,format==='duel'?duelDelay():650);}
-function fight(){clearTimeout(timer);showArena();if(playback==='turns'){if(format==='teams')startTeams();else startDuelTurns();return;}if(format==='teams'){teamBattle=simulateTeamBattle(fighters);result=teamBattle;}else result=simulate(...fighters.map((f,i)=>({...f,picks:{...f.picks,tactic:duelTactics[i]}})));settingsLocked(true);index=0;$('fight').hidden=true;$('skip').hidden=false;if(matchMedia('(prefers-reduced-motion: reduce)').matches)finish();else tick();}
+function fight(){cancelBotMove();clearTimeout(timer);showArena();if(playback==='turns'){if(format==='teams')startTeams();else startDuelTurns();return;}if(format==='teams'){teamBattle=opponent==='bot'?simulateBotTeams(fighters):simulateTeamBattle(fighters);result=teamBattle;}else if(opponent==='bot')result=simulateBotDuel(fighters,duelTactics[0]);else result=simulate(...fighters.map((f,i)=>({...f,picks:{...f.picks,tactic:duelTactics[i]}})));settingsLocked(true);index=0;$('fight').hidden=true;$('skip').hidden=false;if(matchMedia('(prefers-reduced-motion: reduce)').matches)finish();else tick();}
 $('fight').onclick=fight;$('skip').onclick=finish;$('rematch').onclick=fight;
 $('edit').onclick=()=>{clearTimeout(timer);player=0;materialNotice='';picks={...fighters[0].picks};renderCreator();};
-function resetRoster(){clearTimeout(timer);teamBattle=null;duelBattle=null;duelTactics=['balanced','balanced'];player=0;materialNotice='';fighters=[];names=format==='teams'?['Ragnar','Bjorn','Akira','Yuna']:['Ragnar','Akira'];offers=names.map(()=>drawOptions());fantasyOffers=names.map(()=>drawFantasyOptions());mountOffers=names.map(()=>drawMountOptions());settingsLocked(false);picks=defaults();renderCreator();}
+function resetRoster(){cancelBotMove();clearTimeout(timer);teamBattle=null;duelBattle=null;duelTactics=['balanced','balanced'];player=0;materialNotice='';fighters=[];names=format==='teams'?['Ragnar','Bjorn','Akira','Yuna']:['Ragnar','Akira'];offers=names.map(()=>drawOptions());fantasyOffers=names.map(()=>drawFantasyOptions());mountOffers=names.map(()=>drawMountOptions());settingsLocked(false);picks=defaults();renderCreator();}
 $('reset').onclick=resetRoster;
-$('format-settings').addEventListener('change',e=>{if(!e.target.matches('input'))return;format=e.target.value;playback=format==='teams'?'turns':'auto';document.querySelector(`input[name="playback"][value="${playback}"]`).checked=true;resetRoster();});
+$('format-settings').addEventListener('change',e=>{if(!e.target.matches('input'))return;format=e.target.value;playback=opponent==='bot'?'turns':format==='teams'?'turns':'auto';document.querySelector(`input[name="playback"][value="${playback}"]`).checked=true;resetRoster();});
 $('mode-settings').addEventListener('change',e=>{if(!e.target.matches('input'))return;mode=e.target.value;fighters=fighters.map(f=>createFighter(f.name,f.picks,duration,mode,mounted,hybrid));document.body.dataset.mode=mode;if($('creator').hidden)showArena();else{renderFantasy();preview();}});
 $('duration-settings').addEventListener('change',e=>{if(!e.target.matches('input'))return;duration=e.target.value;fighters=fighters.map(f=>createFighter(f.name,f.picks,duration,mode,mounted,hybrid));if($('creator').hidden)showArena();else preview();});
 $('help').onclick=()=>$('instructions').showModal();
 picks=defaults();renderCreator();
 
-function teamName(team){return `Drużyna ${team===0?'A':'B'}`;}
+function teamName(team){return opponent==='bot'&&team===1?'Drużyna bota':`Drużyna ${team===0?'A':'B'}`;}
 function updateTeamChoices(){$('team-tactic').value='balanced';$('team-tactic-note').textContent=tactics.balanced.desc;
  const actors=availableAttackers(teamBattle),targets=availableTargets(teamBattle);
  for(const [id,indices] of [['team-actor',actors],['team-target',targets]]){
@@ -80,7 +82,7 @@ function updateTeamChoices(){$('team-tactic').value='balanced';$('team-tactic-no
   if(indices.includes(previous))$(id).value=String(previous);
  }
  $('team-turn').textContent=`${teamName(teamBattle.activeTeam)} — wybierz atakującego i cel`;
- $('team-error').textContent='';highlightTeamChoices();
+ $('team-error').textContent='';highlightTeamChoices();queueBotMove();
 }
 function highlightTeamChoices(){
  const actor=Number($('team-actor').value),target=Number($('team-target').value);
@@ -96,11 +98,11 @@ function startTeams(){
 $('team-actor').onchange=highlightTeamChoices;$('team-target').onchange=highlightTeamChoices;
 $('combatants').addEventListener('click',e=>{const button=e.target.closest('[data-fighter]');if(!button||button.disabled||!teamBattle||teamBattle.finished)return;const i=Number(button.dataset.fighter);$(teamOf(i)===teamBattle.activeTeam?'team-actor':'team-target').value=String(i);highlightTeamChoices();});
 $('team-attack').onclick=()=>{
- if(!teamBattle||teamBattle.finished)return;
+ if(!teamBattle||teamBattle.finished||isBotTurn())return;
  try{const event=takeTeamTurn(teamBattle,Number($('team-actor').value),Number($('team-target').value),Math.random,$('team-tactic').value);paint(event);if(teamBattle.finished)finishTeams();else updateTeamChoices();}catch(error){$('team-error').textContent=error.message;}
 };
 function finishTeams(){
- settingsLocked(false);$('team-controls').hidden=true;$('result').hidden=false;$('round').textContent='KONIEC WALKI DRUŻYNOWEJ';
+ cancelBotMove(); settingsLocked(false);$('team-controls').hidden=true;$('result').hidden=false;$('round').textContent='KONIEC WALKI DRUŻYNOWEJ';
  const winner=teamBattle.winner;
  $('winner').textContent=winner===null?'Remis':`Zwycięża ${teamName(winner)}`;
  $('summary').textContent=teamBattle.reason==='knockout'?'Obaj przeciwnicy zostali pokonani.':`Po 320 turach decyduje suma pozostałych procentów zdrowia drużyny.${winner===null?' Obie drużyny uzyskały ten sam wynik.':''}`;
@@ -129,7 +131,7 @@ $('team-tactic').onchange=()=>{$('team-tactic-note').textContent=tactics[$('team
 $('playback-settings').addEventListener('change',e=>{if(!e.target.matches('input'))return;playback=e.target.value;if($('creator').hidden)showArena();});
 function updateDuelTurn(){
  const actor=duelBattle.activeActor;$('duel-turn').textContent=`Tura: ${fighters[actor].name}`;
- fighters.forEach((_,i)=>$('combatant'+i).classList.toggle('selected-attacker',i===actor));
+ fighters.forEach((_,i)=>$('combatant'+i).classList.toggle('selected-attacker',i===actor));queueBotMove();
 }
 function startDuelTurns(){
  duelBattle=createDuelBattle(fighters);settingsLocked(true);$('fight').hidden=true;$('duel-controls').hidden=false;
@@ -137,7 +139,7 @@ function startDuelTurns(){
  $('commentary').textContent='Wybierz atak, odpoczynek albo obronę. Po akcji kolej przechodzi na przeciwnika.';
 }
 $('duel-controls').addEventListener('click',e=>{
- const action=e.target.closest('[data-duel-action]');if(!action||!duelBattle||duelBattle.finished)return;
+ const action=e.target.closest('[data-duel-action]');if(!action||!duelBattle||duelBattle.finished||isBotTurn())return;
  try{
   const tactic=action.dataset.duelAction==='attack'?$('duel-tactic').value:action.dataset.duelAction;
   const event=takeDuelTurn(duelBattle,tactic);paint(event);
@@ -147,7 +149,7 @@ $('duel-controls').addEventListener('click',e=>{
 
 $('duel-tactic').onchange=()=>{$('duel-action-note').textContent=tactics[$('duel-tactic').value].desc;};
 
-function renderHybrid(){
+function renderHybrid(){$('pve-note').hidden=opponent!=='bot';$('pve-note').textContent=format==='teams'?'PvE: tworzysz dwóch sojuszników. Bot sam stworzy drużynę przeciwną i wykona jej tury.':'PvE: tworzysz swoją postać. Bot sam stworzy przeciwnika i wykona jego tury.';
  $('hybrid-choices').hidden=!hybrid;
  $('hybrid-choices').innerHTML=hybrid?`<p class="hybrid-note">Połącz części zwierząt. Zastępują broń, zbroję i pochodzenie wojownika — walczysz kłami, pazurami i własnym ciałem.</p>${hybridParts.map(part=>`<fieldset class="hybrid-category" data-hybrid-part="${part.id}"><legend>${part.name}</legend><div class="option-grid">${hybridAnimals.map(animal=>{const o=hybridOption(part,animal);return `<label class="option"><input type="radio" name="${part.id}" value="${o.id}" ${picks[part.id]===o.id?'checked':''}><span class="animal-swatch" style="--animal-color:${o.color}"></span><span class="option-name">${o.name}</span><span class="option-desc">${o.desc}</span></label>`;}).join('')}</div></fieldset>`).join('')}`:'';
  $('confirm').firstChild.textContent=hybrid?'Zatwierdź hybrydę ':'Zatwierdź wojownika ';
@@ -167,4 +169,35 @@ $('speed-controls').addEventListener('change',e=>{
  const speed=Number(e.target.value);if(![1,2,3].includes(speed))return;duelSpeed=speed;
  $('speed-note').textContent=`Odstęp między akcjami: ${(duelDelay()/1000).toLocaleString('pl-PL',{maximumFractionDigits:2})} s.`;
  if(format==='duel'&&playback==='auto'&&$('fight').hidden&&$('result').hidden&&!$('arena').hidden){clearTimeout(timer);timer=setTimeout(tick,duelDelay());}
+});
+
+function prepareBotRoster(){
+ for(let i=format==='teams'?2:1;i<rosterSize();i++){
+  if(!fighters[i])fighters[i]=createBotFighter({index:i-(format==='teams'?2:1),offers:offers[i],fantasyOffers:fantasyOffers[i],mountOffers:mountOffers[i],duration,mode,mounted,hybrid});
+  names[i]=fighters[i].name;
+ }
+}
+function isBotTurn(){return opponent==='bot'&&playback==='turns'&&(format==='teams'?teamBattle&&!teamBattle.finished&&teamBattle.activeTeam===1:duelBattle&&!duelBattle.finished&&duelBattle.activeActor===1);}
+function cancelBotMove(){clearTimeout(botTimer);botTimer=null;$('bot-status').hidden=true;}
+function queueBotMove(){
+ cancelBotMove();const busy=Boolean(isBotTurn());
+ document.querySelectorAll('#duel-controls button,#duel-controls select,#team-controls button,#team-controls select').forEach(n=>n.disabled=busy);
+ if(!busy)return;
+ document.querySelectorAll('.fighter-select').forEach(n=>n.disabled=true);
+ const battle=format==='teams'?teamBattle:duelBattle;
+ $('bot-status').hidden=false;$('bot-status').textContent='Bot wybiera ruch…';
+ botTimer=setTimeout(()=>{
+  botTimer=null;if(battle!==(format==='teams'?teamBattle:duelBattle)||battle.finished||!isBotTurn()||$('arena').hidden)return;
+  let event;
+  if(format==='teams'){const move=chooseBotTeamAction(battle);event=takeTeamTurn(battle,move.actor,move.target,Math.random,move.tactic);}
+  else{const actor=battle.activeActor;event=takeDuelTurn(battle,chooseBotTactic(battle,actor,1-actor));}
+  paint(event);
+  if(battle.finished){if(format==='teams')finishTeams();else{result=battle;finish();}}
+  else if(format==='teams')updateTeamChoices();else updateDuelTurn();
+ },700);
+}
+$('opponent-settings').addEventListener('change',e=>{
+ if(!e.target.matches('input'))return;opponent=e.target.value;
+ if(opponent==='bot'){playback='turns';document.querySelector('input[name="playback"][value="turns"]').checked=true;}
+ resetRoster();
 });
