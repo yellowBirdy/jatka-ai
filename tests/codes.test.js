@@ -1,0 +1,5 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {emptyProgress,redeemCode,readProgress,saveProgress} from '../progression.js';
+test('cheat adds 1000 EXP once per profile and accepts trimmed mixed case',()=>{const p=emptyProgress();assert.equal(redeemCode(p,'0',' ChEaT ').ok,true);assert.equal(p[0].xp,1000);assert.equal(redeemCode(p,'0','cheat').ok,false);assert.equal(p[0].xp,1000);assert.equal(redeemCode(p,'1','cheat').ok,true);assert.equal(p[1].xp,1000);});
+test('invalid codes and missing profiles do not grant EXP',()=>{const p=emptyProgress();for(const [id,code]of [['','cheat'],['9','cheat'],['0','wrong'],['0','']])assert.equal(redeemCode(p,id,code).ok,false);assert.equal(p[0].xp,0);});
+test('redeemed codes survive save/reload and legacy profiles still work',()=>{let data;const storage={setItem:(_,v)=>data=v,getItem:()=>data};const p=emptyProgress();redeemCode(p,'0','cheat');saveProgress(storage,p);assert.equal(redeemCode(readProgress(storage),'0','cheat').ok,false);data=JSON.stringify([{xp:60,armors:[]}]);const old=readProgress(storage);assert.equal(redeemCode(old,'0','cheat').ok,true);assert.equal(old[0].xp,1060);});

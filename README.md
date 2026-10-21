@@ -10,6 +10,8 @@ W kreatorze można otworzyć box za 100 EXP. Pula zawiera 20 zbroi, od zwykłej 
 
 Lekkie zbroje premiują szybkość (Płaszcz zwiadowcy: 1 ochrony, +6 szybkości), ciężkie ją obniżają. 15 lepszych zbroi z boxów ma własne zdolności, opisane na kartach. Aktywują się co 3 lub 4 własny atak; Ostatnia nadzieja działa raz przy maksymalnie 35% HP. Odpoczynek i obrona nie nabijają licznika. Działanie zdolności zapisuje się w historii walki.
 
+Panel „Mam kod” u góry profili pozwala odebrać nagrodę na wybrany profil. Kod `cheat` przyznaje 1000 EXP jednorazowo na profil; wykorzystanie zapisuje się wraz z postępem.
+
 ## Uruchomienie
 
 W katalogu repozytorium:

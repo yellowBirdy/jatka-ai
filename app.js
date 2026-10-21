@@ -1,4 +1,4 @@
-import {readProgress,saveProgress,buyBox,rewardProfiles,lootArmors,drawArmorOffer} from './progression.js?v=armor-28';
+import {readProgress,saveProgress,buyBox,rewardProfiles,lootArmors,drawArmorOffer,redeemCode} from './progression.js?v=codes-30';
 import {readProfiles,writeProfiles} from './profiles.js?v=loot-25';
 import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=armor-28';
 import {textureAnimalSvg} from './surface-textures.js?v=impact-22';
@@ -53,6 +53,11 @@ let profiles=readProfiles(profileStorage),owners=['','','',''];
 const progress=readProgress(profileStorage),rewarded=new WeakSet();
 function ownerLabel(i){return opponent==='bot'&&sideOf(i)===1?'Komputer (bot)':profiles[owners[i]]?`Profil: ${profiles[owners[i]]}`:'Gość';}
 function refreshProfiles(){
+ const codeSelect=$('code-profile'),previous=codeSelect.value;
+ codeSelect.replaceChildren(...profiles.flatMap((name,i)=>name?[new Option(`${i+1}. ${name}`,String(i))]:[]));
+ if(!codeSelect.options.length)codeSelect.add(new Option('Najpierw dodaj profil',''));
+ else if(profiles[previous])codeSelect.value=previous;
+
  for(let i=0;i<owners.length;i++)if(!profiles[owners[i]])owners[i]='';
  const select=$('fighter-profile');select.replaceChildren(new Option('Gość — bez profilu',''),...profiles.flatMap((name,i)=>name?[new Option(`${i+1}. ${name}`,String(i))]:[]));select.value=owners[player]||'';
  document.querySelectorAll('[data-owner]').forEach(node=>node.textContent=ownerLabel(Number(node.dataset.owner)));
@@ -292,4 +297,13 @@ document.querySelector('.arena-mode-tabs').addEventListener('click',e=>{
   if(!input.checked){input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}));}
  }
  updateSettingsSummary();
+});
+
+$('code-form').addEventListener('submit',e=>{
+ e.preventDefault();const id=$('code-profile').value;
+ const outcome=redeemCode(progress,profiles[id]?id:'',$('redeem-code').value);
+ const saved=outcome.ok?saveProgress(profileStorage,progress):true;
+ $('code-status').textContent=outcome.message+(saved?'':' Zapis niedostępny — nagroda pozostanie do zamknięcia strony.');
+ $('code-status').dataset.success=String(outcome.ok);
+ if(outcome.ok){$('redeem-code').value='';renderShop();}
 });
