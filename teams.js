@@ -1,5 +1,5 @@
 import {resolveTactic} from './tactics.js?v=playback-18';
-import {createCombatState,resolveTurn} from './combat.js?v=armor-28';
+import {createCombatState,resolveTurn} from './combat.js?v=creatures-31';
 export const teamOf=index=>Math.floor(index/2);
 const living=(battle,team)=>battle.fighters.map((_,i)=>i).filter(i=>teamOf(i)===team&&battle.state.hp[i]>0);
 export function createTeamBattle(fighters,random=Math.random){

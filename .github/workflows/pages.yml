@@ -37,7 +37,7 @@ jobs:
       - name: Prepare static game
         run: |
           mkdir site
-          cp index.html app.js armor-skills.js profiles.js progression.js bot.js surface-textures.js combat-visuals.js hybrids.js turns.js tactics.js beast-effects.js mounts.js beast-abilities.js tutorial.js teams.js engine.js fantasy.js materials.js catalog.js abilities.js combat.js probability.js weapons.js style.css site/
+          cp index.html app.js creature-art.js armor-skills.js profiles.js progression.js bot.js surface-textures.js combat-visuals.js hybrids.js turns.js tactics.js beast-effects.js mounts.js beast-abilities.js tutorial.js teams.js engine.js fantasy.js materials.js catalog.js abilities.js combat.js probability.js weapons.js style.css site/
           cp -R assets site/assets
           touch site/.nojekyll
       - uses: actions/upload-pages-artifact@v3

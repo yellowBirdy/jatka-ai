@@ -1,20 +1,21 @@
-import {readProgress,saveProgress,buyBox,rewardProfiles,lootArmors,drawArmorOffer,redeemCode} from './progression.js?v=codes-30';
+import {decorateChoices} from './creature-art.js?v=creatures-31';
+import {readProgress,saveProgress,buyBox,rewardProfiles,lootArmors,drawArmorOffer,redeemCode} from './progression.js?v=creatures-31';
 import {readProfiles,writeProfiles} from './profiles.js?v=loot-25';
-import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=armor-28';
-import {textureAnimalSvg} from './surface-textures.js?v=impact-22';
+import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=creatures-31';
+import {textureAnimalSvg} from './surface-textures.js?v=creatures-31';
 import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=impact-22';
-import {hybridParts,hybridAnimals,hybridDefaults,hybridOption,hybridSvg} from './hybrids.js?v=hybrids-19';
-import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=armor-28';
+import {hybridParts,hybridAnimals,hybridDefaults,hybridOption,hybridSvg} from './hybrids.js?v=creatures-31';
+import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=creatures-31';
 import {tactics} from './tactics.js?v=hybrids-19';
 import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=hybrids-19';
 import {getBeastAbilities} from './beast-abilities.js?v=hybrids-19';
-import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait} from './mounts.js?v=hybrids-19';
+import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait} from './mounts.js?v=creatures-31';
 import {setupTutorial} from './tutorial.js?v=hybrids-19';
-import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=armor-28';
+import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=creatures-31';
 import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=fantasy-pools-9';
 import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=weapon-families-6';
 import {weaponSvg,weaponIcon} from './weapons.js?v=weapon-families-6';
-import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=armor-28';
+import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=creatures-31';
 const $=id=>document.getElementById(id);
 let player=0,picks={},fighters=[],names=['Ragnar','Akira'],timer,result,index=0;
 let opponent='local',botTimer=null,rematchBattle=false;
@@ -107,7 +108,7 @@ function syncArmorOffer(){
 }
 function renderCreator(){syncArmorOffer();refreshProfiles();cancelBotMove();clearCombatVisuals();clearBeastEffects();steps(player);$('creator').hidden=false;renderShop();$('arena').hidden=true;$('player-label').textContent=format==='teams'?`DRUŻYNA ${teamOf(player)===0?'A':'B'} · WOJOWNIK ${player%2+1} / 2`:`GRACZ 0${player+1}`;$('fighter-name').value=names[player];$('error').textContent='';
 $('categories').innerHTML=(hybrid?categories.filter(c=>c.id==='ability'):categories).map(c=>`<fieldset class="category" data-category="${c.id}"><legend><span>${c.icon}</span> ${hybrid&&c.id==='ability'?'Instynkt specjalny':c.name}${c.id==='armor'?` <small>5 z ${20+(profiles[owners[player]]?progress[owners[player]].armors.length:0)}</small>`:''}</legend><div class="option-grid">${offers[player][c.id].map(o=>`<label class="option"><input type="radio" name="${c.id}" value="${o.id}" ${picks[c.id]===o.id?'checked':''}><span class="option-icon ${['weapon','secondary'].includes(c.id)?'equipment-preview':''}">${['weapon','secondary'].includes(c.id)?weaponIcon(o.id,c.id==='weapon'?chosenTextures(o.id):{}):o.icon}</span>${c.id==='ability'?`<span class="chance-badge">${Math.round(abilityRules[o.id].chance*100)}%</span>`:''}${o.chance!==undefined?`<span class="chance-badge">${Math.round(o.chance*100)}%</span>`:''}<span class="option-name">${o.name}</span><span class="option-desc">${o.desc}${c.id==='armor'&&o.chance!==undefined?` · ${o.chance}% w boxie · ${o.rarity}`:''}</span></label>`).join('')}</div>${c.id==='weapon'?renderMaterials():''}</fieldset>`).join('');renderFantasy();preview();}
-function preview(){const f=createFighter($('fighter-name').value.trim()||'Wojownik',picks,duration,mode,mounted,hybrid);$('portrait').innerHTML=warrior(f,sideOf(player));for(const card of document.querySelectorAll('[data-category="weapon"] > .option-grid .option'))card.querySelector('.option-icon').innerHTML=weaponIcon(card.querySelector('input').value,chosenTextures(card.querySelector('input').value));$('armor-stats').textContent=hybrid?'':`${f.traits.armor.name}: ochrona +${f.traits.armor.stats?.defense||0}, Szybkość ${(f.traits.armor.stats?.speed||0)>=0?'+':''}${f.traits.armor.stats?.speed||0}, HP ${(f.traits.armor.stats?.health||0)>=0?'+':''}${f.traits.armor.stats?.health||0}. Zastępuje premie poprzedniej zbroi.${f.traits.armor.skill?` ✦ ${f.traits.armor.skill.name}: ${f.traits.armor.skill.description}`:''}`;$('stats').innerHTML=[['Siła',f.stats.attack,40],['Ochrona',f.stats.defense,30],['Szybkość',f.stats.speed,35],['Zdrowie',f.stats.health,260],['Celność',f.stats.accuracy,120],['Przebicie',f.stats.pierce,25],['Kondycja',f.stats.stamina,150]].map(([label,value,max])=>`<div><span>${label}</span><b>${value}</b><i style="--value:${Math.max(0,value)/max*100}%"></i></div>`).join('');}
+function preview(){decorateChoices($('creator'));const f=createFighter($('fighter-name').value.trim()||'Wojownik',picks,duration,mode,mounted,hybrid);$('portrait').innerHTML=warrior(f,sideOf(player));for(const card of document.querySelectorAll('[data-category="weapon"] > .option-grid .option'))card.querySelector('.option-icon').innerHTML=weaponIcon(card.querySelector('input').value,chosenTextures(card.querySelector('input').value));$('armor-stats').textContent=hybrid?'':`${f.traits.armor.name}: ochrona +${f.traits.armor.stats?.defense||0}, Szybkość ${(f.traits.armor.stats?.speed||0)>=0?'+':''}${f.traits.armor.stats?.speed||0}, HP ${(f.traits.armor.stats?.health||0)>=0?'+':''}${f.traits.armor.stats?.health||0}. Zastępuje premie poprzedniej zbroi.${f.traits.armor.skill?` ✦ ${f.traits.armor.skill.name}: ${f.traits.armor.skill.description}`:''}`;$('stats').innerHTML=[['Siła',f.stats.attack,40],['Ochrona',f.stats.defense,30],['Szybkość',f.stats.speed,35],['Zdrowie',f.stats.health,260],['Celność',f.stats.accuracy,120],['Przebicie',f.stats.pierce,25],['Kondycja',f.stats.stamina,150]].map(([label,value,max])=>`<div><span>${label}</span><b>${value}</b><i style="--value:${Math.max(0,value)/max*100}%"></i></div>`).join('');}
 $('categories').addEventListener('change',e=>{if(e.target.matches('input')){const before={...picks};picks[e.target.name]=e.target.value;
 if(e.target.name==='weapon'){
  picks=normalizeMaterials(picks);materialNotice=['headMaterial','gripMaterial'].some(key=>before[key]!==picks[key])?'Niepasujące materiały zastąpiono domyślnymi dla tej broni.':'';

@@ -1,4 +1,4 @@
-import {applyArmorSkill} from './armor-skills.js?v=armor-28';
+import {applyArmorSkill} from './armor-skills.js?v=creatures-31';
 import {resolveTactic} from './tactics.js?v=playback-18';
 import {applyBeastAbility} from './beast-abilities.js?v=playback-18';
 import {rollChance} from './probability.js?v=chance-8';
@@ -59,7 +59,7 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor,tact
  if(tempo)bonus+=rules.pace.power;
  if(state.battlecry[actor]>0){state.battlecry[actor]--;bonus+=4;details.push('Runiczny okrzyk: +4 siły.');}
  let defense=ability==='overhead'?0:Math.max(0,d.defense+state.tacticDefense[target]-state.armorDamage[target]-s.pierce-exposure-(ability==='gap'?rule.break:0)-(ability==='precise'?rule.pierce:0));
- const strength=s.attack+plan.attack+(armorSkill?.id==='emperor'?8:0)+(random()*8-4)+bonus-(weakened?rules.disarm.penalty:0);
+ const strength=s.attack+plan.attack+(armorSkill?.id==='emperor'?5:0)+(random()*8-4)+bonus-(weakened?rules.disarm.penalty:0);
  const scale=(exhausted?.65:1)*(staggered?rules.pommel.ratio:1);
  const raw=(power,protection=defense)=>Math.max(2,Math.round((power-protection*.6)*scale));
  function strike(amount){let dealt=amount;
@@ -79,7 +79,7 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor,tact
  const hit=!evaded&&(ability==='precise'||random()<chance);
  const weaponStrike=amount=>strike(amount>0?amount+(f[actor].mounted?10:0):0);
  weaponStrike(hit?raw(strength):0);
- if(armorSkill?.id==='wargod'&&hp[actor]>0&&hp[target]>0)strike(18);
+ if(armorSkill?.id==='wargod'&&hp[actor]>0&&hp[target]>0)strike(10);
  if(ability==='combo'&&!evaded&&hp[target]>0&&hp[actor]>0){weaponStrike(random()<chance?raw(strength*rule.ratio):0);details.push(`Seria dwóch ciosów: ${strikes.join(' + ')} HP.`);}
  if(ability==='feint-strike'&&!evaded&&hp[actor]>0){
   if(!hit)weaponStrike(Math.max(2,Math.round(raw(strength)*rule.ratio)));
