@@ -1,20 +1,20 @@
-import {readProgress,saveProgress,buyBox,buyBeastBox,rewardProfiles,lootArmors,drawArmorOffer,redeemCode} from './progression.js?v=species-38';
-import {readProfiles,writeProfiles} from './profiles.js?v=species-38';
-import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=species-38';
-import {textureAnimalSvg} from './surface-textures.js?v=species-38';
-import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=species-38';
-import {hybridParts,hybridAnimals,hybridDefaults,hybridOption,hybridSvg} from './hybrids.js?v=species-38';
-import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=species-38';
-import {tactics} from './tactics.js?v=species-38';
-import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=species-38';
-import {getBeastAbilities} from './beast-abilities.js?v=species-38';
-import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait,beastSkins,beastLootArmors,allBeasts,lootBeasts} from './mounts.js?v=species-38';
-import {setupTutorial} from './tutorial.js?v=species-38';
-import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=species-38';
-import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=species-38';
-import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=species-38';
-import {weaponSvg,weaponIcon} from './weapons.js?v=species-38';
-import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=species-38';
+import {readProgress,saveProgress,buyBoxes,rewardProfiles,lootArmors,drawArmorOffer,redeemCode} from './progression.js?v=bulk-39';
+import {readProfiles,writeProfiles} from './profiles.js?v=bulk-39';
+import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=bulk-39';
+import {textureAnimalSvg} from './surface-textures.js?v=bulk-39';
+import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=bulk-39';
+import {hybridParts,hybridAnimals,hybridDefaults,hybridOption,hybridSvg} from './hybrids.js?v=bulk-39';
+import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=bulk-39';
+import {tactics} from './tactics.js?v=bulk-39';
+import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=bulk-39';
+import {getBeastAbilities} from './beast-abilities.js?v=bulk-39';
+import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait,beastSkins,beastLootArmors,allBeasts,lootBeasts} from './mounts.js?v=bulk-39';
+import {setupTutorial} from './tutorial.js?v=bulk-39';
+import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=bulk-39';
+import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=bulk-39';
+import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=bulk-39';
+import {weaponSvg,weaponIcon} from './weapons.js?v=bulk-39';
+import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=bulk-39';
 const $=id=>document.getElementById(id);
 let player=0,picks={},fighters=[],names=['Ragnar','Akira'],timer,result,index=0;
 let opponent='local',botTimer=null,rematchBattle=false;
@@ -77,23 +77,27 @@ function renderShop(){
   if(!name)return [];const p=progress[i],card=document.createElement('div'),label=document.createElement('span'),button=document.createElement('button');
   label.textContent=`${name} · ${p.xp} EXP · Zdobyte zbroje: ${p.armors.length}/20 · ${p.armors.map(id=>lootArmors.find(a=>a.id===id).name).join(', ')||'brak'}`;
   button.type='button';button.className='quiet';button.textContent='Otwórz box · 100 EXP';button.dataset.box=i;
-  button.disabled=$('creator').hidden||p.xp<100;
+  const count=p.codes.includes('x10box')?Number(document.querySelector(`[data-box-count="${i}"]`)?.value||1):1;
+  button.disabled=$('creator').hidden||p.xp<100*count;button.textContent=`Otwórz ${count===1?'box':count+' boxów'} · ${count*100} EXP`;
   card.append(label,button);
+  if(p.codes.includes('x10box')){const countLabel=document.createElement('label');countLabel.textContent='Skrzynki naraz';const select=document.createElement('select');select.dataset.boxCount=i;select.setAttribute('aria-label',`Liczba skrzynek — ${name}`);select.replaceChildren(...Array.from({length:10},(_,n)=>new Option(`${n+1} · ${(n+1)*100} EXP`,String(n+1))));select.value=String(count);select.disabled=$('creator').hidden;countLabel.append(select);card.append(countLabel);}
   const species=document.createElement('select');species.dataset.boxSpecies=i;species.setAttribute('aria-label',`Gatunek dla skrzynki zbroi lub skina — ${name}`);
   const previous=document.querySelector(`[data-box-species="${i}"]`)?.value;
   species.title='Gatunek dla skrzynki zbroi lub skina';species.replaceChildren(...allBeasts.map(b=>new Option(b.name,b.id)));species.value=previous||'horse';species.disabled=$('creator').hidden;card.append(species);
   for(const [kind,title,field] of [['armor','Box zbroi bestii','beastArmors'],['skin','Box skinów bestii','beastSkins'],['beast','Box bestii','beasts']]){
    const extra=document.createElement('button');extra.type='button';extra.className='quiet';extra.dataset.beastBox=kind;extra.dataset.profile=i;
-   extra.textContent=`${title} · 100 EXP (${p[field].length}/${kind==='beast'?5:125})`;extra.disabled=$('creator').hidden||p.xp<100;card.append(extra);
+   extra.textContent=`${title} · ${count} × 100 EXP (${p[field].length}/${kind==='beast'?5:125})`;extra.disabled=$('creator').hidden||p.xp<100*count;card.append(extra);
   }return [card];
  }));
 }
+$('profile-shop').addEventListener('change',e=>{if(e.target.matches('[data-box-count]'))renderShop();});
 $('profile-shop').addEventListener('click',e=>{
  const button=e.target.closest('[data-box],[data-beast-box]');if(!button||$('creator').hidden)return;
- const owner=button.dataset.profile??button.dataset.box;const drop=button.dataset.beastBox?buyBeastBox(progress,Number(owner),button.dataset.beastBox,Math.random,document.querySelector(`[data-box-species="${owner}"]`).value):buyBox(progress,Number(owner));if(!drop)return;
- const saved=saveProgress(profileStorage,progress);
- $('profile-status').textContent=`${drop.armor.rarity}: ${drop.armor.name} (${drop.armor.chance}%). ${drop.duplicate?'Duplikat — zwrot 25 EXP.':drop.kind?'Odblokowano w wyposażeniu bestii tego profilu!':'Dodano do puli zbroi tego profilu!'}${saved?' Zapisano.':' Zapis niedostępny.'}`;
- renderCreator();openBox(drop,owner);
+ const owner=button.dataset.profile??button.dataset.box,count=Number(document.querySelector(`[data-box-count="${owner}"]`)?.value||1);
+ const drops=buyBoxes(progress,Number(owner),button.dataset.beastBox||'warrior',count,Math.random,document.querySelector(`[data-box-species="${owner}"]`).value);if(!drops)return;
+ const saved=saveProgress(profileStorage,progress),drop=drops[0];
+ $('profile-status').textContent=drops.length>1?`Otwarto ${drops.length} skrzynek. Nowe: ${drops.filter(d=>!d.duplicate).length}, duplikaty: ${drops.filter(d=>d.duplicate).length}. Zwrot: ${drops.filter(d=>d.duplicate).length*25} EXP.${saved?' Zapisano.':' Zapis niedostępny.'}`:`${drop.armor.rarity}: ${drop.armor.name} (${drop.armor.chance}%). ${drop.duplicate?'Duplikat — zwrot 25 EXP.':drop.kind?'Odblokowano w wyposażeniu bestii tego profilu!':'Dodano do puli zbroi tego profilu!'}${saved?' Zapisano.':' Zapis niedostępny.'}`;
+ renderCreator();openBox(drops,owner);
 });
 function grantRewards(battle){
  if(rewarded.has(battle))return;rewarded.add(battle);
@@ -288,17 +292,19 @@ function updateSettingsSummary(){
 }
 document.querySelector('.match-settings').addEventListener('change',updateSettingsSummary);updateSettingsSummary();
 let boxTimer=null,boxReveal=null,boxOwner=null;
-function openBox(drop,owner){
+function openBox(drops,owner){
+ const drop=drops[0];
  clearTimeout(boxTimer);boxOwner=owner;
  const dialog=$('box-dialog'),armor=drop.armor;
  dialog.dataset.phase='opening';dialog.dataset.rarity=armor.rarity==='Legendarna'?'legendary':armor.rarity==='Epicka'?'epic':armor.rarity==='Rzadka'?'rare':'common';
- $('box-result').replaceChildren();$('box-title').textContent='Otwieranie skrzyni…';$('box-close').hidden=true;$('box-skip').hidden=false;
+ $('box-result').replaceChildren();$('box-title').textContent=drops.length>1?`Otwieranie ${drops.length} skrzynek…`:'Otwieranie skrzyni…';$('box-close').hidden=true;$('box-skip').hidden=false;
  boxReveal=()=>{
   if(dialog.dataset.phase==='revealed')return;clearTimeout(boxTimer);dialog.dataset.phase='revealed';$('box-title').textContent=drop.kind?(drop.duplicate?'Duplikat — zwrot EXP!':drop.kind==='beast'?'Nowa bestia w kolekcji!':drop.kind==='skin'?'Nowy skin bestii!':'Nowa zbroja bestii!'):(drop.duplicate?'Znana zbroja, nowa nagroda!':'Nowa zbroja w Twojej puli!');
   const rarity=document.createElement('span'),name=document.createElement('h3'),stats=document.createElement('p'),note=document.createElement('p');
   rarity.className='box-rarity';rarity.textContent=`${armor.rarity} · ${armor.chance}% szansy`;
   name.textContent=armor.name;stats.textContent=armor.desc;note.textContent=drop.kind&&!drop.duplicate?'Odblokowano dla tego profilu. Włącz Wierzchowce i wybierz przedmiot pod bestią.':drop.duplicate?'Duplikat — zwrot 25 EXP.':'Dodano do puli zbroi tego profilu. Wylosuj ją w zwykłym slocie Zbroja!';
-  $('box-result').append(rarity,name,stats,note);$('box-skip').hidden=true;$('box-close').hidden=false;$('box-close').focus();
+  $('box-result').append(rarity,name,stats,note);
+  if(drops.length>1){$('box-title').textContent=`Otwarto ${drops.length} skrzynek!`;$('box-result').replaceChildren();for(const item of drops){const card=document.createElement('div');card.className='bulk-drop';const heading=document.createElement('h3'),info=document.createElement('p');heading.textContent=item.armor.name;info.textContent=`${item.armor.rarity} · ${item.armor.chance}% · ${item.duplicate?'Duplikat — zwrot 25 EXP':'Nowy przedmiot'} · ${item.armor.desc}`;card.append(heading,info);$('box-result').append(card);}}$('box-skip').hidden=true;$('box-close').hidden=false;$('box-close').focus();
  };
  dialog.showModal();if(matchMedia('(prefers-reduced-motion: reduce)').matches)boxReveal();else boxTimer=setTimeout(boxReveal,1500);
 }
