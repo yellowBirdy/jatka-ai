@@ -1,8 +1,8 @@
 const animalIds=['horse','wolf','boar','bear','rhino','tiger','lion','elk','mammoth','lizard','ostrich','camel','bison','buffalo','hyena','stag','panther','polar-bear','yak','crocodile','cheetah','eagle','scorpion','snake','gorilla'];
 let sequence=0;
-export function animalSprite(id,x,y,width,height,crop='0 0 1 1'){
- const i=animalIds.indexOf(id);if(i<0)return '';
- return `<svg data-painted-animal="${id}" x="${x}" y="${y}" width="${width}" height="${height}" viewBox="${crop}" preserveAspectRatio="none" overflow="hidden"><image href="assets/choices/animal-sprites.webp" x="${-i%5}" y="${-Math.floor(i/5)}" width="5" height="5" preserveAspectRatio="none"/></svg>`;
+export function animalSprite(id,x,y,width,height,crop=null){
+ const aspect=1374/1145,i=animalIds.indexOf(id);if(i<0)return '';
+ return `<svg data-painted-animal="${id}" x="${x}" y="${y}" width="${width}" height="${height}" viewBox="${crop||`0 0 ${aspect} 1`}" preserveAspectRatio="xMidYMid meet" overflow="hidden"><image href="assets/choices/animal-sprites.webp" x="${(-i%5)*aspect}" y="${-Math.floor(i/5)}" width="${5*aspect}" height="5" preserveAspectRatio="none"/></svg>`;
 }
 export function paintMounted(svg,f){
  const armor=f.traits.beastArmor,type=armor.type||armor.id,id=`painted-tack-${++sequence}`;

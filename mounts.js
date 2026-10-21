@@ -1,4 +1,4 @@
-import {paintMounted} from './painted-models.js?v=unique-art-33';
+import {paintMounted} from './painted-models.js?v=unique-art-34';
 import {creatureDetail} from './surface-textures.js?v=creatures-31';
 import {getBeastAbilities} from './beast-abilities.js?v=playback-18';
 const beast=(id,name,icon,stats,shape,color,size=1)=>({id,name,icon,stats,shape,color,size,desc:describeStats(stats)});

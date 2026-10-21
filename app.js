@@ -1,4 +1,4 @@
-import {decorateChoices} from './creature-art.js?v=unique-art-33';
+import {decorateChoices} from './creature-art.js?v=unique-art-34';
 import {readProgress,saveProgress,buyBox,rewardProfiles,lootArmors,drawArmorOffer,redeemCode} from './progression.js?v=creatures-32';
 import {readProfiles,writeProfiles} from './profiles.js?v=loot-25';
 import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=unique-art-33';
@@ -9,7 +9,7 @@ import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=uni
 import {tactics} from './tactics.js?v=hybrids-19';
 import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=hybrids-19';
 import {getBeastAbilities} from './beast-abilities.js?v=hybrids-19';
-import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait} from './mounts.js?v=unique-art-33';
+import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait} from './mounts.js?v=unique-art-34';
 import {setupTutorial} from './tutorial.js?v=hybrids-19';
 import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=unique-art-33';
 import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=fantasy-pools-9';

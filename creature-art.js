@@ -1,4 +1,4 @@
-import {optionArt} from './option-art-manifest.js?v=unique-art-33';
+import {optionArt} from './option-art-manifest.js?v=unique-art-34';
 import {getBeastAbilities} from './beast-abilities.js?v=playback-18';
 const animals=['horse','wolf','boar','bear','rhino','tiger','lion','elk','mammoth','lizard','ostrich','camel','bison','buffalo','hyena','stag','panther','polar-bear','yak','crocodile','cheetah','eagle','scorpion','snake','gorilla'];
 const categories=['weapon','origin','style','armor','secondary','weakness','advantage','ability'];
@@ -27,7 +27,9 @@ export function decorateChoices(root){
   else if(input.name==='beastArmor')art=animalArtwork(root.querySelector('input[name="beast"]:checked')?.value);
   else art=optionArtwork(input.name,input.value);
   if(!art)continue;
-  const image=document.createElement('span');image.className='choice-illustration';image.setAttribute('aria-hidden','true');image.style.backgroundImage=`url('${art.image}')`;image.style.backgroundPosition=art.position;image.style.backgroundSize=art.size;
+  const image=document.createElement('span');image.className='choice-illustration';image.setAttribute('aria-hidden','true');image.style.backgroundImage=`url('${art.image}')`;image.style.backgroundPosition=art.position;image.style.backgroundSize=art.size;const [columns,rows]=art.size.split(' ').map(v=>parseFloat(v)/100),[px,py]=art.position.split(' ').map(parseFloat);const column=px/100*(columns-1),row=py/100*(rows-1),aspect=art.aspect||1;
+  image.innerHTML=`<svg class="choice-crop" viewBox="${column*aspect} ${row} ${aspect} 1" preserveAspectRatio="xMidYMid slice" overflow="hidden" aria-hidden="true"><image href="${art.image}" width="${columns*aspect}" height="${rows}" preserveAspectRatio="none"/></svg>`;
+
   card.prepend(image);card.dataset.illustrated='true';card.dataset.artKey=`${input.name}:${input.value}`;
   if(input.name==='beastAbility'){
    const beast=root.querySelector('input[name="beast"]:checked')?.value;
