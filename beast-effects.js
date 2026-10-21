@@ -1,4 +1,4 @@
-import {getBeastAbilities} from './beast-abilities.js?v=classic-art-35';
+import {getBeastAbilities} from './beast-abilities.js?v=creatures-36';
 const baseTypes={horse:'energy',wolf:'claw',boar:'claw',bear:'heal',rhino:'claw',tiger:'claw',lion:'control',elk:'control',mammoth:'guard',lizard:'venom',ostrich:'guard',camel:'energy',bison:'guard',buffalo:'claw',hyena:'heal',stag:'energy',panther:'claw','polar-bear':'control',yak:'guard',crocodile:'control'};
 export function beastEffectFor(beast,id){const rule=getBeastAbilities(beast).find(a=>a.id===id);if(!rule)return null;return {name:rule.name,type:rule.effect?({strike:'claw',guard:'guard',heal:'heal',drain:'control',mark:'control',barrier:'guard',focus:'energy',slow:'control'})[rule.effect]:baseTypes[beast]};}
 const drawings={
@@ -15,6 +15,6 @@ export function animateBeastSkill(event,fighters){
  const effect=beastEffectFor(fighters[event.actor].picks.beast,event.beastAbility);if(!effect)return;
  const defensive=['guard','heal','energy'].includes(effect.type),target=defensive?event.actor:event.target;
  const arena=document.querySelector(`#combatant${target} .arena-warrior`),actor=document.getElementById(`combatant${event.actor}`);if(!arena||!actor)return;
- const overlay=document.createElement('div');overlay.className=`beast-fx beast-fx-${effect.type}`;overlay.dataset.effect=effect.type;overlay.setAttribute('aria-hidden','true');overlay.innerHTML=`<svg viewBox="0 0 100 100">${drawings[effect.type]}</svg>`;arena.append(overlay);
+ const overlay=document.createElement('div');overlay.className=`beast-fx beast-fx-${effect.type}`;overlay.dataset.effect=effect.type;overlay.setAttribute('aria-hidden','true');overlay.innerHTML=`<svg viewBox="0 0 100 100"><circle class="skill-ring" cx="50" cy="50" r="46"/>${drawings[effect.type]}</svg><span class="skill-particles">${Array.from({length:8},(_,i)=>`<i style="--angle:${i*45}deg"></i>`).join('')}</span>`;arena.append(overlay);
  const badge=document.createElement('p');badge.className='beast-skill-banner';badge.textContent=`✺ ${fighters[event.actor].traits.beast.name}: ${effect.name}`;actor.append(badge);
 }

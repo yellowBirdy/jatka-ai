@@ -1,20 +1,20 @@
-import {readProgress,saveProgress,buyBox,rewardProfiles,lootArmors,drawArmorOffer,redeemCode} from './progression.js?v=classic-art-35';
-import {readProfiles,writeProfiles} from './profiles.js?v=classic-art-35';
-import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=classic-art-35';
-import {textureAnimalSvg} from './surface-textures.js?v=classic-art-35';
-import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=classic-art-35';
-import {hybridParts,hybridAnimals,hybridDefaults,hybridOption,hybridSvg} from './hybrids.js?v=classic-art-35';
-import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=classic-art-35';
-import {tactics} from './tactics.js?v=classic-art-35';
-import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=classic-art-35';
-import {getBeastAbilities} from './beast-abilities.js?v=classic-art-35';
-import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait} from './mounts.js?v=classic-art-35';
-import {setupTutorial} from './tutorial.js?v=classic-art-35';
-import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=classic-art-35';
-import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=classic-art-35';
-import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=classic-art-35';
-import {weaponSvg,weaponIcon} from './weapons.js?v=classic-art-35';
-import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=classic-art-35';
+import {readProgress,saveProgress,buyBox,rewardProfiles,lootArmors,drawArmorOffer,redeemCode} from './progression.js?v=creatures-36';
+import {readProfiles,writeProfiles} from './profiles.js?v=creatures-36';
+import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=creatures-36';
+import {textureAnimalSvg} from './surface-textures.js?v=creatures-36';
+import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=creatures-36';
+import {hybridParts,hybridAnimals,hybridDefaults,hybridOption,hybridSvg} from './hybrids.js?v=creatures-36';
+import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=creatures-36';
+import {tactics} from './tactics.js?v=creatures-36';
+import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=creatures-36';
+import {getBeastAbilities} from './beast-abilities.js?v=creatures-36';
+import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait} from './mounts.js?v=creatures-36';
+import {setupTutorial} from './tutorial.js?v=creatures-36';
+import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=creatures-36';
+import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=creatures-36';
+import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=creatures-36';
+import {weaponSvg,weaponIcon} from './weapons.js?v=creatures-36';
+import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=creatures-36';
 const $=id=>document.getElementById(id);
 let player=0,picks={},fighters=[],names=['Ragnar','Akira'],timer,result,index=0;
 let opponent='local',botTimer=null,rematchBattle=false;
@@ -113,7 +113,7 @@ if(e.target.name==='weapon'){
  picks=normalizeMaterials(picks);materialNotice=['headMaterial','gripMaterial'].some(key=>before[key]!==picks[key])?'Niepasujące materiały zastąpiono domyślnymi dla tej broni.':'';
  document.querySelector('.weapon-materials').outerHTML=renderMaterials();
 }preview();}});
-$('fantasy-choices').addEventListener('change',e=>{if(e.target.matches('input')){picks[e.target.name]=e.target.value;preview();}});
+$('fantasy-choices').addEventListener('change',e=>{if(e.target.matches('input')){picks[e.target.name]=e.target.value;preview();animateMutation(e.target.name);}});
 $('fighter-name').addEventListener('input',()=>{names[player]=$('fighter-name').value;preview();});
 $('randomize').onclick=()=>{const materials=Object.fromEntries(Object.keys(weaponMaterials).map(key=>[key,picks[key]]));offers[player]=drawOptions();armorPools[player]=null;fantasyOffers[player]=drawFantasyOptions();mountOffers[player]=drawMountOptions();const candidate={...defaults(),...(hybrid?Object.fromEntries(hybridParts.map(part=>[part.id,hybridAnimals[Math.floor(Math.random()*hybridAnimals.length)].id])):{}),...materials,beastArmor:picks.beastArmor||'none',beastAbility:picks.beastAbility==='none'?'none':mountOffers[player][0].id};picks=normalizeMount(normalizeMaterials(candidate));materialNotice=Object.keys(materials).some(key=>candidate[key]!==picks[key])?'Po losowaniu dopasowano materiały do nowej broni.':'';renderCreator();};
 $('confirm').onclick=()=>{try{fighters[player]=createFighter($('fighter-name').value,picks,duration,mode,mounted,hybrid);names[player]=fighters[player].name;if(opponent==='bot'&&player===(format==='teams'?1:0)){prepareBotRoster();showArena();return;}if(player<rosterSize()-1){player++;materialNotice='';picks=fighters[player]?.picks?{...fighters[player].picks}:defaults();renderCreator();$('fighter-name').focus();}else showArena();}catch(e){$('error').textContent=e.message;$('fighter-name').focus();}};
@@ -215,7 +215,17 @@ function renderHybrid(){$('pve-note').hidden=opponent!=='bot';$('pve-note').text
  $('confirm').firstChild.textContent=hybrid?'Zatwierdź hybrydę ':'Zatwierdź wojownika ';
  document.querySelector('.offer-note').textContent=hybrid?'Wybierz po jednym zwierzęciu dla każdej z 5 części. Możesz łączyć różne gatunki lub stworzyć postać jednego gatunku. Instynkt wybierasz z 5 losowych propozycji.':'W każdym slocie wybierasz 1 z 5 losowych cech z puli 20. Każdy gracz otrzymuje własną ofertę.';
 }
-$('hybrid-choices').addEventListener('change',e=>{if(e.target.matches('input')){picks[e.target.name]=e.target.value;preview();}});
+let mutationTimer;
+function animateMutation(part){
+ clearTimeout(mutationTimer);
+ const portrait=$('portrait');portrait.classList.remove('mutating');void portrait.offsetWidth;portrait.classList.add('mutating');
+ portrait.querySelectorAll('.mutation-sparks').forEach(node=>node.remove());
+ const sparks=document.createElement('span');sparks.className='mutation-sparks';sparks.setAttribute('aria-hidden','true');
+ sparks.innerHTML=Array.from({length:12},(_,i)=>`<i style="--angle:${i*30}deg;--delay:${i%3*45}ms"></i>`).join('');portrait.append(sparks);
+ const target=portrait.querySelector(`[data-part="${part}"]`);if(target)target.classList.add('mutated-part');
+ mutationTimer=setTimeout(()=>{sparks.remove();portrait.classList.remove('mutating');},1100);
+}
+$('hybrid-choices').addEventListener('change',e=>{if(e.target.matches('input')){picks[e.target.name]=e.target.value;preview();animateMutation(e.target.name);}});
 $('hybrids-enabled').addEventListener('change',e=>{
  hybrid=e.target.checked;
  if(hybrid){mounted=false;$('mounts-enabled').checked=false;}
