@@ -8,6 +8,8 @@ U góry gry można nazwać cztery lokalne profile, a w kreatorze przypisać prof
 
 W kreatorze można otworzyć box za 100 EXP. Pula zawiera 20 zbroi, od zwykłej (50%) do wyjątkowo silnej legendarnej (0,4%). Pełne szanse i statystyki są widoczne w grze. Zdobyta zbroja dołącza do standardowej puli zbroi profilu, z której losuje się 5 ofert w zwykłym slocie Zbroja. Duplikat zwraca 25 EXP. Postęp i nazwy zapisują się w localStorage tej przeglądarki, bez logowania i synchronizacji między urządzeniami. Zmiana nazwy profilu zachowuje jego postęp.
 
+Lekkie zbroje premiują szybkość (Płaszcz zwiadowcy: 1 ochrony, +6 szybkości), ciężkie ją obniżają. 15 lepszych zbroi z boxów ma własne zdolności, opisane na kartach. Aktywują się co 3 lub 4 własny atak; Ostatnia nadzieja działa raz przy maksymalnie 35% HP. Odpoczynek i obrona nie nabijają licznika. Działanie zdolności zapisuje się w historii walki.
+
 ## Uruchomienie
 
 W katalogu repozytorium:

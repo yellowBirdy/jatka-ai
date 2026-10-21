@@ -1,3 +1,4 @@
+import {applyArmorSkill} from './armor-skills.js?v=armor-28';
 import {resolveTactic} from './tactics.js?v=playback-18';
 import {applyBeastAbility} from './beast-abilities.js?v=playback-18';
 import {rollChance} from './probability.js?v=chance-8';
@@ -6,7 +7,7 @@ import {abilityRules as rules} from './abilities.js?v=chance-8';
 const clamp=(x,min,max)=>Math.max(min,Math.min(max,x));
 export function createCombatState(fighters){
  const state={hp:fighters.map(f=>f.stats.health),energy:fighters.map(f=>f.stats.stamina)};
- for(const key of ['guard','tacticDefense','venom','turns','wrist','blind','exposed','armorDamage','slow','shield','tempo','focus','exposureStrength','burn','frozen','magicShield','silenced','rooted','thorns','barrier','marked','blink','battlecry','stunned','mist'])state[key]=fighters.map(()=>0);
+ for(const key of ['armorTurns','armorRescue','guard','tacticDefense','venom','turns','wrist','blind','exposed','armorDamage','slow','shield','tempo','focus','exposureStrength','burn','frozen','magicShield','silenced','rooted','thorns','barrier','marked','blink','battlecry','stunned','mist'])state[key]=fighters.map(()=>0);
  state.disarmed=fighters.map(()=>false);state.staggered=fighters.map(()=>false);return state;
 }
 export function resolveTurn(f,state,actor,random=Math.random,target=1-actor,tactic='balanced'){
@@ -34,6 +35,7 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor,tact
  if(ability&&!rule)throw Error(`Nieznana umiejętność: ${ability}`);
  const details=[...burnDetails,...(tactic==='balanced'?[]:[`Taktyka: ${plan.name}. ${plan.desc}`])],strikes=[];let healed=0,counterDamage=0;
  const heal=amount=>{const actual=Math.min(amount,s.health-hp[actor]);hp[actor]+=actual;healed+=actual;};
+ const armorSkill=applyArmorSkill({fighters:f,state,actor,target,heal,details});
  if(ability==='breathing'){energy[actor]=Math.min(s.stamina,energy[actor]+rule.energy);details.push(`Odzyskano kondycję: +${rule.energy} (do limitu).`);}
  if(state.rooted[actor]>0){state.rooted[actor]--;energy[actor]=Math.max(0,energy[actor]-10);details.push('Korzenie: dodatkowy koszt 10 kondycji.');}
  const exhausted=energy[actor]<=0;
@@ -57,7 +59,7 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor,tact
  if(tempo)bonus+=rules.pace.power;
  if(state.battlecry[actor]>0){state.battlecry[actor]--;bonus+=4;details.push('Runiczny okrzyk: +4 siły.');}
  let defense=ability==='overhead'?0:Math.max(0,d.defense+state.tacticDefense[target]-state.armorDamage[target]-s.pierce-exposure-(ability==='gap'?rule.break:0)-(ability==='precise'?rule.pierce:0));
- const strength=s.attack+plan.attack+(random()*8-4)+bonus-(weakened?rules.disarm.penalty:0);
+ const strength=s.attack+plan.attack+(armorSkill?.id==='emperor'?8:0)+(random()*8-4)+bonus-(weakened?rules.disarm.penalty:0);
  const scale=(exhausted?.65:1)*(staggered?rules.pommel.ratio:1);
  const raw=(power,protection=defense)=>Math.max(2,Math.round((power-protection*.6)*scale));
  function strike(amount){let dealt=amount;
@@ -77,10 +79,11 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor,tact
  const hit=!evaded&&(ability==='precise'||random()<chance);
  const weaponStrike=amount=>strike(amount>0?amount+(f[actor].mounted?10:0):0);
  weaponStrike(hit?raw(strength):0);
+ if(armorSkill?.id==='wargod'&&hp[actor]>0&&hp[target]>0)strike(18);
  if(ability==='combo'&&!evaded&&hp[target]>0&&hp[actor]>0){weaponStrike(random()<chance?raw(strength*rule.ratio):0);details.push(`Seria dwóch ciosów: ${strikes.join(' + ')} HP.`);}
  if(ability==='feint-strike'&&!evaded&&hp[actor]>0){
   if(!hit)weaponStrike(Math.max(2,Math.round(raw(strength)*rule.ratio)));
-  else state.focus[actor]=1;
+  else state.focus[actor]=Math.max(state.focus[actor],1);
  }
  if(ability==='charge'){
   state.exposureStrength[actor]=Math.max(state.exposed[actor]>0?state.exposureStrength[actor]:0,rule.exposure);
@@ -99,7 +102,7 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor,tact
  }
  if(ability==='breath'&&hp[actor]>0){heal(rule.heal);energy[actor]=Math.min(s.stamina,energy[actor]+rule.energy);}
  if(ability==='rally'&&hp[actor]>0&&hp[actor]<s.health*rule.threshold)heal(rule.heal);
- if(ability==='reset-stance'){state.shield[actor]=rule.shield;details.push(`Osłona następnego trafienia: ${rule.shield} HP.`);}
+ if(ability==='reset-stance'){state.shield[actor]=Math.max(state.shield[actor],rule.shield);details.push(`Osłona następnego trafienia: ${rule.shield} HP.`);}
  if(ability==='pace'){state.tempo[actor]=rule.duration;details.push('Dwa kolejne ataki w oszczędnym tempie.');}
  const beastAbility=applyBeastAbility({f,state,actor,target,random,strike,heal,details});
  let magic=null,magicDamage=0;
@@ -141,5 +144,5 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor,tact
  const damage=strikes.reduce((sum,n)=>sum+n,0);
  const kind=damage>0?(damage<8?'block':'hit'):hit?'block':'dodge';
  const text=damage>0?`${f[actor].name}: ${kind==='block'?'cios częściowo zablokowany':'trafienie'} −${damage} HP.`:hit?`${f[target].name} blokuje atak ${f[actor].name}.`:`${f[target].name} unika ataku ${f[actor].name}.`;
- return {actor,target,tactic,damage,kind,ability,beastAbility,healed,hp:[...hp],energy:[...energy],text,exhausted,weakened,strikes,details,counterDamage,magic,magicDamage,selfDamage};
+ return {actor,target,tactic,damage,kind,ability,armorAbility:armorSkill?.id||null,beastAbility,healed,hp:[...hp],energy:[...energy],text,exhausted,weakened,strikes,details,counterDamage,magic,magicDamage,selfDamage};
 }
