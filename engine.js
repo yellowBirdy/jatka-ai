@@ -1,3 +1,4 @@
+import {lootArmors} from './progression.js?v=loot-25';
 import {resolveHybrid} from './hybrids.js?v=hybrids-19';
 import {resolveMount} from './mounts.js?v=playback-18';
 import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=fantasy-pools-9';
@@ -45,7 +46,7 @@ export function createFighter(name,picks,duration='medium',mode='classic',mounte
  if(!Object.hasOwn(durations,duration))throw Error('Wybierz poprawną długość gry.');
  if(typeof name!=='string'||!name.trim()||name.trim().length>24)throw Error('Imię musi mieć od 1 do 24 znaków.');
  const stats={health:100,attack:17,defense:5,speed:15,accuracy:75,stamina:90,pierce:0};const traits={};
- for(const c of categories){const o=c.options.find(o=>o.id===(picks[c.id]??(hybrid?c.options[0].id:undefined)));if(!o)throw Error(`Wybierz: ${c.name}`);traits[c.id]=o;if(!hybrid||c.id==='ability')for(const [k,v]of Object.entries(o.stats))stats[k]+=v;}
+ for(const c of categories){const o=(c.id==='armor'?[...c.options,...lootArmors]:c.options).find(o=>o.id===(picks[c.id]??(hybrid?c.options[0].id:undefined)));if(!o)throw Error(`Wybierz: ${c.name}`);traits[c.id]=o;if(!hybrid||c.id==='ability')for(const [k,v]of Object.entries(o.stats))stats[k]+=v;}
  const materials=hybrid?{}:resolveMaterials(picks);
  for(const [key,material] of Object.entries(materials)){
   traits[key]=material;
