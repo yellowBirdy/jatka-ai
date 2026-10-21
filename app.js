@@ -25,7 +25,7 @@ let mode='classic',format='duel',teamBattle=null,mounted=false,hybrid=false;
 let mountOffers=[drawMountOptions(),drawMountOptions()];
 const rosterSize=()=>format==='teams'?4:2;
 const sideOf=i=>format==='teams'?teamOf(i):i;
-function settingsLocked(locked){document.querySelectorAll('.combatants .duel-tactic select').forEach(n=>n.disabled=locked);for(const id of ['profile-settings','opponent-settings','playback-settings','format-settings','mode-settings','duration-settings','modification-settings'])$(id).disabled=locked;}
+function settingsLocked(locked){document.querySelectorAll('.combatants .duel-tactic select').forEach(n=>n.disabled=locked);document.querySelectorAll('[data-preset],#enter-creator').forEach(n=>n.disabled=locked);for(const id of ['profile-settings','opponent-settings','playback-settings','format-settings','mode-settings','duration-settings','modification-settings'])$(id).disabled=locked;}
 let duration='medium',offers=[drawOptions(),drawOptions()];
 let fantasyOffers=[drawFantasyOptions(),drawFantasyOptions()];
 const defaults=()=>normalizeMaterials({...hybridDefaults,beast:mountOffers[player][0].id,beastArmor:'none',beastAbility:mountOffers[player][0].id,...Object.fromEntries(fantasySlots.map(slot=>[slot.id,fantasyOffers[player][slot.id][0].id])),...Object.fromEntries(categories.map(c=>[c.id,offers[player][c.id][0].id]))});
@@ -259,6 +259,7 @@ $('opponent-settings').addEventListener('change',e=>{
 
 // Settings summary reads the actual controls, including automatic mode changes.
 function updateSettingsSummary(){
+ document.querySelectorAll('[data-preset]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.preset===`${format}:${opponent}`)));
  const label=name=>document.querySelector(`input[name="${name}"]:checked`)?.parentElement.querySelector('b').textContent;
  $('settings-summary').textContent=[opponent==='bot'?'Bot PvE':'Lokalnie',label('format'),label('playback'),label('mode'),label('duration')].join(' · ');
 }
@@ -281,3 +282,14 @@ function openBox(drop,owner){
 $('box-skip').onclick=()=>boxReveal?.();$('box-close').onclick=()=>$('box-dialog').close();
 $('box-dialog').addEventListener('cancel',()=>{boxReveal?.();});
 $('box-dialog').addEventListener('close',()=>{clearTimeout(boxTimer);boxReveal=null;document.querySelector(`[data-box="${boxOwner}"]`)?.focus();});
+
+$('enter-creator').onclick=()=>{if($('creator').hidden){$('arena').scrollIntoView({behavior:'smooth',block:'start'});return;}$('creator').scrollIntoView({behavior:'smooth',block:'start'});$('fighter-name').focus({preventScroll:true});};
+document.querySelector('.arena-mode-tabs').addEventListener('click',e=>{
+ const button=e.target.closest('[data-preset]');if(!button||button.disabled)return;
+ const [nextFormat,nextOpponent]=button.dataset.preset.split(':');
+ for(const [name,value]of [['opponent',nextOpponent],['format',nextFormat]]){
+  const input=document.querySelector(`input[name="${name}"][value="${value}"]`);
+  if(!input.checked){input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}));}
+ }
+ updateSettingsSummary();
+});
