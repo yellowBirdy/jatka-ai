@@ -1,13 +1,13 @@
-import {lootArmors} from './progression.js?v=anatomy-37';
-import {resolveHybrid} from './hybrids.js?v=anatomy-37';
-import {resolveMount} from './mounts.js?v=anatomy-37';
-import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=anatomy-37';
-import {weaponMaterials,resolveMaterials} from './materials.js?v=anatomy-37';
-export {weaponMaterials} from './materials.js?v=anatomy-37';
-import {abilityRules} from './abilities.js?v=anatomy-37';
-import {createCombatState,resolveTurn} from './combat.js?v=anatomy-37';
-export {abilityRules} from './abilities.js?v=anatomy-37';
-import {additions} from './catalog.js?v=anatomy-37';
+import {lootArmors} from './progression.js?v=species-38';
+import {resolveHybrid} from './hybrids.js?v=species-38';
+import {resolveMount} from './mounts.js?v=species-38';
+import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=species-38';
+import {weaponMaterials,resolveMaterials} from './materials.js?v=species-38';
+export {weaponMaterials} from './materials.js?v=species-38';
+import {abilityRules} from './abilities.js?v=species-38';
+import {createCombatState,resolveTurn} from './combat.js?v=species-38';
+export {abilityRules} from './abilities.js?v=species-38';
+import {additions} from './catalog.js?v=species-38';
 const option=(id,name,icon,desc,stats={})=>({id,name,icon,desc,stats});
 export const categories=[
 {id:'weapon',name:'Broń',icon:'⚔',options:[option('sword','Miecz','⚔','Wszechstronny i celny.',{attack:4,accuracy:8}),option('axe','Topór','🪓','Silne, lecz wolniejsze ciosy.',{attack:9,speed:-3}),option('spear','Włócznia','↗','Zasięg i pierwszeństwo.',{attack:3,speed:5,accuracy:4}),option('hammer','Młot','🔨','Przełamuje ciężką ochronę.',{attack:7,pierce:7,speed:-5})]},

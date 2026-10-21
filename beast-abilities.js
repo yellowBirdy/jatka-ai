@@ -1,4 +1,4 @@
-import {rollChance} from './probability.js?v=anatomy-37';
+import {rollChance} from './probability.js?v=species-38';
 const ability=(name,desc)=>({name,desc:`25% po własnym ataku: ${desc}`,chance:.25,stats:{}});
 export const beastAbilities={
  horse:ability('Galop bojowy','odzyskaj do 12 kondycji; następny atak nie zużywa kondycji, ma +3 siły i +12 pkt proc. celności.'),
@@ -20,9 +20,19 @@ export const beastAbilities={
  panther:ability('Zasadzka z cienia','oznacz cel na dwa trafienia i wykonaj cios za 3 HP; oznaczenie dodaje po 3 obrażenia do tego ciosu i następnego trafienia.'),
  'polar-bear':ability('Polarny uścisk','osłab procentowo następny atak celu i spowolnij go o 2, do limitu 8.'),
  yak:ability('Górska niezłomność','usuń zamrożenie i korzenie oraz przygotuj osłonę jednego trafienia do 3 HP.'),
+ dragon:ability('Ognisty oddech','zadaj dodatkowe 18 HP i przygotuj osłonę do 8 HP.'),
+ 'chinese-dragon':ability('Oddech niebios','zadaj dodatkowe 14 HP i odzyskaj do 8 kondycji.'),
+ drake:ability('Skalny pogrom','zadaj dodatkowe 11 HP i przygotuj osłonę do 5 HP.'),
+ griffin:ability('Pikowanie gryfa','zadaj dodatkowe 10 HP i odbierz do 6 kondycji.'),
+ sabretooth:ability('Pradawne kły','zadaj dodatkowe 9 HP i oznacz cel na jedno trafienie.'),
  crocodile:ability('Zacisk szczęk','dwa następne ataki celu kosztują dodatkowe 10 kondycji; natychmiast odbierz mu do 6 kondycji.')
 };
 const extraNames={
+ dragon:['Smoczy pazur','Pancerz czerwonego smoka','Żar serca','Ryk zagłady'],
+ 'chinese-dragon':['Szpon niebios','Jadeitowa bariera','Oddech chmur','Wiatr cesarza'],
+ drake:['Skalny pazur','Bazaltowa tarcza','Ciepło skał','Grzmot smoka'],
+ griffin:['Orli szpon','Straż skrzydeł','Oddech przestworzy','Podmuch gryfa'],
+ sabretooth:['Szabla drapieżnika','Czujność pradawna','Siła epoki lodu','Ryk pradawnych'],
  horse:['Kopnięcie rumaka','Czaprak strażnika','Oddech w galopie','Tratujący rozpęd'],
  wolf:['Skok wilka','Czujność watahy','Wycie łowcy','Szarpnięcie ścięgna'],
  boar:['Uderzenie racicą','Twarda szczecina','Zawziętość dzika','Rozjuszający kwik'],
@@ -82,6 +92,11 @@ export function applyBeastAbility({f,state,actor,target,random,strike,heal,detai
    case 'slow':state.slow[target]=Math.max(state.slow[target],Math.min(8,state.slow[target]+n));drain(5);break;
   }
  }else switch(id){
+  case 'dragon':strike(18);shield(8);break;
+  case 'chinese-dragon':strike(14);recover(8);break;
+  case 'drake':strike(11);shield(5);break;
+  case 'griffin':strike(10);drain(6);break;
+  case 'sabretooth':strike(9);state.marked[target]=Math.max(1,state.marked[target]);break;
   case 'horse':recover(12);state.tempo[actor]=Math.max(1,state.tempo[actor]);break;
   case 'wolf':strike(hp[target]<f[target].stats.health*.5?6:3);break;
   case 'boar':state.armorDamage[target]=Math.max(state.armorDamage[target],Math.min(9,Math.max(0,f[target].stats.defense),state.armorDamage[target]+3));break;

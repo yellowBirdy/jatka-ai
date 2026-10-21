@@ -1,5 +1,5 @@
-import {getBeastAbilities} from './beast-abilities.js?v=anatomy-37';
-const baseTypes={horse:'energy',wolf:'claw',boar:'claw',bear:'heal',rhino:'claw',tiger:'claw',lion:'control',elk:'control',mammoth:'guard',lizard:'venom',ostrich:'guard',camel:'energy',bison:'guard',buffalo:'claw',hyena:'heal',stag:'energy',panther:'claw','polar-bear':'control',yak:'guard',crocodile:'control'};
+import {getBeastAbilities} from './beast-abilities.js?v=species-38';
+const baseTypes={dragon:'venom','chinese-dragon':'energy',drake:'claw',griffin:'claw',sabretooth:'claw',horse:'energy',wolf:'claw',boar:'claw',bear:'heal',rhino:'claw',tiger:'claw',lion:'control',elk:'control',mammoth:'guard',lizard:'venom',ostrich:'guard',camel:'energy',bison:'guard',buffalo:'claw',hyena:'heal',stag:'energy',panther:'claw','polar-bear':'control',yak:'guard',crocodile:'control'};
 export function beastEffectFor(beast,id){const rule=getBeastAbilities(beast).find(a=>a.id===id);if(!rule)return null;return {name:rule.name,type:rule.effect?({strike:'claw',guard:'guard',heal:'heal',drain:'control',mark:'control',barrier:'guard',focus:'energy',slow:'control'})[rule.effect]:baseTypes[beast]};}
 const drawings={
  claw:'<path d="M20 20L74 81M39 13L88 67M12 43L55 89"/>',
