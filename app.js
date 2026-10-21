@@ -1,20 +1,20 @@
-import {readProgress,saveProgress,buyBoxes,rewardProfiles,lootArmors,drawArmorOffer,redeemCode} from './progression.js?v=bulk-39';
-import {readProfiles,writeProfiles} from './profiles.js?v=bulk-39';
-import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=bulk-39';
-import {textureAnimalSvg} from './surface-textures.js?v=bulk-39';
-import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=bulk-39';
-import {hybridParts,hybridAnimals,hybridDefaults,hybridOption,hybridSvg} from './hybrids.js?v=bulk-39';
-import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=bulk-39';
-import {tactics} from './tactics.js?v=bulk-39';
-import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=bulk-39';
-import {getBeastAbilities} from './beast-abilities.js?v=bulk-39';
-import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait,beastSkins,beastLootArmors,allBeasts,lootBeasts} from './mounts.js?v=bulk-39';
-import {setupTutorial} from './tutorial.js?v=bulk-39';
-import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=bulk-39';
-import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=bulk-39';
-import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=bulk-39';
-import {weaponSvg,weaponIcon} from './weapons.js?v=bulk-39';
-import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=bulk-39';
+import {readProgress,saveProgress,buyBoxes,rewardProfiles,lootArmors,drawArmorOffer,redeemCode} from './progression.js?v=shop-40';
+import {readProfiles,writeProfiles} from './profiles.js?v=shop-40';
+import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=shop-40';
+import {textureAnimalSvg} from './surface-textures.js?v=shop-40';
+import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=shop-40';
+import {hybridParts,hybridAnimals,hybridDefaults,hybridOption,hybridSvg} from './hybrids.js?v=shop-40';
+import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=shop-40';
+import {tactics} from './tactics.js?v=shop-40';
+import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=shop-40';
+import {getBeastAbilities} from './beast-abilities.js?v=shop-40';
+import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait,beastSkins,beastLootArmors,allBeasts,lootBeasts} from './mounts.js?v=shop-40';
+import {setupTutorial} from './tutorial.js?v=shop-40';
+import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=shop-40';
+import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=shop-40';
+import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=shop-40';
+import {weaponSvg,weaponIcon} from './weapons.js?v=shop-40';
+import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=shop-40';
 const $=id=>document.getElementById(id);
 let player=0,picks={},fighters=[],names=['Ragnar','Akira'],timer,result,index=0;
 let opponent='local',botTimer=null,rematchBattle=false;
@@ -81,10 +81,10 @@ function renderShop(){
   button.disabled=$('creator').hidden||p.xp<100*count;button.textContent=`Otwórz ${count===1?'box':count+' boxów'} · ${count*100} EXP`;
   card.append(label,button);
   if(p.codes.includes('x10box')){const countLabel=document.createElement('label');countLabel.textContent='Skrzynki naraz';const select=document.createElement('select');select.dataset.boxCount=i;select.setAttribute('aria-label',`Liczba skrzynek — ${name}`);select.replaceChildren(...Array.from({length:10},(_,n)=>new Option(`${n+1} · ${(n+1)*100} EXP`,String(n+1))));select.value=String(count);select.disabled=$('creator').hidden;countLabel.append(select);card.append(countLabel);}
-  const species=document.createElement('select');species.dataset.boxSpecies=i;species.setAttribute('aria-label',`Gatunek dla skrzynki zbroi lub skina — ${name}`);
+  const species=document.createElement('select');species.dataset.boxSpecies=i;species.setAttribute('aria-label',`Gatunek dla skrzynki skinów — ${name}`);
   const previous=document.querySelector(`[data-box-species="${i}"]`)?.value;
-  species.title='Gatunek dla skrzynki zbroi lub skina';species.replaceChildren(...allBeasts.map(b=>new Option(b.name,b.id)));species.value=previous||'horse';species.disabled=$('creator').hidden;card.append(species);
-  for(const [kind,title,field] of [['armor','Box zbroi bestii','beastArmors'],['skin','Box skinów bestii','beastSkins'],['beast','Box bestii','beasts']]){
+  species.title='Gatunek dla skrzynki skinów';species.replaceChildren(...allBeasts.map(b=>new Option(b.name,b.id)));species.value=previous||'horse';species.disabled=$('creator').hidden;card.append(species);
+  for(const [kind,title,field] of [['skin','Box skinów bestii','beastSkins']]){
    const extra=document.createElement('button');extra.type='button';extra.className='quiet';extra.dataset.beastBox=kind;extra.dataset.profile=i;
    extra.textContent=`${title} · ${count} × 100 EXP (${p[field].length}/${kind==='beast'?5:125})`;extra.disabled=$('creator').hidden||p.xp<100*count;card.append(extra);
   }return [card];
@@ -186,7 +186,7 @@ setupTutorial(()=>({format,mode,mounted,hybrid,player,activeTeam:teamBattle?.act
 function renderMounts(){
  const owned=profiles[owners[player]]?progress[owners[player]]:null;
  $('mount-choices').hidden=!mounted;
- $('mount-choices').innerHTML=mounted?`<fieldset class="mount-category"><legend>♞ Wierzchowiec <small>5 z 20</small></legend><p>Bestia i jeździec walczą jako jedna postać ze wspólnym HP. Premie sumują się ze statystykami. Wierzchowiec dodaje +10 obrażeń do każdego trafienia bronią (przed osłonami).</p><div class="option-grid">${[...mountOffers[player],...lootBeasts.filter(b=>owned?.beasts.includes(b.id))].map(o=>`<label class="option"><input type="radio" name="beast" value="${o.id}" ${picks.beast===o.id?'checked':''}><span class="option-icon">${o.icon}</span><span class="option-name">${o.name}</span><span class="option-desc">${o.desc}</span></label>`).join('')}</div><fieldset class="beast-armor-group"><legend>1. Zbroja bestii — ${createFighter('Podgląd',picks,duration,mode,mounted,hybrid).traits.beast.name}</legend><div class="option-grid">${getBeastArmors(picks.beast,profiles[owners[player]]?progress[owners[player]].beastArmors:[]).map(o=>`<label class="option"><input type="radio" name="beastArmor" value="${o.id}" ${picks.beastArmor===o.id?'checked':''}><span class="option-icon">${o.icon}</span><span class="option-name">${o.name}</span><span class="option-desc">${o.desc}</span></label>`).join('')}</div></fieldset><fieldset class="beast-skin-group"><legend>Skin bestii — wygląd bez premii</legend><p>Skrzynki dają przedmioty wyłącznie dla wskazanego gatunku. Wybierz gatunek przy profilu przed otwarciem boxa. Zbroje i skiny: po 100 EXP; duplikat zwraca 25 EXP.</p><div class="option-grid">${[{id:'natural',name:'Naturalna',desc:'Oryginalne umaszczenie',color:null},...beastSkins.filter(s=>s.beast===picks.beast&&profiles[owners[player]]&&progress[owners[player]].beastSkins.includes(s.id))].map(s=>`<label class="option"><input type="radio" name="beastSkin" value="${s.id}" ${(picks.beastSkin||'natural')===s.id?'checked':''}><span class="animal-swatch" style="--animal-color:${s.color||'#8d7964'}"></span><span class="option-name">${s.name}</span><span class="option-desc">${s.desc}</span></label>`).join('')}</div></fieldset><fieldset class="beast-ability-group"><legend>2. Umiejętność bestii — wybierz 1 z 5</legend><div class="option-grid">${getBeastAbilities(picks.beast).map(o=>`<label class="option"><input type="radio" name="beastAbility" value="${o.id}" ${picks.beastAbility===o.id?'checked':''}><span class="option-icon">✺</span><span class="chance-badge">${Math.round(o.chance*100)}%</span><span class="option-name">${o.name}</span><span class="option-desc">${o.desc}</span></label>`).join('')}</div></fieldset></fieldset>`:'';
+ $('mount-choices').innerHTML=mounted?`<fieldset class="mount-category"><legend>♞ Wierzchowiec <small>5 z 20</small></legend><p>Bestia i jeździec walczą jako jedna postać ze wspólnym HP. Premie sumują się ze statystykami. Wierzchowiec dodaje +10 obrażeń do każdego trafienia bronią (przed osłonami).</p><div class="option-grid">${[...mountOffers[player],...lootBeasts.filter(b=>owned?.beasts.includes(b.id))].map(o=>`<label class="option"><input type="radio" name="beast" value="${o.id}" ${picks.beast===o.id?'checked':''}><span class="option-icon">${o.icon}</span><span class="option-name">${o.name}</span><span class="option-desc">${o.desc}</span></label>`).join('')}</div><fieldset class="beast-armor-group"><legend>1. Zbroja bestii — ${createFighter('Podgląd',picks,duration,mode,mounted,hybrid).traits.beast.name}</legend><div class="option-grid">${getBeastArmors(picks.beast,profiles[owners[player]]?progress[owners[player]].beastArmors:[]).map(o=>`<label class="option"><input type="radio" name="beastArmor" value="${o.id}" ${picks.beastArmor===o.id?'checked':''}><span class="option-icon">${o.icon}</span><span class="option-name">${o.name}</span><span class="option-desc">${o.desc}</span></label>`).join('')}</div></fieldset><fieldset class="beast-skin-group"><legend>Skin bestii — wygląd bez premii</legend><p>Skrzynka skinów losuje wygląd dla wybranego gatunku. Wybierz gatunek przy profilu. Koszt: 100 EXP; duplikat zwraca 25 EXP.</p><div class="option-grid">${[{id:'natural',name:'Naturalna',desc:'Oryginalne umaszczenie',color:null},...beastSkins.filter(s=>s.beast===picks.beast&&profiles[owners[player]]&&progress[owners[player]].beastSkins.includes(s.id))].map(s=>`<label class="option"><input type="radio" name="beastSkin" value="${s.id}" ${(picks.beastSkin||'natural')===s.id?'checked':''}><span class="animal-swatch" style="--animal-color:${s.color||'#8d7964'}"></span><span class="option-name">${s.name}</span><span class="option-desc">${s.desc}</span></label>`).join('')}</div></fieldset><fieldset class="beast-ability-group"><legend>2. Umiejętność bestii — wybierz 1 z 5</legend><div class="option-grid">${getBeastAbilities(picks.beast).map(o=>`<label class="option"><input type="radio" name="beastAbility" value="${o.id}" ${picks.beastAbility===o.id?'checked':''}><span class="option-icon">✺</span><span class="chance-badge">${Math.round(o.chance*100)}%</span><span class="option-name">${o.name}</span><span class="option-desc">${o.desc}</span></label>`).join('')}</div></fieldset></fieldset>`:'';
 }
 $('mount-choices').addEventListener('change',e=>{if(e.target.matches('input')){picks[e.target.name]=e.target.value;if(e.target.name==='beast'){picks=normalizeMount(picks);renderMounts();}preview();}});
 $('mounts-enabled').addEventListener('change',e=>{
