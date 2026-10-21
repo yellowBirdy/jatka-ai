@@ -1,5 +1,5 @@
 import {decorateChoices} from './creature-art.js?v=creatures-31';
-import {readProgress,saveProgress,buyBox,rewardProfiles,lootArmors,drawArmorOffer,redeemCode} from './progression.js?v=creatures-31';
+import {readProgress,saveProgress,buyBox,rewardProfiles,lootArmors,drawArmorOffer,redeemCode} from './progression.js?v=creatures-32';
 import {readProfiles,writeProfiles} from './profiles.js?v=loot-25';
 import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=creatures-31';
 import {textureAnimalSvg} from './surface-textures.js?v=creatures-31';
@@ -15,7 +15,7 @@ import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf
 import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=fantasy-pools-9';
 import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=weapon-families-6';
 import {weaponSvg,weaponIcon} from './weapons.js?v=weapon-families-6';
-import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=creatures-31';
+import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=creatures-32';
 const $=id=>document.getElementById(id);
 let player=0,picks={},fighters=[],names=['Ragnar','Akira'],timer,result,index=0;
 let opponent='local',botTimer=null,rematchBattle=false;

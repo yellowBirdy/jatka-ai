@@ -1,7 +1,7 @@
 import {armorSkills} from './armor-skills.js?v=creatures-31';
 const key='jatka.progress.v1';
 const names=['Przeszywanica rekruta','Płaszcz zwiadowcy','Nitowany kaftan','Kolczuga strażnika','Pancerz łowcy','Zbroja weterana','Łuski pustyni','Płyty legionisty','Pancerz husarza','Zbroja czempiona','Srebrna kolczuga','Pancerz nosorożca','Karmazynowa garda','Zbroja zdobywcy','Tytanowy bastion','Obsydianowy pancerz','Złoty kolos','Zbroja imperatora','Pancerz nieśmiertelnego','Zbroja boga wojny'];
-const chances=[50,10,8,6,5,4,3,2,2,2,1,1,1,1,1,.8,.7,.6,.5,.4];
+const chances=[30,12,8,6,5,5,5,4,4,4,2,2,2,2,2,2,1.5,1.5,1,1];
 export const lootArmors=names.map((name,i)=>({id:`box-armor-${i+1}`,name,chance:chances[i],rarity:i<5?'Zwykła':i<10?'Rzadka':i<15?'Epicka':'Legendarna',texture:i<1?'cloth':i<5?'leather':i<10?'chainmail':i<15?'steel':i<18?'darksteel':'bronze',icon:'⬢',desc:`${name} — zbroja z boxa.`,skill:i>=5?armorSkills[i-5]:null,stats:{defense:[3,1,5,7,4,8,6,10,8,10,9,12,10,12,14,13,16,15,13,18][i],health:[0,4,6,8,6,10,8,12,10,14,12,18,14,18,22,20,24,24,24,26][i],attack:[0,0,0,0,0,0,0,0,0,0,1,1,2,2,2,3,3,4,3,4][i],speed:[3,6,2,-2,4,-3,1,-4,-2,-3,-2,-6,-1,-3,-7,-4,-8,-5,1,-6][i]}}));
 for(const armor of lootArmors)armor.desc=`Ochrona +${armor.stats.defense}, HP +${armor.stats.health}, siła +${armor.stats.attack}, szybkość ${armor.stats.speed>=0?'+':''}${armor.stats.speed}.${armor.skill?` ✦ ${armor.skill.name}: ${armor.skill.description}`:''}`;
 export const emptyProgress=()=>Array.from({length:4},()=>({xp:0,armors:[],codes:[]}));

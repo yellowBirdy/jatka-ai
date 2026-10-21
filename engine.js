@@ -1,4 +1,4 @@
-import {lootArmors} from './progression.js?v=creatures-31';
+import {lootArmors} from './progression.js?v=creatures-32';
 import {resolveHybrid} from './hybrids.js?v=creatures-31';
 import {resolveMount} from './mounts.js?v=creatures-31';
 import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=fantasy-pools-9';

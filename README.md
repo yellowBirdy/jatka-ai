@@ -6,7 +6,7 @@ Lokalna gra dla dwóch osób przy jednym ekranie. Każdy wybiera imię i po jedn
 
 U góry gry można nazwać cztery lokalne profile, a w kreatorze przypisać profil do każdej postaci. Po walce profil dostaje 60 EXP za wygraną, −40 za porażkę (minimum 0 EXP na profilu) lub 40 za remis, raz na walkę również przy kilku postaciach tego samego profilu. Za wygraną w rewanżu nagroda wynosi 30 EXP. Goście i boty nie dostają EXP.
 
-W kreatorze można otworzyć box za 100 EXP. Pula zawiera 20 zbroi, od zwykłej (50%) do legendarnej (0,4%). Pełne szanse i statystyki są widoczne w grze. Zdobyta zbroja dołącza do standardowej puli zbroi profilu, z której losuje się 5 ofert w zwykłym slocie Zbroja. Duplikat zwraca 25 EXP. Postęp i nazwy zapisują się w localStorage tej przeglądarki, bez logowania i synchronizacji między urządzeniami. Zmiana nazwy profilu zachowuje jego postęp.
+W kreatorze można otworzyć box za 100 EXP. Pula zawiera 20 zbroi, od zwykłej (30%) do legendarnej (1%). Pełne szanse i statystyki są widoczne w grze. Zdobyta zbroja dołącza do standardowej puli zbroi profilu, z której losuje się 5 ofert w zwykłym slocie Zbroja. Duplikat zwraca 25 EXP. Postęp i nazwy zapisują się w localStorage tej przeglądarki, bez logowania i synchronizacji między urządzeniami. Zmiana nazwy profilu zachowuje jego postęp.
 
 Lekkie zbroje premiują szybkość (Płaszcz zwiadowcy: 1 ochrony, +6 szybkości), ciężkie ją obniżają. Premie zbroi z boxów nie przekraczają 18 ochrony, 30 HP i 4 siły. 15 lepszych zbroi z boxów ma własne zdolności, opisane na kartach. Aktywują się co 4 lub 5 własny atak; Ostatnia nadzieja działa raz przy maksymalnie 35% HP. Odpoczynek i obrona nie nabijają licznika. Działanie zdolności zapisuje się w historii walki.
 

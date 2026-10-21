@@ -1,2 +1,3 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {lootArmors} from '../progression.js';
 test('box armor bonuses stay close to ordinary armor instead of overwhelming builds',()=>{for(const a of lootArmors){assert.ok(a.stats.defense<=18);assert.ok(a.stats.health<=30);assert.ok(a.stats.attack<=4);}assert.equal(lootArmors[1].stats.speed,6);assert.equal(lootArmors[1].stats.defense,1);});
+test('better armor drop chance rises to 39%, with 7% legendary and 1% top armor',()=>{const sum=armors=>armors.reduce((total,a)=>total+a.chance,0);assert.equal(sum(lootArmors.slice(5)),39);assert.equal(sum(lootArmors.slice(15)),7);assert.equal(lootArmors.at(-1).chance,1);assert.equal(sum(lootArmors),100);});
