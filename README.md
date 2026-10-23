@@ -1,6 +1,14 @@
 # JATKA — Arena wojowników
 
-Lokalna gra dla dwóch osób przy jednym ekranie. Każdy wybiera imię i po jednej cesze w ośmiu kategoriach (w każdym slocie oferta 5 wylosowanych cech z puli 20). Potem oglądacie automatyczny pojedynek i opis oparty na zdarzeniach walki. Dostępne są rewanż, edycja postaci i rozpoczęcie od nowa. Interfejs po polsku, responsywne postacie SVG, bez zewnętrznych obrazów, fontów i usług.
+Lokalna gra dla dwóch osób przy jednym ekranie. Każdy wybiera imię i po jednej cesze w ośmiu kategoriach (w każdym slocie oferta 5 wylosowanych cech z puli 20). Potem oglądacie automatyczny pojedynek i opis oparty na zdarzeniach walki. Dostępne są rewanż, edycja postaci i rozpoczęcie od nowa. Interfejs po polsku, responsywne postacie SVG, standardowe tryby działają lokalnie. Opcjonalny tryb „Totalna jatka” korzysta z serwera AI.
+
+## Totalna jatka AI
+
+Każdy gracz wpisuje **jeden dowolny opis postaci**. AI porównuje oba opisy i zwraca werdykt, krótki opis, długą relację oraz uzasadnienie. Ten tryb wymaga backendu i klucza OpenAI API po stronie serwera; GitHub Pages sam go nie uruchamia. Brak połączenia nie jest zastępowany lokalną oceną słów kluczowych.
+
+[Wdróż grę z AI na Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FyellowBirdy%2Fjatka-ai&env=OPENAI_API_KEY)
+
+Konfiguracja i publikacja: [AI-DEPLOYMENT.md](AI-DEPLOYMENT.md). Klucz ustaw w panelu hostingu, nigdy w kodzie przeglądarki.
 
 ## Profile, EXP i boxy
 

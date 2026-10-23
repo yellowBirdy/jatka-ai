@@ -1,13 +1,13 @@
-import {lootArmors} from './progression.js?v=total-42';
-import {resolveHybrid} from './hybrids.js?v=total-42';
-import {resolveMount} from './mounts.js?v=total-42';
-import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=total-42';
-import {weaponMaterials,resolveMaterials} from './materials.js?v=total-42';
-export {weaponMaterials} from './materials.js?v=total-42';
-import {abilityRules} from './abilities.js?v=total-42';
-import {createCombatState,resolveTurn} from './combat.js?v=total-42';
-export {abilityRules} from './abilities.js?v=total-42';
-import {additions} from './catalog.js?v=total-42';
+import {lootArmors} from './progression.js?v=ai-43';
+import {resolveHybrid} from './hybrids.js?v=ai-43';
+import {resolveMount} from './mounts.js?v=ai-43';
+import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=ai-43';
+import {weaponMaterials,resolveMaterials} from './materials.js?v=ai-43';
+export {weaponMaterials} from './materials.js?v=ai-43';
+import {abilityRules} from './abilities.js?v=ai-43';
+import {createCombatState,resolveTurn} from './combat.js?v=ai-43';
+export {abilityRules} from './abilities.js?v=ai-43';
+import {additions} from './catalog.js?v=ai-43';
 const option=(id,name,icon,desc,stats={})=>({id,name,icon,desc,stats});
 export const categories=[
 {id:'weapon',name:'Broń',icon:'⚔',options:[option('sword','Miecz','⚔','Wszechstronny i celny.',{attack:4,accuracy:8}),option('axe','Topór','🪓','Silne, lecz wolniejsze ciosy.',{attack:9,speed:-3}),option('spear','Włócznia','↗','Zasięg i pierwszeństwo.',{attack:3,speed:5,accuracy:4}),option('hammer','Młot','🔨','Przełamuje ciężką ochronę.',{attack:7,pierce:7,speed:-5})]},

@@ -6,7 +6,8 @@
     "test": "node --test tests/*.test.js",
     "start": "python3 -m http.server 8000 --bind 0.0.0.0",
     "test:browser": "node tests/browser.cjs && node tests/expansion.cjs && node tests/abilities-browser.cjs && node tests/materials-browser.cjs && node tests/fantasy-browser.cjs && node tests/teams-browser.cjs && node tests/tutorial-browser.cjs && node tests/mounts-browser.cjs && node tests/beasts-browser.cjs && node tests/tactics-browser.cjs && node tests/playback-browser.cjs && node tests/hybrids-browser.cjs && node tests/visuals-browser.cjs && node tests/speed-browser.cjs && node tests/impact-browser.cjs && node tests/bot-browser.cjs && node tests/profiles-browser.cjs && node tests/menu-box-browser.cjs && node tests/armor-browser.cjs && node tests/codes-browser.cjs && node tests/beast-boxes-browser.cjs && node tests/dragons-browser.cjs && node tests/bulk-boxes-browser.cjs && node tests/god-browser.cjs && node tests/total-browser.cjs",
-    "balance": "node scripts/balance.js"
+    "balance": "node scripts/balance.js",
+    "build:site": "node scripts/build-site.js"
   },
   "devDependencies": {
     "playwright": "1.62.1"
