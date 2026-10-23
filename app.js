@@ -1,21 +1,20 @@
-import {setupTotal} from './total.js?v=ai-43';
-import {readProgress,saveProgress,buyBoxes,rewardProfiles,lootArmors,drawArmorOffer,redeemCode,claimGod} from './progression.js?v=ai-43';
-import {readProfiles,writeProfiles} from './profiles.js?v=ai-43';
-import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=ai-43';
-import {textureAnimalSvg} from './surface-textures.js?v=ai-43';
-import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=ai-43';
-import {hybridParts,hybridAnimals,hybridDefaults,hybridOption,hybridSvg} from './hybrids.js?v=ai-43';
-import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=ai-43';
-import {tactics} from './tactics.js?v=ai-43';
-import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=ai-43';
-import {getBeastAbilities} from './beast-abilities.js?v=ai-43';
-import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait,beastSkins,beastLootArmors,allBeasts,lootBeasts} from './mounts.js?v=ai-43';
-import {setupTutorial} from './tutorial.js?v=ai-43';
-import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=ai-43';
-import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=ai-43';
-import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=ai-43';
-import {weaponSvg,weaponIcon} from './weapons.js?v=ai-43';
-import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=ai-43';
+import {readProgress,saveProgress,buyBoxes,rewardProfiles,lootArmors,drawArmorOffer,redeemCode,claimGod} from './progression.js?v=arena-44';
+import {readProfiles,writeProfiles} from './profiles.js?v=arena-44';
+import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=arena-44';
+import {textureAnimalSvg} from './surface-textures.js?v=arena-44';
+import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=arena-44';
+import {hybridParts,hybridAnimals,hybridDefaults,hybridOption,hybridSvg} from './hybrids.js?v=arena-44';
+import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=arena-44';
+import {tactics} from './tactics.js?v=arena-44';
+import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=arena-44';
+import {getBeastAbilities} from './beast-abilities.js?v=arena-44';
+import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait,beastSkins,beastLootArmors,allBeasts,lootBeasts} from './mounts.js?v=arena-44';
+import {setupTutorial} from './tutorial.js?v=arena-44';
+import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=arena-44';
+import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=arena-44';
+import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=arena-44';
+import {weaponSvg,weaponIcon} from './weapons.js?v=arena-44';
+import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=arena-44';
 const $=id=>document.getElementById(id);
 let player=0,picks={},fighters=[],names=['Ragnar','Akira'],timer,result,index=0;
 let opponent='local',botTimer=null,rematchBattle=false;
@@ -26,7 +25,7 @@ let mode='classic',format='duel',teamBattle=null,mounted=false,hybrid=false;
 let mountOffers=[drawMountOptions(),drawMountOptions()];
 const rosterSize=()=>format==='teams'?4:2;
 const sideOf=i=>format==='teams'?teamOf(i):i;
-function settingsLocked(locked){document.querySelectorAll('.combatants .duel-tactic select').forEach(n=>n.disabled=locked);document.querySelectorAll('[data-preset],#enter-creator,#total-start').forEach(n=>n.disabled=locked);for(const id of ['profile-settings','opponent-settings','playback-settings','format-settings','mode-settings','duration-settings','modification-settings'])$(id).disabled=locked;}
+function settingsLocked(locked){document.querySelectorAll('.combatants .duel-tactic select').forEach(n=>n.disabled=locked);document.querySelectorAll('[data-preset],#enter-creator').forEach(n=>n.disabled=locked);for(const id of ['profile-settings','opponent-settings','playback-settings','format-settings','mode-settings','duration-settings','modification-settings'])$(id).disabled=locked;}
 let duration='medium',offers=[drawOptions(),drawOptions()];
 let fantasyOffers=[drawFantasyOptions(),drawFantasyOptions()];
 const defaults=()=>normalizeMaterials({...hybridDefaults,beast:mountOffers[player][0].id,beastArmor:'none',beastAbility:mountOffers[player][0].id,...Object.fromEntries(fantasySlots.map(slot=>[slot.id,fantasyOffers[player][slot.id][0].id])),...Object.fromEntries(categories.map(c=>[c.id,offers[player][c.id][0].id]))});
@@ -353,5 +352,3 @@ $('god-form').addEventListener('submit',e=>{
  const saved=saveProgress(profileStorage,progress);$('profile-status').textContent=result.message+(saved?' Zapisano.':' Zapis niedostępny.');$('god-dialog').close();renderCreator();
 });
 $('god-later').onclick=()=>$('god-dialog').close();
-
-setupTotal();

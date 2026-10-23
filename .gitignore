@@ -1,6 +1,1 @@
 node_modules/
-site/
-.env
-.env.*
-!.env.example
-.vercel/
