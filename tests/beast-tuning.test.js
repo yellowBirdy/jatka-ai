@@ -1,0 +1,11 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {categories,createFighter} from '../engine.js';
+import {createCombatState} from '../combat.js';
+import {applyBeastAbility} from '../beast-abilities.js';
+import {mountedPortrait,beastSkins} from '../mounts.js';
+import {benchmarkBeasts} from '../scripts/beast-balance.js';
+const picks=Object.fromEntries(categories.map(c=>[c.id,c.options[0].id]));
+const fighter=(beast,beastSkin='natural')=>createFighter('A',{...picks,beast,beastSkin,beastArmor:'none',beastAbility:beast},'medium','classic',true);
+test('special beasts keep a measurable advantage without dominating nearly every matchup',()=>{const {report}=benchmarkBeasts();for(const id of ['sabretooth','griffin','drake']){assert.ok(report[id].winPercent>=60,`${id}: ${report[id].winPercent}%`);assert.ok(report[id].winPercent<=90,`${id}: ${report[id].winPercent}%`);}});
+test('adjusted signature powers apply their displayed damage and support effects',()=>{for(const [beast,damage,shield,drain]of [['sabretooth',6,0,0],['griffin',7,0,4],['drake',8,4,0]]){const f=[fighter(beast),fighter('horse')],state=createCombatState(f),energy=state.energy[1];let dealt=0;applyBeastAbility({f,state,actor:0,target:1,random:()=>0,strike:n=>{dealt+=n;},heal:()=>{},details:[]});assert.equal(dealt,damage);assert.equal(state.shield[0],shield);assert.equal(energy-state.energy[1],drain);if(beast==='sabretooth')assert.equal(state.marked[1],1);}});
+test('drake legendary skin changes silhouette and adds crystals and magma without stat bonuses',()=>{const id='drake-skin-midnight',skin=beastSkins.find(s=>s.id===id),base=fighter('drake'),legend=fighter('drake',id);assert.equal(skin.rarity,'Legendarna');assert.deepEqual(base.stats,legend.stats);const normal=mountedPortrait('<svg/>',base),special=mountedPortrait('<svg/>',legend);assert.ok(special.includes('obsidian-crystal-wings'));assert.ok(special.includes('obsidian-crown'));assert.ok(special.includes('magma-fissures'));assert.ok(!normal.includes('obsidian-crystal-wings'));assert.notEqual(normal.match(/class="beast-anatomy"[^>]*d="([^"]+)"/)[1],special.match(/class="beast-anatomy"[^>]*d="([^"]+)"/)[1]);assert.ok(!mountedPortrait('<svg/>',fighter('griffin','griffin-skin-midnight')).includes('obsidian-crystal-wings'));});

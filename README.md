@@ -2,6 +2,14 @@
 
 Lokalna gra dla dwóch osób przy jednym ekranie. Każdy wybiera imię i po jednej cesze w ośmiu kategoriach (w każdym slocie oferta 5 wylosowanych cech z puli 20). Potem oglądacie automatyczny pojedynek i opis oparty na zdarzeniach walki. Dostępne są rewanż, edycja postaci i rozpoczęcie od nowa. Interfejs po polsku, responsywne postacie SVG, bez zewnętrznych obrazów, fontów i usług.
 
+## Balans bestii i Obsydianowy Kolos (V45)
+
+Tygrys szablozębny, gryf i smok skalny nadal przewyższają zwykłe bestie, ale mają niższe premie bojowe oraz słabsze umiejętności podstawowe. Smok skalny jest cięższym, mniej zwinnym wierzchowcem z kosztem kondycji. Szansa uruchomienia umiejętności pozostaje 25%. Najsilniejsze legendarne smoki zachowują swoje premie.
+
+`npm run balance:beasts` porównuje trzy bestie z tygrysem, lwem, nosorożcem, panterą i mamutem: 12 wspólnych zestawów, rotacja pięciu zbroi i pięciu umiejętności, trzy długości walki, cztery ziarna losowe i obie kolejności postaci. W 4320 takich walkach częstość zwycięstw zmieniła się: szablozębny 96,9% → 84,6%, gryf 99,2% → 88,3%, smok skalny 99,8% → 88,3%. To porównanie testowych zestawów, nie gwarancja wyniku każdej rozgrywki.
+
+Legendarny skin smoka skalnego nosi nazwę „Obsydianowy Kolos”. Zmienia sylwetkę, grzbiet, rogi i ogon, dodaje kryształy oraz animowane szczeliny magmy. Nie zmienia statystyk. Identyfikator `drake-skin-midnight` pozostaje ten sam, więc wcześniej zdobyte skiny otrzymują nowy wygląd automatycznie. Animacje respektują ograniczenie ruchu w przeglądarce.
+
 ## Profile, EXP i boxy
 
 U góry gry można nazwać cztery lokalne profile, a w kreatorze przypisać profil do każdej postaci. Po walce profil dostaje 60 EXP za wygraną, −40 za porażkę (minimum 0 EXP na profilu) lub 40 za remis, raz na walkę również przy kilku postaciach tego samego profilu. Za wygraną w rewanżu nagroda wynosi 30 EXP. Goście i boty nie dostają EXP.
