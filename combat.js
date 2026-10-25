@@ -1,10 +1,11 @@
-import {applyArmorSkill} from './armor-skills.js?v=variety-51';
-import {resolveTactic} from './tactics.js?v=variety-51';
-import {applyBeastAbility} from './beast-abilities.js?v=variety-51';
-import {rollChance} from './probability.js?v=variety-51';
-import {magicRules} from './fantasy.js?v=variety-51';
-import {abilityRules as rules} from './abilities.js?v=variety-51';
+import {applyArmorSkill} from './armor-skills.js?v=randomness-52';
+import {resolveTactic} from './tactics.js?v=randomness-52';
+import {applyBeastAbility} from './beast-abilities.js?v=randomness-52';
+import {rollChance} from './probability.js?v=randomness-52';
+import {magicRules} from './fantasy.js?v=randomness-52';
+import {abilityRules as rules} from './abilities.js?v=randomness-52';
 const clamp=(x,min,max)=>Math.max(min,Math.min(max,x));
+export function attackVariation(attack,random=Math.random){return (random()*2-1)*Math.max(8,attack*.25);}
 export function createCombatState(fighters){
  const state={hp:fighters.map(f=>f.stats.health),energy:fighters.map(f=>f.stats.stamina)};
  for(const key of ['armorTurns','armorRescue','guard','tacticDefense','venom','turns','wrist','blind','exposed','armorDamage','slow','shield','tempo','focus','exposureStrength','burn','frozen','magicShield','silenced','rooted','thorns','barrier','marked','blink','battlecry','stunned','mist'])state[key]=fighters.map(()=>0);
@@ -59,7 +60,7 @@ export function resolveTurn(f,state,actor,random=Math.random,target=1-actor,tact
  if(tempo)bonus+=rules.pace.power;
  if(state.battlecry[actor]>0){state.battlecry[actor]--;bonus+=4;details.push('Runiczny okrzyk: +4 siły.');}
  let defense=ability==='overhead'?0:Math.max(0,d.defense+state.tacticDefense[target]-state.armorDamage[target]-s.pierce-exposure-(ability==='gap'?rule.break:0)-(ability==='precise'?rule.pierce:0));
- const strength=s.attack+plan.attack+(armorSkill?.id==='emperor'?5:0)+(random()*8-4)+bonus-(weakened?rules.disarm.penalty:0);
+ const strength=s.attack+plan.attack+(armorSkill?.id==='emperor'?5:0)+attackVariation(s.attack,random)+bonus-(weakened?rules.disarm.penalty:0);
  const scale=(exhausted?.65:1)*(staggered?rules.pommel.ratio:1);
  const raw=(power,protection=defense)=>Math.max(2,Math.round((power-protection*.6)*scale));
  function strike(amount){let dealt=amount;

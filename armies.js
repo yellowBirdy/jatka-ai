@@ -1,7 +1,7 @@
-import {buildArmyRoster} from './army-roster.js?v=variety-51';
-import {resolveArmyTraits} from './army-traits.js?v=variety-51';
-import {categories,createFighter} from './engine.js?v=variety-51';
-import {createCombatState,resolveTurn} from './combat.js?v=variety-51';
+import {buildArmyRoster} from './army-roster.js?v=randomness-52';
+import {resolveArmyTraits} from './army-traits.js?v=randomness-52';
+import {categories,createFighter} from './engine.js?v=randomness-52';
+import {createCombatState,resolveTurn} from './combat.js?v=randomness-52';
 export const armyBudgets=[500,800,1200,10000];
 const baseArmyUnits=[
  {id:'infantry',name:'Piechur',icon:'⚔',cost:80,role:'front',desc:'Tania, uniwersalna pierwsza linia.',picks:{weapon:'sword',armor:'mail',origin:'legionary',style:'balanced',ability:'breath',advantage:'endurance',weakness:'predictable'}},
