@@ -2,9 +2,11 @@
 
 Lokalna gra dla dwóch osób przy jednym ekranie. Każdy wybiera imię i po jednej cesze w ośmiu kategoriach (w każdym slocie oferta 5 wylosowanych cech z puli 20). Potem oglądacie automatyczny pojedynek i opis oparty na zdarzeniach walki. Dostępne są rewanż, edycja postaci i rozpoczęcie od nowa. Interfejs po polsku, responsywne postacie SVG, bez zewnętrznych obrazów, fontów i usług.
 
-## Armie (V47)
+## Armie (V48)
 
-Osobna karta „Armie” w menu uruchamia rekrutację dwóch oddziałów. Obaj gracze dostają ten sam budżet: 500, 800 lub 1200 punktów, maksymalnie 12 jednostek na armię. Pula zawiera 20 typów jednostek. Każda armia otrzymuje własne 5 losowych typów do rekrutacji. Oferta zachowuje się przy zmianie liczebności i powrocie do edycji. Automatyczna rekrutacja korzysta tylko z tych pięciu typów. „Losuj nowe 5 z 20” zmienia ofertę i czyści skład wyłącznie bieżącej armii, przywracając jej budżet. Rekrutacja nie kosztuje EXP; ten tryb nie przyznaje EXP ani przedmiotów.
+Osobna karta „Armie” w menu uruchamia rekrutację dwóch oddziałów. Obaj gracze dostają ten sam budżet: 500, 800 lub 1200 punktów, maksymalnie 12 jednostek na armię. Pula zawiera 20 typów jednostek. Każda armia otrzymuje własne 5 losowych typów do rekrutacji. Oferta zachowuje się przy zmianie liczebności i powrocie do edycji. Automatyczna rekrutacja korzysta tylko z tych pięciu typów. „Losuj nowe 5 z 20” zmienia oferty i czyści skład wyłącznie bieżącej armii, przywracając jej budżet. Rekrutacja nie kosztuje EXP; ten tryb nie przyznaje EXP ani przedmiotów.
+
+Dodatkowo każda armia wybiera taktykę, pochodzenie i jedną magiczną bestię. Każda z tych trzech kategorii ma pulę 20 opcji i własną ofertę 5. Taktyka ustala sposób ataku i premiuje statystyki armii; pochodzenie daje niezależne premie. Magiczna bestia ma własne HP, inicjatywę, umiejętność gatunku i moc magiczną. Jest dodatkową jednostką bez kosztu rekrutacji, poza limitem 12 żołnierzy. Jeźdźcy nadal mają zwykłe wierzchowce. Nowe losowanie odświeża wszystkie cztery oferty tylko bieżącej armii i resetuje jej skład. Rewanż i edycja zachowują wybrane cechy.
 
 Każda jednostka korzysta z istniejącego silnika walki, własnego HP, kondycji, broni i umiejętności. Pierwsza linia chroni wsparcie, kawaleria omija ją i atakuje magów. Kolejność każdej rundy wynika z szybkości i losowania; każda żywa jednostka wykonuje jeden ruch w rundzie. Taktyka jest wybierana dla całej armii, a wyczerpane jednostki odpoczywają. Wygrywa armia, która wyeliminuje przeciwników. Przy limicie 160 ruchów na jednostkę decyduje średni procent pozostałego HP.
 

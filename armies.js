@@ -1,5 +1,6 @@
-import {categories,createFighter} from './engine.js?v=army-pool-47';
-import {createCombatState,resolveTurn} from './combat.js?v=army-pool-47';
+import {resolveArmyTraits} from './army-traits.js?v=army-traits-48';
+import {categories,createFighter} from './engine.js?v=army-traits-48';
+import {createCombatState,resolveTurn} from './combat.js?v=army-traits-48';
 export const armyBudgets=[500,800,1200];
 export const armyUnits=[
  {id:'infantry',name:'Piechur',icon:'⚔',cost:80,role:'front',desc:'Tania, uniwersalna pierwsza linia.',picks:{weapon:'sword',armor:'mail',origin:'legionary',style:'balanced',ability:'breath',advantage:'endurance',weakness:'predictable'}},
@@ -32,19 +33,24 @@ export function validateArmy(army,budget){
  if(!Array.isArray(army.units)||army.units.length<1||army.units.length>12)throw Error('Armia musi liczyć od 1 do 12 jednostek.');
  if(!['balanced','aggressive','cautious'].includes(army.tactic))throw Error('Wybierz taktykę armii.');
  if(army.offer&&(!Array.isArray(army.offer)||army.units.some(id=>!army.offer.includes(id))))throw Error('Rekrutuj tylko jednostki z wylosowanej oferty.');
+ resolveArmyTraits(army);
  if(armyCost(army.units)>budget)throw Error('Armia przekracza budżet rekrutacji.');return true;
 }
 export function armyLiving(battle,side){return battle.sides.flatMap((s,i)=>s===side&&battle.state.hp[i]>0?[i]:[]);}
 function initiative(battle){return battle.fighters.map((f,i)=>({i,score:f.stats.speed+battle.random()*10})).filter(({i})=>battle.state.hp[i]>0).sort((a,b)=>b.score-a.score||a.i-b.i).map(({i})=>i);}
 export function createArmyBattle(armies,budget=800,random=Math.random){
  if(!Array.isArray(armies)||armies.length!==2)throw Error('Potrzebne są dwie armie.');armies.forEach(a=>validateArmy(a,budget));
- const fighters=[],sides=[],roles=[];
+ const fighters=[],sides=[],roles=[],traits=armies.map(resolveArmyTraits);
  const defaults=Object.fromEntries(categories.map(c=>[c.id,c.options[0].id]));
- for(let side=0;side<2;side++)for(const [index,id]of armies[side].units.entries()){
+ for(let side=0;side<2;side++){for(const [index,id]of armies[side].units.entries()){
   const unit=unitFor(id),picks={...defaults,...unit.picks,...(unit.beast?{beast:unit.beast,beastArmor:'none',beastAbility:unit.beast}:{})};
   fighters.push(createFighter(`${unit.name} ${index+1}`,picks,'short',unit.mode||'classic',!!unit.beast));sides.push(side);roles.push(unit.role);
  }
- const battle={fighters,sides,roles,armies:armies.map(a=>({...a,name:a.name.trim(),units:[...a.units]})),budget,random,state:createCombatState(fighters),queue:[],events:[],finished:false,winner:null,reason:null,round:1,limit:160*fighters.length};
+ const magic=traits[side].magicalBeast;
+ if(magic){const f=createFighter(magic.name,{...defaults,weapon:'staff',armor:'cloth',origin:'monk',style:'balanced',ability:'precise',weakness:'predictable',advantage:'endurance',beast:magic.beast,beastArmor:'none',beastAbility:magic.beast,specialItem:'vitality',magicPower:magic.power},'short','fantasy',true);f.armyMagicBeast=true;f.traits.weapon={...f.traits.weapon,name:'Naturalna broń bestii'};fighters.push(f);sides.push(side);roles.push('beast');}
+ }
+ for(const [i,f]of fighters.entries())for(const source of [traits[sides[i]].strategy,traits[sides[i]].origin])for(const [key,value]of Object.entries(source?.stats||{}))f.stats[key]=Math.max(1,f.stats[key]+value);
+ const battle={fighters,sides,roles,armies:armies.map(a=>({...a,name:a.name.trim(),units:[...a.units]})),budget,random,traits,state:createCombatState(fighters),queue:[],events:[],finished:false,winner:null,reason:null,round:1,limit:160*fighters.length};
  battle.queue=initiative(battle);return battle;
 }
 export function advanceArmy(battle){
@@ -55,12 +61,13 @@ export function advanceArmy(battle){
  if(actor===undefined||!enemies.length)throw Error('Brak dostępnego przeciwnika.');
  const fronts=enemies.filter(i=>battle.roles[i]==='front'),support=enemies.filter(i=>battle.roles[i]==='support');
  const pool=battle.roles[actor]==='flank'&&support.length?support:fronts.length?fronts:enemies;
- const target=pool.reduce((best,i)=>battle.state.hp[i]<battle.state.hp[best]?i:best,pool[0]);
- const tactic=battle.state.energy[actor]<7?'rest':battle.armies[side].tactic;
+ const priority=battle.traits[side].strategy?.target;
+ const target=priority==='random'?pool[Math.floor(battle.random()*pool.length)]:pool.reduce((best,i)=>(priority==='strongest'?battle.state.hp[i]>battle.state.hp[best]:battle.state.hp[i]<battle.state.hp[best])?i:best,pool[0]);
+ const tactic=battle.state.energy[actor]<7?'rest':battle.traits[side].strategy?.plan||battle.armies[side].tactic;
  const event=resolveTurn(battle.fighters,battle.state,actor,battle.random,target,tactic);event.round=battle.round;battle.events.push(event);
  const alive=[armyLiving(battle,0).length,armyLiving(battle,1).length];
  if(!alive[0]||!alive[1]){battle.finished=true;battle.winner=alive[0]?0:alive[1]?1:null;battle.reason=battle.winner===null?'draw':'knockout';}
- else if(battle.events.length>=battle.limit){const score=s=>battle.sides.reduce((n,side,i)=>n+(side===s?battle.state.hp[i]/battle.fighters[i].stats.health:0),0)/battle.armies[s].units.length;const delta=score(0)-score(1);battle.finished=true;battle.winner=Math.abs(delta)<1e-10?null:delta>0?0:1;battle.reason=battle.winner===null?'draw':'decision';}
+ else if(battle.events.length>=battle.limit){const score=s=>battle.sides.reduce((n,side,i)=>n+(side===s?battle.state.hp[i]/battle.fighters[i].stats.health:0),0)/battle.sides.filter(side=>side===s).length;const delta=score(0)-score(1);battle.finished=true;battle.winner=Math.abs(delta)<1e-10?null:delta>0?0:1;battle.reason=battle.winner===null?'draw':'decision';}
  return event;
 }
 export function finishArmy(battle){while(!battle.finished)advanceArmy(battle);return battle;}
