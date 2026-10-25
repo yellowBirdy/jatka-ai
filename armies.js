@@ -1,5 +1,5 @@
-import {categories,createFighter} from './engine.js?v=armies-46';
-import {createCombatState,resolveTurn} from './combat.js?v=armies-46';
+import {categories,createFighter} from './engine.js?v=army-pool-47';
+import {createCombatState,resolveTurn} from './combat.js?v=army-pool-47';
 export const armyBudgets=[500,800,1200];
 export const armyUnits=[
  {id:'infantry',name:'Piechur',icon:'⚔',cost:80,role:'front',desc:'Tania, uniwersalna pierwsza linia.',picks:{weapon:'sword',armor:'mail',origin:'legionary',style:'balanced',ability:'breath',advantage:'endurance',weakness:'predictable'}},
@@ -8,7 +8,21 @@ export const armyUnits=[
  {id:'berserker',name:'Berserker',icon:'✹',cost:110,role:'front',desc:'Potężne ciosy, ale słabsza ochrona.',picks:{weapon:'axe',armor:'hide',origin:'viking',style:'brutal',ability:'rage',advantage:'strength',weakness:'reckless'}},
  {id:'rider',name:'Kawalerzysta',icon:'♞',cost:160,role:'flank',desc:'Koń bojowy. Omija front i atakuje wsparcie.',beast:'horse',picks:{weapon:'sabre',armor:'brigandine',origin:'knight',style:'mobile',ability:'charge',advantage:'quick-feet',weakness:'poor-guard'}},
  {id:'wolf-rider',name:'Wilczy jeździec',icon:'🐺',cost:170,role:'flank',desc:'Mobilny oddział na wilku. Osacza tylną linię.',beast:'wolf',picks:{weapon:'spear',armor:'leather',origin:'nomad',style:'ambush',ability:'lunge',advantage:'reflex',weakness:'fragile'}},
- {id:'mage',name:'Mag bitewny',icon:'✦',cost:180,role:'support',desc:'Błyskawice zza pierwszej linii. Chroń go piechotą.',picks:{weapon:'staff',armor:'cloth',origin:'monk',style:'distance',ability:'precise',advantage:'precision',weakness:'fragile',specialItem:'focus-charm',magicPower:'lightning'},mode:'fantasy'}
+ {id:'mage',name:'Mag bitewny',icon:'✦',cost:180,role:'support',desc:'Błyskawice zza pierwszej linii. Chroń go piechotą.',picks:{weapon:'staff',armor:'cloth',origin:'monk',style:'distance',ability:'precise',advantage:'precision',weakness:'fragile',specialItem:'focus-charm',magicPower:'lightning'},mode:'fantasy'},
+ {id:'halberdier',name:'Halabardnik',icon:'⚒',cost:115,role:'front',desc:'Długie ostrze i szerokie zamachy na pierwszej linii.',picks:{weapon:'halberd',armor:'lamellar',origin:'mercenary',style:'sweeping',ability:'overhead',advantage:'reach',weakness:'tired'}},
+ {id:'duelist',name:'Szermierz',icon:'✧',cost:105,role:'flank',desc:'Lekki rapier i rozbrojenie. Omija pierwszą linię.',picks:{weapon:'rapier',armor:'leather',origin:'duelist',style:'fencing',ability:'disarm',advantage:'timing',weakness:'fragile'}},
+ {id:'gladiator',name:'Gladiator',icon:'♆',cost:115,role:'front',desc:'Trójząb, sieć i doświadczenie walk na arenie.',picks:{weapon:'trident',armor:'brigandine',origin:'gladiator',style:'counter',secondary:'net',ability:'wrist-lock',advantage:'resolve',weakness:'old-wound'}},
+ {id:'monk',name:'Mnich bojowy',icon:'☯',cost:95,role:'flank',desc:'Techniczna walka kosturem i kontrola oddechu.',picks:{weapon:'staff',armor:'quilted',origin:'monk',style:'technical',ability:'breathing',advantage:'balance',weakness:'poor-eye'}},
+ {id:'samurai',name:'Samuraj',icon:'◇',cost:130,role:'front',desc:'Miecz, precyzyjne cięcia i pancerz lamelkowy.',picks:{weapon:'sword',armor:'lamellar',origin:'samurai',style:'measured',ability:'gap',advantage:'precision',weakness:'old-wound'}},
+ {id:'knight',name:'Rycerz pancerny',icon:'⬟',cost:135,role:'front',desc:'Ciężki młot, półzbroja i niezłomna postawa.',picks:{weapon:'hammer',armor:'halfplate',origin:'knight',style:'pressure',ability:'shoulder',advantage:'iron-body',weakness:'heavy-feet'}},
+ {id:'pikeman',name:'Pikinier',icon:'↑',cost:100,role:'front',desc:'Długa pika, trzymanie dystansu i zahaczanie broni.',picks:{weapon:'pike',armor:'leather',origin:'guard',style:'thrusting',ability:'weapon-hook',advantage:'reach',weakness:'tired'}},
+ {id:'scout',name:'Zwiadowca',icon:'◈',cost:85,role:'flank',desc:'Tani, zwinny flankier z fałszywym atakiem.',picks:{weapon:'falchion',armor:'leather',origin:'hunter',style:'ambush',ability:'feint-strike',advantage:'awareness',weakness:'fragile'}},
+ {id:'lancer',name:'Kopijnik',icon:'♘',cost:175,role:'flank',desc:'Opancerzony jeździec z włócznią i szarżą.',beast:'horse',picks:{weapon:'spear',armor:'plate',origin:'knight',style:'offensive',ability:'charge',advantage:'strength',weakness:'slow'}},
+ {id:'boar-rider',name:'Jeździec dzika',icon:'🐗',cost:180,role:'flank',desc:'Kły bestii uszkadzają pancerz. Atakuje tylną linię.',beast:'boar',picks:{weapon:'axe',armor:'hardened',origin:'highlander',style:'brutal',ability:'overhead',advantage:'toughness',weakness:'reckless'}},
+ {id:'frost-mage',name:'Mag lodu',icon:'❄',cost:180,role:'support',desc:'Spowalnia przeciwnika lodową magią.',mode:'fantasy',picks:{weapon:'staff',armor:'linen',origin:'monk',style:'distance',ability:'precise',advantage:'precision',weakness:'fragile',specialItem:'focus-charm',magicPower:'frost'}},
+ {id:'healer',name:'Uzdrowiciel',icon:'✚',cost:170,role:'support',desc:'Magiczna odnowa leczy jego własne rany.',mode:'fantasy',picks:{weapon:'staff',armor:'cloth',origin:'monk',style:'defensive',ability:'breathing',advantage:'endurance',weakness:'fragile',specialItem:'vitality',magicPower:'healing'}},
+ {id:'fire-mage',name:'Mag ognia',icon:'♨',cost:180,role:'support',desc:'Podpala cel, zadając obrażenia przez osłony.',mode:'fantasy',picks:{weapon:'staff',armor:'linen',origin:'desert',style:'pressure',ability:'precise',advantage:'precision',weakness:'fragile',specialItem:'strength-belt',magicPower:'fire'}}
+
 ];
 const unitFor=id=>armyUnits.find(u=>u.id===id);
 export function armyCost(units){return units.reduce((sum,id)=>{const unit=unitFor(id);if(!unit)throw Error('Nieznana jednostka.');return sum+unit.cost;},0);}
@@ -17,6 +31,7 @@ export function validateArmy(army,budget){
  if(!army||typeof army.name!=='string'||!army.name.trim()||army.name.trim().length>40)throw Error('Nazwa armii musi mieć od 1 do 40 znaków.');
  if(!Array.isArray(army.units)||army.units.length<1||army.units.length>12)throw Error('Armia musi liczyć od 1 do 12 jednostek.');
  if(!['balanced','aggressive','cautious'].includes(army.tactic))throw Error('Wybierz taktykę armii.');
+ if(army.offer&&(!Array.isArray(army.offer)||army.units.some(id=>!army.offer.includes(id))))throw Error('Rekrutuj tylko jednostki z wylosowanej oferty.');
  if(armyCost(army.units)>budget)throw Error('Armia przekracza budżet rekrutacji.');return true;
 }
 export function armyLiving(battle,side){return battle.sides.flatMap((s,i)=>s===side&&battle.state.hp[i]>0?[i]:[]);}
@@ -49,9 +64,14 @@ export function advanceArmy(battle){
  return event;
 }
 export function finishArmy(battle){while(!battle.finished)advanceArmy(battle);return battle;}
-export function draftArmy(budget=800,random=Math.random){
- if(!armyBudgets.includes(budget))throw Error('Nieznany budżet.');const units=[];
+export function draftArmy(budget=800,random=Math.random,offer=armyUnits){
+ if(!armyBudgets.includes(budget))throw Error('Nieznany budżet.');
+ if(!Array.isArray(offer)||!offer.length||offer.some(u=>!unitFor(u.id)))throw Error('Niepoprawna oferta jednostek.');const units=[];
  // Mixed automatic recruitment, always constrained by the same budget as a human.
- while(units.length<12){const remaining=budget-armyCost(units),pool=armyUnits.filter(u=>u.cost<=remaining);if(!pool.length)break;units.push(pool[Math.min(pool.length-1,Math.floor(random()*pool.length))].id);}
+ while(units.length<12){const remaining=budget-armyCost(units),pool=offer.filter(u=>u.cost<=remaining);if(!pool.length)break;units.push(pool[Math.min(pool.length-1,Math.floor(random()*pool.length))].id);}
  return units;
+}
+
+export function drawArmyOffer(random=Math.random){
+ const pool=[...armyUnits];for(let i=pool.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}return pool.slice(0,5);
 }
