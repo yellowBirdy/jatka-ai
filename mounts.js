@@ -1,4 +1,4 @@
-import {getBeastAbilities} from './beast-abilities.js?v=massacre-49';
+import {getBeastAbilities} from './beast-abilities.js?v=variety-51';
 const beast=(id,name,icon,stats,shape,color,size=1)=>({id,name,icon,stats,shape,color,size,desc:describeStats(stats)});
 function describeStats(stats){const names={health:'bazowego HP',attack:'siły',defense:'ochrony',speed:'szybkości',accuracy:'celności',stamina:'kondycji',pierce:'przebicia'};return Object.entries(stats).map(([key,n])=>`${n>0?'+':''}${n} ${names[key]}`).join(' · ')||'Bez dodatkowych premii i kosztów.';}
 export const beasts=[
