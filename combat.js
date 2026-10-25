@@ -1,9 +1,9 @@
-import {applyArmorSkill} from './armor-skills.js?v=beast-balance-45';
-import {resolveTactic} from './tactics.js?v=beast-balance-45';
-import {applyBeastAbility} from './beast-abilities.js?v=beast-balance-45';
-import {rollChance} from './probability.js?v=beast-balance-45';
-import {magicRules} from './fantasy.js?v=beast-balance-45';
-import {abilityRules as rules} from './abilities.js?v=beast-balance-45';
+import {applyArmorSkill} from './armor-skills.js?v=armies-46';
+import {resolveTactic} from './tactics.js?v=armies-46';
+import {applyBeastAbility} from './beast-abilities.js?v=armies-46';
+import {rollChance} from './probability.js?v=armies-46';
+import {magicRules} from './fantasy.js?v=armies-46';
+import {abilityRules as rules} from './abilities.js?v=armies-46';
 const clamp=(x,min,max)=>Math.max(min,Math.min(max,x));
 export function createCombatState(fighters){
  const state={hp:fighters.map(f=>f.stats.health),energy:fighters.map(f=>f.stats.stamina)};

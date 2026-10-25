@@ -1,0 +1,41 @@
+import {armyUnits,armyBudgets,armyCost,validateArmy,draftArmy,createArmyBattle,advanceArmy,finishArmy,armyLiving} from './armies.js?v=armies-46';
+export function setupArmies(drawWarrior){
+ const $=id=>document.getElementById(id);let drafts=[{name:'Armia Północy',units:[],tactic:'balanced'},{name:'Armia Południa',units:[],tactic:'balanced'}],stage=0,budget=800,battle=null,timer=null,running=false,snapshot=[];
+ const unit=id=>armyUnits.find(u=>u.id===id);
+ const stop=()=>{clearTimeout(timer);timer=null;running=false;$('army-auto').textContent='Automatycznie ▶';};
+ function renderRecruit(){
+  $('army-build').hidden=false;$('army-arena').hidden=true;$('army-error').textContent='';$('army-stage').textContent=`ARMIA ${stage===0?'A':'B'} · REKRUTACJA`;$('army-name').value=drafts[stage].name;$('army-tactic').value=drafts[stage].tactic;$('army-back').hidden=stage===0;
+  $('army-budget').disabled=stage!==0||drafts[1].units.length>0;$('army-budget').value=String(budget);
+  const spent=armyCost(drafts[stage].units);$('army-points').textContent=`${budget-spent} / ${budget} pkt · ${drafts[stage].units.length} / 12 jednostek`;
+  $('army-recruits').replaceChildren(...armyUnits.map(type=>{const card=document.createElement('article'),icon=document.createElement('span'),title=document.createElement('h3'),desc=document.createElement('p'),stats=document.createElement('strong'),actions=document.createElement('div'),minus=document.createElement('button'),count=document.createElement('b'),plus=document.createElement('button');icon.className='army-recruit-icon';icon.textContent=type.icon;title.textContent=type.name;desc.textContent=type.desc;stats.textContent=`${type.cost} pkt · ${type.role==='front'?'Pierwsza linia':type.role==='flank'?'Flanka':'Wsparcie'}`;minus.type=plus.type='button';minus.className=plus.className='secondary';minus.textContent='−';plus.textContent='+';minus.setAttribute('aria-label',`Usuń: ${type.name}`);plus.setAttribute('aria-label',`Rekrutuj: ${type.name}`);minus.dataset.removeUnit=plus.dataset.addUnit=type.id;count.textContent=drafts[stage].units.filter(id=>id===type.id).length;minus.disabled=Number(count.textContent)===0;plus.disabled=drafts[stage].units.length>=12||spent+type.cost>budget;minus.onclick=()=>{drafts[stage].units.splice(drafts[stage].units.lastIndexOf(type.id),1);renderRecruit();};plus.onclick=()=>{drafts[stage].units.push(type.id);renderRecruit();};actions.className='army-quantity';actions.append(minus,count,plus);card.append(icon,title,desc,stats,actions);return card;}));
+  $('army-lineup').textContent=drafts[stage].units.length?armyUnits.filter(u=>drafts[stage].units.includes(u.id)).map(u=>`${u.icon} ${u.name} ×${drafts[stage].units.filter(id=>id===u.id).length}`).join(' · '):'Brak jednostek. Zrekrutuj żołnierzy z kart poniżej.';
+  $('army-confirm').textContent=stage===0?'Zatwierdź · zbuduj armię B →':'Na pole bitwy ⚔';
+ }
+ function showBattle(){
+  stop();battle=createArmyBattle(drafts,budget);$('army-build').hidden=true;$('army-arena').hidden=false;$('army-stage').textContent='DWIE ARMIE · JEDNO POLE BITWY';$('army-result').hidden=true;$('army-log').replaceChildren();$('army-commentary').textContent='Jednostki ruszają według szybkości. Piechota osłania wsparcie, a jeźdźcy mogą zaatakować tylną linię.';
+  $('army-field').replaceChildren(...drafts.map((draft,side)=>{const section=document.createElement('section'),title=document.createElement('h3'),troops=document.createElement('div');section.className=`army-side army-side-${side}`;title.textContent=draft.name;troops.className='army-troops';for(const index of battle.sides.flatMap((s,i)=>s===side?[i]:[])){const card=document.createElement('article'),name=document.createElement('b'),portrait=document.createElement('div'),bar=document.createElement('progress'),hp=document.createElement('small');card.dataset.armyUnit=index;card.className='army-soldier';name.textContent=battle.fighters[index].name;portrait.className='army-soldier-art';portrait.innerHTML=drawWarrior(battle.fighters[index],side);bar.max=battle.fighters[index].stats.health;bar.value=bar.max;bar.setAttribute('aria-label',`Zdrowie: ${battle.fighters[index].name}`);hp.dataset.armyHp=index;card.append(name,portrait,bar,hp);troops.append(card);}section.append(title,troops);return section;}));
+  refresh();$('army-arena').scrollIntoView({block:'start'});
+ }
+ function refresh(event,record=true){
+  $('army-status').textContent=`Runda ${battle.round} · Żywi: ${armyLiving(battle,0).length}/${drafts[0].units.length} vs ${armyLiving(battle,1).length}/${drafts[1].units.length} · Ruch ${battle.events.length}`;
+  for(const card of $('army-field').querySelectorAll('[data-army-unit]')){const i=Number(card.dataset.armyUnit),f=battle.fighters[i],hp=battle.state.hp[i];card.querySelector('progress').value=hp;card.querySelector('small').textContent=`${hp} / ${f.stats.health} HP`;card.classList.toggle('army-fallen',hp===0);card.classList.toggle('army-striking',!!event&&i===event.actor);card.classList.toggle('army-hit',!!event&&i===event.target&&event.damage>0);}
+  if(event){const message=`${battle.fighters[event.actor].name} → ${battle.fighters[event.target].name}: ${event.text} ${event.details.join(' ')}`;$('army-commentary').textContent=message;if(record){const entry=document.createElement('li');entry.textContent=`Runda ${event.round}. ${message}`;$('army-log').append(entry);}}
+  for(const id of ['army-step','army-auto','army-finish'])$(id).disabled=battle.finished;
+  if(battle.finished){stop();$('army-result').hidden=false;$('army-winner').textContent=battle.winner===null?'Remis':`Zwycięża ${drafts[battle.winner].name}`;$('army-summary').textContent=`Bitwa trwała ${battle.round} rund i ${battle.events.length} ruchów. Pozostało ${armyLiving(battle,0).length} jednostek armii A i ${armyLiving(battle,1).length} armii B. ${battle.reason==='decision'?'Po limicie ruchów decyduje średni procent pozostałego HP.':'O wyniku zdecydowała eliminacja przeciwników.'}`;}
+ }
+ function step(){if(!battle||battle.finished)return;const event=advanceArmy(battle);refresh(event);}
+ function auto(){if(!running||battle.finished)return;step();if(running)timer=setTimeout(auto,750/Number($('army-speed').value));}
+ $('army-start').onclick=()=>{snapshot=[...document.querySelectorAll('.match-settings,.steps,#creator,#arena,#stat-guide,#profile-settings,#tutorial-start')].map(n=>[n,n.hidden]);snapshot.forEach(([n])=>n.hidden=true);$('army-mode').hidden=false;stage=0;renderRecruit();$('army-mode').scrollIntoView({block:'start'});};
+ $('army-exit').onclick=()=>{stop();$('army-mode').hidden=true;snapshot.forEach(([n,hidden])=>n.hidden=hidden);$('army-start').focus();};
+ $('army-name').oninput=e=>{drafts[stage].name=e.target.value;};$('army-tactic').onchange=e=>{drafts[stage].tactic=e.target.value;};
+ $('army-budget').onchange=e=>{budget=Number(e.target.value);drafts=drafts.map(d=>({...d,units:[]}));renderRecruit();};
+ $('army-random').onclick=()=>{drafts[stage].units=draftArmy(budget);renderRecruit();};
+ $('army-clear').onclick=()=>{drafts[stage].units=[];renderRecruit();};
+ $('army-back').onclick=()=>{stage=0;renderRecruit();};
+ $('army-confirm').onclick=()=>{try{validateArmy(drafts[stage],budget);if(stage===0){stage=1;renderRecruit();$('army-name').focus();}else showBattle();}catch(error){$('army-error').textContent=error.message;}};
+ $('army-step').onclick=()=>{stop();step();};
+ $('army-auto').onclick=()=>{if(running){stop();return;}running=true;$('army-auto').textContent='Pauza ⏸';auto();};
+ $('army-finish').onclick=()=>{stop();const before=battle.events.length;finishArmy(battle);for(const event of battle.events.slice(before)){const item=document.createElement('li');item.textContent=`Runda ${event.round}. ${battle.fighters[event.actor].name} → ${battle.fighters[event.target].name}: ${event.text} ${event.details.join(' ')}`;$('army-log').append(item);}refresh(battle.events.at(-1),false);};
+ $('army-rematch').onclick=showBattle;
+ $('army-edit').onclick=()=>{stop();stage=0;renderRecruit();};
+}

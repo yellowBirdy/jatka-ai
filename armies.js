@@ -1,0 +1,57 @@
+import {categories,createFighter} from './engine.js?v=armies-46';
+import {createCombatState,resolveTurn} from './combat.js?v=armies-46';
+export const armyBudgets=[500,800,1200];
+export const armyUnits=[
+ {id:'infantry',name:'Piechur',icon:'⚔',cost:80,role:'front',desc:'Tania, uniwersalna pierwsza linia.',picks:{weapon:'sword',armor:'mail',origin:'legionary',style:'balanced',ability:'breath',advantage:'endurance',weakness:'predictable'}},
+ {id:'spearman',name:'Włócznik',icon:'♜',cost:100,role:'front',desc:'Zasięg włóczni i przebijające pchnięcia.',picks:{weapon:'spear',armor:'leather',origin:'spartan',style:'thrusting',ability:'precise',advantage:'reach',weakness:'fragile'}},
+ {id:'guard',name:'Gwardzista',icon:'⬢',cost:120,role:'front',desc:'Ciężki pancerz chroni tylną linię.',picks:{weapon:'hammer',armor:'plate',origin:'guard',style:'fortress',ability:'wrist-lock',advantage:'iron-body',weakness:'slow'}},
+ {id:'berserker',name:'Berserker',icon:'✹',cost:110,role:'front',desc:'Potężne ciosy, ale słabsza ochrona.',picks:{weapon:'axe',armor:'hide',origin:'viking',style:'brutal',ability:'rage',advantage:'strength',weakness:'reckless'}},
+ {id:'rider',name:'Kawalerzysta',icon:'♞',cost:160,role:'flank',desc:'Koń bojowy. Omija front i atakuje wsparcie.',beast:'horse',picks:{weapon:'sabre',armor:'brigandine',origin:'knight',style:'mobile',ability:'charge',advantage:'quick-feet',weakness:'poor-guard'}},
+ {id:'wolf-rider',name:'Wilczy jeździec',icon:'🐺',cost:170,role:'flank',desc:'Mobilny oddział na wilku. Osacza tylną linię.',beast:'wolf',picks:{weapon:'spear',armor:'leather',origin:'nomad',style:'ambush',ability:'lunge',advantage:'reflex',weakness:'fragile'}},
+ {id:'mage',name:'Mag bitewny',icon:'✦',cost:180,role:'support',desc:'Błyskawice zza pierwszej linii. Chroń go piechotą.',picks:{weapon:'staff',armor:'cloth',origin:'monk',style:'distance',ability:'precise',advantage:'precision',weakness:'fragile',specialItem:'focus-charm',magicPower:'lightning'},mode:'fantasy'}
+];
+const unitFor=id=>armyUnits.find(u=>u.id===id);
+export function armyCost(units){return units.reduce((sum,id)=>{const unit=unitFor(id);if(!unit)throw Error('Nieznana jednostka.');return sum+unit.cost;},0);}
+export function validateArmy(army,budget){
+ if(!armyBudgets.includes(budget))throw Error('Wybierz budżet 500, 800 albo 1200 punktów.');
+ if(!army||typeof army.name!=='string'||!army.name.trim()||army.name.trim().length>40)throw Error('Nazwa armii musi mieć od 1 do 40 znaków.');
+ if(!Array.isArray(army.units)||army.units.length<1||army.units.length>12)throw Error('Armia musi liczyć od 1 do 12 jednostek.');
+ if(!['balanced','aggressive','cautious'].includes(army.tactic))throw Error('Wybierz taktykę armii.');
+ if(armyCost(army.units)>budget)throw Error('Armia przekracza budżet rekrutacji.');return true;
+}
+export function armyLiving(battle,side){return battle.sides.flatMap((s,i)=>s===side&&battle.state.hp[i]>0?[i]:[]);}
+function initiative(battle){return battle.fighters.map((f,i)=>({i,score:f.stats.speed+battle.random()*10})).filter(({i})=>battle.state.hp[i]>0).sort((a,b)=>b.score-a.score||a.i-b.i).map(({i})=>i);}
+export function createArmyBattle(armies,budget=800,random=Math.random){
+ if(!Array.isArray(armies)||armies.length!==2)throw Error('Potrzebne są dwie armie.');armies.forEach(a=>validateArmy(a,budget));
+ const fighters=[],sides=[],roles=[];
+ const defaults=Object.fromEntries(categories.map(c=>[c.id,c.options[0].id]));
+ for(let side=0;side<2;side++)for(const [index,id]of armies[side].units.entries()){
+  const unit=unitFor(id),picks={...defaults,...unit.picks,...(unit.beast?{beast:unit.beast,beastArmor:'none',beastAbility:unit.beast}:{})};
+  fighters.push(createFighter(`${unit.name} ${index+1}`,picks,'short',unit.mode||'classic',!!unit.beast));sides.push(side);roles.push(unit.role);
+ }
+ const battle={fighters,sides,roles,armies:armies.map(a=>({...a,name:a.name.trim(),units:[...a.units]})),budget,random,state:createCombatState(fighters),queue:[],events:[],finished:false,winner:null,reason:null,round:1,limit:160*fighters.length};
+ battle.queue=initiative(battle);return battle;
+}
+export function advanceArmy(battle){
+ if(battle.finished)throw Error('Bitwa jest już zakończona.');
+ battle.queue=battle.queue.filter(i=>battle.state.hp[i]>0);
+ if(!battle.queue.length){battle.round++;battle.queue=initiative(battle);}
+ const actor=battle.queue.shift(),side=battle.sides[actor],enemies=armyLiving(battle,1-side);
+ if(actor===undefined||!enemies.length)throw Error('Brak dostępnego przeciwnika.');
+ const fronts=enemies.filter(i=>battle.roles[i]==='front'),support=enemies.filter(i=>battle.roles[i]==='support');
+ const pool=battle.roles[actor]==='flank'&&support.length?support:fronts.length?fronts:enemies;
+ const target=pool.reduce((best,i)=>battle.state.hp[i]<battle.state.hp[best]?i:best,pool[0]);
+ const tactic=battle.state.energy[actor]<7?'rest':battle.armies[side].tactic;
+ const event=resolveTurn(battle.fighters,battle.state,actor,battle.random,target,tactic);event.round=battle.round;battle.events.push(event);
+ const alive=[armyLiving(battle,0).length,armyLiving(battle,1).length];
+ if(!alive[0]||!alive[1]){battle.finished=true;battle.winner=alive[0]?0:alive[1]?1:null;battle.reason=battle.winner===null?'draw':'knockout';}
+ else if(battle.events.length>=battle.limit){const score=s=>battle.sides.reduce((n,side,i)=>n+(side===s?battle.state.hp[i]/battle.fighters[i].stats.health:0),0)/battle.armies[s].units.length;const delta=score(0)-score(1);battle.finished=true;battle.winner=Math.abs(delta)<1e-10?null:delta>0?0:1;battle.reason=battle.winner===null?'draw':'decision';}
+ return event;
+}
+export function finishArmy(battle){while(!battle.finished)advanceArmy(battle);return battle;}
+export function draftArmy(budget=800,random=Math.random){
+ if(!armyBudgets.includes(budget))throw Error('Nieznany budżet.');const units=[];
+ // Mixed automatic recruitment, always constrained by the same budget as a human.
+ while(units.length<12){const remaining=budget-armyCost(units),pool=armyUnits.filter(u=>u.cost<=remaining);if(!pool.length)break;units.push(pool[Math.min(pool.length-1,Math.floor(random()*pool.length))].id);}
+ return units;
+}

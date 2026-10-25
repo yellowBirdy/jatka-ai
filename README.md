@@ -2,6 +2,14 @@
 
 Lokalna gra dla dwóch osób przy jednym ekranie. Każdy wybiera imię i po jednej cesze w ośmiu kategoriach (w każdym slocie oferta 5 wylosowanych cech z puli 20). Potem oglądacie automatyczny pojedynek i opis oparty na zdarzeniach walki. Dostępne są rewanż, edycja postaci i rozpoczęcie od nowa. Interfejs po polsku, responsywne postacie SVG, bez zewnętrznych obrazów, fontów i usług.
 
+## Armie (V46)
+
+Osobna karta „Armie” w menu uruchamia rekrutację dwóch oddziałów. Obaj gracze dostają ten sam budżet: 500, 800 lub 1200 punktów, maksymalnie 12 jednostek na armię. Można wybierać piechurów, włóczników, gwardzistów, berserkerów, kawalerzystów, wilczych jeźdźców i magów bitewnych. Rekrutacja nie kosztuje EXP; ten tryb nie przyznaje EXP ani przedmiotów.
+
+Każda jednostka korzysta z istniejącego silnika walki, własnego HP, kondycji, broni i umiejętności. Pierwsza linia chroni wsparcie, kawaleria omija ją i atakuje magów. Kolejność każdej rundy wynika z szybkości i losowania; każda żywa jednostka wykonuje jeden ruch w rundzie. Taktyka jest wybierana dla całej armii, a wyczerpane jednostki odpoczywają. Wygrywa armia, która wyeliminuje przeciwników. Przy limicie 160 ruchów na jednostkę decyduje średni procent pozostałego HP.
+
+Bitwę można oglądać automatycznie z prędkością ×1/×2/×3, rozgrywać krokami lub przewinąć do końca. Dostępne są historia walki, rewanż z pełnym zdrowiem i edycja obu składów. „Zwykła arena” wraca do poprzedniego wojownika bez resetowania profili i EXP.
+
 ## Balans bestii i Obsydianowy Kolos (V45)
 
 Tygrys szablozębny, gryf i smok skalny nadal przewyższają zwykłe bestie, ale mają niższe premie bojowe oraz słabsze umiejętności podstawowe. Smok skalny jest cięższym, mniej zwinnym wierzchowcem z kosztem kondycji. Szansa uruchomienia umiejętności pozostaje 25%. Najsilniejsze legendarne smoki zachowują swoje premie.
