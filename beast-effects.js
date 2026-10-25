@@ -1,4 +1,4 @@
-import {getBeastAbilities} from './beast-abilities.js?v=army-traits-48';
+import {getBeastAbilities} from './beast-abilities.js?v=massacre-49';
 const baseTypes={dragon:'venom','chinese-dragon':'energy',drake:'claw',griffin:'claw',sabretooth:'claw',horse:'energy',wolf:'claw',boar:'claw',bear:'heal',rhino:'claw',tiger:'claw',lion:'control',elk:'control',mammoth:'guard',lizard:'venom',ostrich:'guard',camel:'energy',bison:'guard',buffalo:'claw',hyena:'heal',stag:'energy',panther:'claw','polar-bear':'control',yak:'guard',crocodile:'control'};
 export function beastEffectFor(beast,id){const rule=getBeastAbilities(beast).find(a=>a.id===id);if(!rule)return null;return {name:rule.name,type:rule.effect?({strike:'claw',guard:'guard',heal:'heal',drain:'control',mark:'control',barrier:'guard',focus:'energy',slow:'control'})[rule.effect]:baseTypes[beast]};}
 const drawings={

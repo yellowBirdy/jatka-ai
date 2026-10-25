@@ -2,9 +2,13 @@
 
 Lokalna gra dla dwóch osób przy jednym ekranie. Każdy wybiera imię i po jednej cesze w ośmiu kategoriach (w każdym slocie oferta 5 wylosowanych cech z puli 20). Potem oglądacie automatyczny pojedynek i opis oparty na zdarzeniach walki. Dostępne są rewanż, edycja postaci i rozpoczęcie od nowa. Interfejs po polsku, responsywne postacie SVG, bez zewnętrznych obrazów, fontów i usług.
 
-## Armie (V48)
+## Armie i Totalna miazga (V49)
 
-Osobna karta „Armie” w menu uruchamia rekrutację dwóch oddziałów. Obaj gracze dostają ten sam budżet: 500, 800 lub 1200 punktów, maksymalnie 12 jednostek na armię. Pula zawiera 20 typów jednostek. Każda armia otrzymuje własne 5 losowych typów do rekrutacji. Oferta zachowuje się przy zmianie liczebności i powrocie do edycji. Automatyczna rekrutacja korzysta tylko z tych pięciu typów. „Losuj nowe 5 z 20” zmienia oferty i czyści skład wyłącznie bieżącej armii, przywracając jej budżet. Rekrutacja nie kosztuje EXP; ten tryb nie przyznaje EXP ani przedmiotów.
+Karta „Armie” uruchamia rekrutację dwóch oddziałów. Obaj gracze dostają ten sam budżet: 500, 800 lub 1200 punktów, maksymalnie 12 żołnierzy. Osobna karta „Totalna miazga” uruchamia bitwę z **10 000 punktów rekrutacji na stronę i bez niezależnego limitu liczby żołnierzy** — liczebność ogranicza wyłącznie budżet. To nie jest EXP profilu; rekrutacja nie wydaje ani nie przyznaje EXP.
+
+Jednostki wybiera się z czterech osobnych kategorii: **1. Strzelcy, 2. Kawaleria, 3. Piechota, 4. Magowie**. Każda ma 20 unikalnych typów (80 łącznie), a każdy gracz dostaje własne 5 losowych propozycji z każdej kategorii. Automatyczna rekrutacja korzysta tylko z tych ofert. Oferta zachowuje się przy edycji; ponowne losowanie zmienia oferty i usuwa skład tylko bieżącej armii. Przyklejony do górnej krawędzi licznik pokazuje pozostałe punkty, wydane punkty i liczebność również po przewinięciu listy.
+
+Strzelcy mają łuki lub kusze, premię celności i +8 inicjatywy w pierwszej rundzie. Chroni ich pierwsza linia, ale kawaleria może ich oskrzydlić. Duże bitwy przedstawiają zwykłych żołnierzy kompaktowymi ikonami, zachowując osobne HP i pełne uczestnictwo każdej jednostki; magiczne bestie nadal mają pełny portret.
 
 Dodatkowo każda armia wybiera taktykę, pochodzenie i jedną magiczną bestię. Każda z tych trzech kategorii ma pulę 20 opcji i własną ofertę 5. Taktyka ustala sposób ataku i premiuje statystyki armii; pochodzenie daje niezależne premie. Magiczna bestia ma własne HP, inicjatywę, umiejętność gatunku i moc magiczną. Jest dodatkową jednostką bez kosztu rekrutacji, poza limitem 12 żołnierzy. Jeźdźcy nadal mają zwykłe wierzchowce. Nowe losowanie odświeża wszystkie cztery oferty tylko bieżącej armii i resetuje jej skład. Rewanż i edycja zachowują wybrane cechy.
 
