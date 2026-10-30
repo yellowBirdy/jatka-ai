@@ -1,7 +1,7 @@
-import {armyTraitSlots,drawArmyTraits} from './army-traits.js?v=anime-53';
-import {mountedPortrait} from './mounts.js?v=anime-53';
-import {textureAnimalSvg} from './surface-textures.js?v=anime-53';
-import {armyUnits,armyUnitGroups,armyUnitLimit,drawArmyRecruitment,armyBudgets,armyCost,validateArmy,draftArmy,createArmySoldier,createArmyBattle,advanceArmy,finishArmy,armyLiving} from './armies.js?v=anime-53';
+import {armyTraitSlots,drawArmyTraits} from './army-traits.js?v=anime-54';
+import {mountedPortrait} from './mounts.js?v=anime-54';
+import {textureAnimalSvg} from './surface-textures.js?v=anime-54';
+import {armyUnits,armyUnitGroups,armyUnitLimit,drawArmyRecruitment,armyBudgets,armyCost,validateArmy,draftArmy,createArmySoldier,createArmyBattle,advanceArmy,finishArmy,armyLiving} from './armies.js?v=anime-54';
 export function setupArmies(drawWarrior){
  const $=id=>document.getElementById(id);let drafts=[{name:'Armia Północy',units:[],tactic:'balanced'},{name:'Armia Południa',units:[],tactic:'balanced'}],stage=0,budget=800,battle=null,timer=null,running=false,snapshot=[];
  const offers=[drawArmyRecruitment(),drawArmyRecruitment()],traitOffers=[drawArmyTraits(),drawArmyTraits()];
