@@ -1,4 +1,4 @@
-import {rollChance} from './probability.js?v=anime-54';
+import {rollChance} from './probability.js?v=anime-55';
 const ability=(name,desc)=>({name,desc:`25% po własnym ataku: ${desc}`,chance:.25,stats:{}});
 export const beastAbilities={
  horse:ability('Galop bojowy','odzyskaj do 12 kondycji; następny atak nie zużywa kondycji, ma +3 siły i +12 pkt proc. celności.'),

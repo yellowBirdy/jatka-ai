@@ -1,5 +1,5 @@
-import {fruitPowers} from './anime-fruit-powers.js?v=anime-54';
-import {loreDescription} from './anime-lore.js?v=anime-54';
+import {fruitPowers} from './anime-fruit-powers.js?v=anime-55';
+import {loreDescription} from './anime-lore.js?v=anime-55';
 // Named fruits from One Piece, including animated films and anime-only arcs.
 // Different models are separate choices; Gomu Gomu and Nika are one fruit.
 const groups={

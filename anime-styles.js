@@ -42,3 +42,5 @@ export function fruitStyles(fruit,combatStyle='weapon'){
  if(fruit.id==='ope-ope'&&combatStyle==='fists'){titles[0]='Scalpel — operacyjne dłonie';rules[0]={damage:16,armor:4,statuses:{marked:1}};}
  return titles.map((name,i)=>({id:`${fruit.id}-${i}`,name,icon:['✹','⬡','◎','➶','✦'][i],rule:rules[i],desc:[animal?'Wykorzystuje siłę przemiany w bezpośrednim natarciu.':'Skupia moc w zdecydowanym ataku.','Rezygnuje z części natarcia, by przygotować osłonę.',controlDescription[fruit.family]||'Wykorzystuje właściwości owocu do przejęcia inicjatywy.','Stawia na ruch, uniki i korzystne ustawienie.','Rozwija pełną technikę. Jest wyczerpująca i wymaga odzyskania oddechu.'][i]}));
 }
+
+export function animeTactics(fighter){return fruitStyles(fighter.anime.baseFruit||fighter.anime.fruit,fighter.anime.combatStyle).map((style,index)=>({...style,plan:['aggressive','cautious','balanced','balanced','aggressive'][index]}));}

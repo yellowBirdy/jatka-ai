@@ -6,7 +6,7 @@ test('all fruits have an individually authored move and all weapons come from On
  for(const f of animeFruits){assert.ok(f.move,f.id);assert.ok(Object.keys(f.rule).length,f.id);}
  assert.equal(new Set(animeFruits.map(f=>f.move)).size,animeFruits.length);assert.equal(new Set(animeFruits.map(f=>JSON.stringify(f.rule))).size,animeFruits.length);
  assert.ok(animeWeapons.some(w=>w.name==='Enma'));assert.ok(animeWeapons.some(w=>w.name==='Clima-Tact'));assert.ok(animeWeapons.some(w=>w.name==='Yoru'));
- assert.ok(animeHaki.length>=5);assert.throws(()=>make('mera-mera','fake'));
+ assert.equal(animeHaki.length,4);assert.throws(()=>make('mera-mera','fake'));
 });
 test('Kaido reliably dominates smoothness under equal equipment without guaranteeing every roll',()=>{
  let wins=0;for(let i=0;i<120;i++){const b=createAnimeBattle([make('uo-uo-seiryu'),make('sube-sube')],seededRandom(i));while(!b.finished)advanceAnime(b);wins+=b.winner===0;}assert.ok(wins>=100,`${wins}/120`);

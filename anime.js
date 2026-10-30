@@ -1,16 +1,16 @@
-import {fruitStyles,fruitTier} from './anime-styles.js?v=anime-54';
-import {animeWeapons,animeHaki,combineHaki} from './anime-equipment.js?v=anime-54';
-import {armoredFruits} from './anime-fruit-powers.js?v=anime-54';
-import {powerInteraction,isLogia} from './anime-lore.js?v=anime-54';
-import {animeFruits,animeDials} from './anime-catalog.js?v=anime-54';
-import {categories,createFighter} from './engine.js?v=anime-54';
-import {createCombatState,resolveTurn} from './combat.js?v=anime-54';
+import {fruitStyles,fruitTier,animeTactics} from './anime-styles.js?v=anime-55';
+import {animeWeapons,animeHaki,combineHaki} from './anime-equipment.js?v=anime-55';
+import {armoredFruits} from './anime-fruit-powers.js?v=anime-55';
+import {powerInteraction,isLogia} from './anime-lore.js?v=anime-55';
+import {animeFruits,animeDials} from './anime-catalog.js?v=anime-55';
+import {categories,createFighter} from './engine.js?v=anime-55';
+import {createCombatState,resolveTurn} from './combat.js?v=anime-55';
 export {animeFruits,animeDials};
 export {animeWeapons,animeHaki,fruitStyles};
 function draw(source,random){const pool=[...source];for(let i=pool.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}return pool.slice(0,5);}
 export function drawAnimeOptions(random=Math.random){return {fruit:draw(animeFruits,random),weapon:draw(animeWeapons,random),dial:draw(animeDials,random),haki:draw(animeHaki,random),haki2:draw(animeHaki,random)};}
 export function createAnimeFighter(name,picks,duration='medium'){
- const fruit=animeFruits.find(o=>o.id===picks.fruit),dial=animeDials.find(o=>o.id===picks.dial),haki=animeHaki.find(o=>o.id===(picks.haki??'none')),weapon=animeWeapons.find(o=>o.id===picks.weapon);
+ const fruit=animeFruits.find(o=>o.id===picks.fruit),dial=animeDials.find(o=>o.id===picks.dial),haki=(picks.haki===undefined||picks.haki==='none')?{id:'none',name:'Bez Haki'}:animeHaki.find(o=>o.id===picks.haki),weapon=animeWeapons.find(o=>o.id===picks.weapon);
  if(!haki)throw Error('Wybierz Haki.');
  const combatStyle=picks.combatStyle??'weapon';if(!['weapon','fists'].includes(combatStyle))throw Error('Wybierz broń lub pięści.');const fists=combatStyle==='fists';
  const second=fists?animeHaki.find(h=>h.id===picks.haki2):null;if(fists&&(!second||second.id===haki.id))throw Error('Wybierz dwa różne Haki do walki pięściami.');
@@ -22,7 +22,7 @@ export function createAnimeFighter(name,picks,duration='medium'){
  const styles=fruitStyles(fruit,combatStyle),style=styles.find(s=>s.id===(picks.fruitStyle??styles[0].id));if(!style)throw Error('Wybierz styl pasujący do owocu.');
  const chosenFruit={...fruit,rule:style.rule,move:style.name,desc:`${fruit.desc} ${style.desc}`};
  const activeWeapon=fists?{id:'fists',name:'Pięści',kind:'blunt',attack:0}:weapon;
- f.anime={fruit:chosenFruit,dial,haki:activeHaki,hakis:[haki,...(second?[second]:[])],weapon:activeWeapon,style,combatStyle};f.traits.fruit=fruit;f.traits.dial=dial;f.traits.weapon={...f.traits.weapon,name:activeWeapon.name};
+ f.anime={fruit:chosenFruit,baseFruit:fruit,dial,haki:activeHaki,hakis:[haki,...(second?[second]:[])],weapon:activeWeapon,style,combatStyle};f.traits.fruit=fruit;f.traits.dial=dial;f.traits.weapon={...f.traits.weapon,name:activeWeapon.name};
  if(fists){for(const source of [categories[0].options[0],f.traits.secondary,f.traits.headMaterial,f.traits.gripMaterial])for(const [key,value]of Object.entries(source.stats||{}))f.stats[key]-=value;}
  f.stats.attack+=activeWeapon.attack;for(const key of ['attack','defense','speed','accuracy','pierce'])f.stats[key]+=activeHaki[key]||0;
  const tier=fruitTier(fruit);f.stats.health+=tier*11;f.stats.attack+=tier*2;f.stats.defense+=tier;
@@ -59,7 +59,12 @@ function applyPower(battle,event,power){
 }
 export function advanceAnime(battle,tactic='balanced',random=battle.random){
  if(battle.finished)throw Error('Walka zakończona.');
- const actor=battle.activeActor,target=1-actor,suppressed=battle.state.stunned[actor]>0||(battle.state.silenced[actor]>0&&['oto-oto','goe-goe','uta-uta'].includes(battle.fighters[actor].anime.fruit.id)),sealed=battle.exposed[actor]>0;
+ const actor=battle.activeActor,target=1-actor;
+ const choices=animeTactics(battle.fighters[actor]),chosen=choices.find(t=>t.id===tactic);
+ if(!chosen&&!['balanced','aggressive','cautious','rest','defend'].includes(tactic))throw Error('Wybierz taktykę swojego owocu.');
+ const action=tactic;tactic=chosen?chosen.plan:tactic;
+ const turnFruit=chosen?{...battle.fighters[actor].anime.baseFruit,rule:chosen.rule,move:chosen.name,desc:chosen.desc}:battle.fighters[actor].anime.fruit;
+ const suppressed=battle.state.stunned[actor]>0||(battle.state.silenced[actor]>0&&['oto-oto','goe-goe','uta-uta'].includes(battle.fighters[actor].anime.fruit.id)),sealed=battle.exposed[actor]>0;
  if(sealed)battle.exposed[actor]--;
  const user=battle.fighters[actor].anime,enemy=battle.fighters[target].anime;
  const intangible=isLogia(enemy.fruit)&&battle.exposed[target]===0&&!user.haki.touch&&user.weapon.kind!=='seastone';
@@ -69,7 +74,7 @@ export function advanceAnime(battle,tactic='balanced',random=battle.random){
  const naturalDodge=!user.haki.touch&&((enemy.fruit.id==='bara-bara'&&cutting)||(enemy.fruit.id==='sube-sube'&&random()<.3));
  if(naturalDodge)battle.state.blink[target]=Math.max(1,battle.state.blink[target]);
  if(enemy.fruit.id==='gomu-gomu'&&user.weapon.kind==='blunt'&&!user.haki.touch)battle.state.guard[target]=1;
- const event=resolveTurn(battle.fighters,battle.state,actor,random,target,tactic);event.fruitSuppressed=sealed;event.fruit=null;event.dial=null;event.details=[];
+ const event=resolveTurn(battle.fighters,battle.state,actor,random,target,tactic);event.action=action;event.fruitMove=turnFruit.move;event.fruitSuppressed=sealed;event.fruit=null;event.dial=null;event.details=[];
  event.text=tactic==='rest'?`${battle.fighters[actor].name} odzyskuje oddech i szuka nowego otwarcia.`:tactic==='defend'?`${battle.fighters[actor].name} przyjmuje postawę obronną.`:intangible?`Broń przechodzi przez żywiołowe ciało ${battle.fighters[target].name}. Potrzebna jest odpowiednia kontra!`:event.damage>0?`${battle.fighters[actor].name} przebija się przez gardę rywala.`:`${battle.fighters[target].name} wymyka się z zasięgu broni.`;
  if(event.damage>0&&user.haki.touch&&isLogia(enemy.fruit))event.details.push('Haki uzbrojenia sięga prawdziwego ciała Logii!');
  if(event.damage>0&&user.weapon.kind==='seastone'){battle.exposed[target]=Math.max(battle.exposed[target],1);event.details.push('Kamień morski w Jitte osłabia dotkniętego użytkownika owocu.');}
@@ -77,7 +82,7 @@ export function advanceAnime(battle,tactic='balanced',random=battle.random){
  if(battle.state.hp[actor]>0&&!['rest','defend'].includes(tactic)&&!suppressed&&user.haki.pressure&&random()<.2){battle.state.stunned[target]=1;event.details.push('Królewska wola przerywa koncentrację przeciwnika!');}
  if(sealed)event.details.push('Właściwości owocu zostały przełamane — trzeba najpierw odzyskać kontrolę nad ciałem.');
  if(!['rest','defend'].includes(tactic)&&!suppressed&&battle.state.hp[actor]>0&&battle.state.hp[target]>0){
-  for(const key of ['fruit','dial']){if(key==='fruit'&&sealed)continue;const power=battle.fighters[actor].anime[key];if(battle.state.hp[target]>0&&random()<power.chance){if(applyPower(battle,event,power)!==false)event[key]=power.id;}}
+  for(const key of ['fruit','dial']){if(key==='fruit'&&sealed)continue;const power=key==='fruit'?turnFruit:battle.fighters[actor].anime[key];if(battle.state.hp[target]>0&&random()<power.chance){if(applyPower(battle,event,power)!==false)event[key]=power.id;}}
  }
  event.hp=[...battle.state.hp];event.energy=[...battle.state.energy];battle.events.push(event);
  if(event.hp.some(h=>h===0)){battle.finished=true;battle.reason='knockout';battle.winner=event.hp[0]>0?0:1;}

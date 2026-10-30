@@ -3,14 +3,10 @@ const weapons=[
 ];
 export const animeWeapons=weapons.map(([id,name,desc,kind,attack])=>({id,name,desc,kind,attack,icon:kind==='ranged'?'➶':kind==='blunt'?'♜':'⚔'}));
 export const animeHaki=[
- {id:'none',name:'Bez Haki',icon:'○',desc:'Polegaj na owocu, broni i sprycie.'},
- {id:'observation',name:'Kenbunshoku — obserwacja',icon:'◎',desc:'Wyczuwasz zamiary i łatwiej wymykasz się natarciu.',speed:5,accuracy:6},
- {id:'armament',name:'Busoshoku — uzbrojenie',icon:'⬢',desc:'Utwardzasz ciało i broń. Możesz trafić Logię oraz złagodzić odrzut dialu.',touch:true,recoil:.5,attack:4,defense:4},
- {id:'conqueror',name:'Haoshoku — królewska wola',icon:'♛',desc:'Przy natarciu możesz przytłoczyć wolę przeciwnika i przerwać jego technikę.',pressure:true},
- {id:'future',name:'Kenbunshoku — wizja przyszłości',icon:'◉',desc:'Przewidujesz natarcie i potrafisz uniknąć nawet zaskakującego ciosu.',speed:9,accuracy:8,dodge:true},
- {id:'emission',name:'Busoshoku — emisja',icon:'✹',desc:'Sięgasz Haki przez niematerialne ciało. Wzmocniona osłona pomaga znieść odrzut.',touch:true,recoil:.3,attack:6,defense:5},
- {id:'internal',name:'Busoshoku — wewnętrzne zniszczenie',icon:'◆',desc:'Przenikasz przez twardą osłonę i atakujesz od środka.',touch:true,recoil:.4,attack:5,pierce:8},
- {id:'coating',name:'Haoshoku — pokrycie ataku',icon:'ϟ',desc:'Pokrywasz atak królewskim Haki. Potrafisz przełamać Logię i zderzyć się z potężną bestią.',touch:true,recoil:.4,attack:8,defense:3,pressure:true}
+ {id:'armament',name:'Haki uzbrojenia',icon:'⬢',desc:'Utwardza ataki i broń. Pozwala dosięgnąć prawdziwego ciała Logii.',touch:true,recoil:.5,attack:5,defense:2},
+ {id:'defense',name:'Haki obrony',icon:'⬡',desc:'Osłania ciało przed ciosami i pomaga przetrwać odrzut dialu.',recoil:.2,defense:9},
+ {id:'observation',name:'Haki obserwacji',icon:'◎',desc:'Pozwala wyczuć zamiar przeciwnika i uniknąć zaskakującego natarcia.',speed:7,accuracy:6,dodge:true},
+ {id:'conqueror',name:'Haki królewskie',icon:'♛',desc:'Potężna wola potrafi przerwać koncentrację przeciwnika i jego następną technikę.',pressure:true}
 ];
 export function combineHaki(first,second){
  const values=[first,second].filter(Boolean),combined={name:values.map(h=>h.name).join(' + '),touch:values.some(h=>h.touch),dodge:values.some(h=>h.dodge),pressure:values.some(h=>h.pressure),recoil:Math.min(...values.map(h=>h.recoil??1))};

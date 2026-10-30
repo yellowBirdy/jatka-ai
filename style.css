@@ -136,3 +136,10 @@ header{background-image:linear-gradient(#111814c9,#111814e6),url('assets/texture
 @media(prefers-reduced-motion:reduce){.anime-fruit-fx svg,.anime-hit-fx,.anime-haki-fx{animation:none;filter:none}}
 #anime-style-slot{border-top:1px solid #8ba87966;margin-top:18px;padding-top:8px}#anime-style-slot h4{color:#dfcc91;font-size:14px}.anime-style-options label{padding-top:30px;background:linear-gradient(150deg,#273933,#142424)}
 .anime-combat-choice{display:flex;flex-wrap:wrap;gap:18px;padding:18px;border:1px solid #738d62;margin-bottom:20px}.anime-combat-choice legend{color:#e1d3a1}.anime-combat-choice label{color:#ceddcd;font-size:14px}.anime-options label:has(input:disabled){opacity:.35;cursor:not-allowed}.anime-options label:has(input:disabled):after{content:'Już wybrane';font-size:10px;color:#d5c5a2}
+/* Anime uses the same attackCommit / weightedRecoil / evade motions as classic. */
+.anime-warrior.arena-warrior{height:310px}.anime-fighter .anime-pirate-svg{filter:drop-shadow(0 13px 10px #0006)}.anime-fighter.resting .arena-warrior{animation:restPulse .6s}.anime-fighter.guarding .arena-warrior{filter:drop-shadow(0 0 10px #a9d4f2)}
+@media(max-width:650px){.anime-warrior.arena-warrior{height:200px}}@media(prefers-reduced-motion:reduce){#anime-field .arena-warrior{animation:none!important}}
+
+.anime-fighter.guarding .arena-warrior{animation:guardPulse .6s}
+
+#anime-field .anime-haki-fx{inset:auto;top:32%;right:22%;font-size:44px}#anime-field .anime-hit-fx{inset:25% 15%;font-size:66px}

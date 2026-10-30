@@ -20,12 +20,12 @@ export function fruitEffectSvg(fruit){
  return `<svg viewBox="0 0 200 200" aria-hidden="true" data-effect-family="${family}">${shapes}</svg>`;
 }
 const timers=new Set();
-export function clearAnimeEffects(){for(const timer of timers)clearTimeout(timer);timers.clear();document.querySelectorAll('.anime-fruit-fx,.anime-hit-fx,.anime-haki-fx').forEach(n=>n.remove());}
+export function clearAnimeEffects(){document.getElementById('anime-field')?.classList.remove('power-hit');for(const timer of timers)clearTimeout(timer);timers.clear();document.querySelectorAll('.anime-fruit-fx,.anime-hit-fx,.anime-haki-fx').forEach(n=>n.remove());}
 export function showAnimeEffects(event,fighters){
  clearAnimeEffects();if(['rest','defend'].includes(event.tactic))return;
- const card=document.getElementById(`anime-fighter-${event.fruit?event.actor:event.target}`);if(!card)return;
- if(event.fruit){const fruit=fighters[event.actor].anime.fruit,layer=document.createElement('div');layer.className=`anime-fruit-fx anime-fx-${fruit.family}`;layer.dataset.fruitEffect=fruit.id;layer.innerHTML=fruitEffectSvg(fruit);const caption=document.createElement('strong');caption.textContent=fruit.move||fruit.name;layer.append(caption);card.append(layer);}
- else if(event.damage>0||event.magicDamage>0){const hit=document.createElement('span');hit.className='anime-hit-fx';hit.textContent=event.dial?'✹':'╳';card.append(hit);}
+ const stage=document.getElementById('anime-field');if(stage&&(event.damage+event.magicDamage)>=30&&!matchMedia('(prefers-reduced-motion: reduce)').matches){void stage.offsetWidth;stage.classList.add('power-hit');}
+ const card=document.getElementById(`anime-fighter-${event.target}`);if(!card)return;
+ if(event.damage>0||event.magicDamage>0){const hit=document.createElement('span');hit.className='anime-hit-fx combat-impact';hit.textContent='✧';card.append(hit);}
  if(fighters[event.actor].anime.haki.touch&&event.damage>0){const haki=document.createElement('span');haki.className='anime-haki-fx';haki.textContent='ϟ';card.append(haki);}
- const timer=setTimeout(()=>{document.querySelectorAll('.anime-fruit-fx,.anime-hit-fx,.anime-haki-fx').forEach(n=>n.remove());timers.delete(timer);},1100);timers.add(timer);
+ const timer=setTimeout(()=>{document.querySelectorAll('.anime-hit-fx,.anime-haki-fx').forEach(n=>n.remove());timers.delete(timer);},550);timers.add(timer);
 }

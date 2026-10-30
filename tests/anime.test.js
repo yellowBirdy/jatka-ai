@@ -10,7 +10,7 @@ test('anime catalog has distinct fruit models and all nineteen named dial types'
 });
 test('each slot independently draws five unique valid offers',()=>{
  const a=drawAnimeOptions(seededRandom(1)),b=drawAnimeOptions(seededRandom(2));
- assert.notDeepEqual(a,b);for(const values of Object.values(a)){assert.equal(values.length,5);assert.equal(new Set(values.map(v=>v.id)).size,5);}
+ assert.notDeepEqual(a,b);for(const [key,values]of Object.entries(a)){const count=key.startsWith('haki')?4:5;assert.equal(values.length,count);assert.equal(new Set(values.map(v=>v.id)).size,count);}
 });
 test('fighter validates fruit, weapon and dial and leaves the standard roster untouched',()=>{
  assert.throws(()=>createAnimeFighter('A',{fruit:'fake',weapon:'sword',dial:'impact'}));
