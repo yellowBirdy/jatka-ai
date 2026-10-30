@@ -4,7 +4,7 @@ Lokalna gra dla dwóch osób przy jednym ekranie. Każdy wybiera imię i po jedn
 
 ## Walka anime (V53)
 
-Osobna karta „Walka anime” otwiera pojedynek One Piece. Każdy gracz otrzymuje niezależne oferty 5 owoców z katalogu 166, 5 broni z 20 oraz 5 diali z 19. Wybiera po jednej opcji; ponowne losowanie dotyczy tylko bieżącego gracza. Dial jest wyposażeniem wybranej broni. Dostępne są trzy długości pojedynku, pojedyncze ruchy z atakiem/obroną/odpoczynkiem, automatyczna walka ×1/×2/×3, historia, rewanż i edycja. Ten tryb nie przyznaje ani nie wydaje EXP.
+Osobna karta „Walka anime” otwiera pojedynek One Piece. Każdy gracz otrzymuje niezależne oferty 5 owoców z katalogu 168, 5 broni z 20 oraz 5 diali z 19. Wybiera po jednej opcji; ponowne losowanie dotyczy tylko bieżącego gracza. Dial jest wyposażeniem wybranej broni. Dostępne są trzy długości pojedynku, pojedyncze ruchy z atakiem/obroną/odpoczynkiem, automatyczna walka ×1/×2/×3, historia, rewanż i edycja. Ten tryb nie przyznaje ani nie wydaje EXP.
 
 Owoce mają 30% szansy aktywacji, diale 25%, w niezależnych losowaniach po ataku. Efekty są adaptacją do zasad gry: obrażenia, leczenie, osłony, uniki, statusy, kondycja i uszkodzenia ochrony. Karty pokazują dokładne działanie oraz procent. Zdolności nie działają podczas odpoczynku/obrony, po nokaucie ani podczas ogłuszenia. Gomu Gomu i Hito Hito: Nika to jedna opcja; różne modele Zoan są osobnymi opcjami.
 

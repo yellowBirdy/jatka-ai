@@ -6,7 +6,7 @@ import {seededRandom} from '../engine.js';
 test('anime catalog has distinct fruit models and all nineteen named dial types',()=>{
  assert.ok(animeFruits.length>=150);assert.equal(animeDials.length,19);
  for(const list of [animeFruits,animeDials]){assert.equal(new Set(list.map(o=>o.id)).size,list.length);for(const o of list){assert.ok(o.name&&o.desc);assert.ok(o.chance>0&&o.chance<1);}}
- for(const name of ['Gomu Gomu / Hito Hito: Nika','Yami Yami','Gura Gura','Ope Ope','Nomi Nomi','Gabu Gabu','Uo Uo: Seiryu'])assert.ok(animeFruits.some(o=>o.name===name),name);
+ for(const name of ['Gomu Gomu / Hito Hito: Nika','Yami Yami','Gura Gura','Ope Ope','Nomi Nomi','Gabu Gabu','Noko Noko','Kyubu Kyubu','Uo Uo: Seiryu'])assert.ok(animeFruits.some(o=>o.name===name),name);
 });
 test('each slot independently draws five unique valid offers',()=>{
  const a=drawAnimeOptions(seededRandom(1)),b=drawAnimeOptions(seededRandom(2));
