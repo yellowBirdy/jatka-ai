@@ -1,6 +1,6 @@
-import {categories} from './engine.js?v=randomness-52';
-import {fantasySlots} from './fantasy.js?v=randomness-52';
-import {beasts} from './mounts.js?v=randomness-52';
+import {categories} from './engine.js?v=anime-53';
+import {fantasySlots} from './fantasy.js?v=anime-53';
+import {beasts} from './mounts.js?v=anime-53';
 const lookup=(key,id)=>categories.find(c=>c.id===key)?.options.find(o=>o.id===id)?.name||id;
 const magicName=id=>fantasySlots.find(s=>s.id==='magicPower').options.find(o=>o.id===id)?.name||id;
 const describeBonus=stats=>Object.entries(stats||{}).filter(([,v])=>v!==0).map(([k,v])=>`${v>0?'+':''}${v} ${({attack:'siły',defense:'ochrony',health:'HP',accuracy:'celności',speed:'szybkości',stamina:'kondycji',pierce:'przebicia'})[k]}`).join(', ');

@@ -2,6 +2,14 @@
 
 Lokalna gra dla dwóch osób przy jednym ekranie. Każdy wybiera imię i po jednej cesze w ośmiu kategoriach (w każdym slocie oferta 5 wylosowanych cech z puli 20). Potem oglądacie automatyczny pojedynek i opis oparty na zdarzeniach walki. Dostępne są rewanż, edycja postaci i rozpoczęcie od nowa. Interfejs po polsku, responsywne postacie SVG, bez zewnętrznych obrazów, fontów i usług.
 
+## Walka anime (V53)
+
+Osobna karta „Walka anime” otwiera pojedynek One Piece. Każdy gracz otrzymuje niezależne oferty 5 owoców z katalogu 164, 5 broni z 20 oraz 5 diali z 19. Wybiera po jednej opcji; ponowne losowanie dotyczy tylko bieżącego gracza. Dial jest wyposażeniem wybranej broni. Dostępne są trzy długości pojedynku, pojedyncze ruchy z atakiem/obroną/odpoczynkiem, automatyczna walka ×1/×2/×3, historia, rewanż i edycja. Ten tryb nie przyznaje ani nie wydaje EXP.
+
+Owoce mają 30% szansy aktywacji, diale 25%, w niezależnych losowaniach po ataku. Efekty są adaptacją do zasad gry: obrażenia, leczenie, osłony, uniki, statusy, kondycja i uszkodzenia ochrony. Karty pokazują dokładne działanie oraz procent. Zdolności nie działają podczas odpoczynku/obrony, po nokaucie ani podczas ogłuszenia. Gomu Gomu i Hito Hito: Nika to jedna opcja; różne modele Zoan są osobnymi opcjami.
+
+Katalog `anime-catalog.js` obejmuje nazwane moce głównej serii i animowanych dodatków/filmów, z oznaczeniem pochodzenia. Nie obejmuje nienazwanych mocy i pozycji wyłącznie z gier. Spis kontrolny `tests/anime-fruit-reference.json` opiera się na publicznym [DevilFruits](https://github.com/conorkenn/DevilFruits/blob/main/fruits.js); sprawdza brak pominięć względem tego starszego katalogu, ale nie stanowi potwierdzenia kompletności wszystkich najnowszych odcinków. Strony referencyjne do dalszej aktualizacji: [Devil Fruit Encyclopedia](https://onepiece.fandom.com/wiki/Devil_Fruit/Devil_Fruit_Encyclopedia) i [Dials](https://onepiece.fandom.com/wiki/Dials). W tej sesji bezpośredni dostęp do wiki był zablokowany.
+
 ## Armie i Totalna miazga (V51)
 
 Karta „Armie” uruchamia rekrutację dwóch oddziałów. Obaj gracze dostają ten sam budżet: 500, 800 lub 1200 punktów, maksymalnie 12 żołnierzy. Osobna karta „Totalna miazga” uruchamia bitwę z **10 000 punktów rekrutacji na stronę i bez niezależnego limitu liczby żołnierzy** — liczebność ogranicza wyłącznie budżet. To nie jest EXP profilu; rekrutacja nie wydaje ani nie przyznaje EXP.

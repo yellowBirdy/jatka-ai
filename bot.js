@@ -1,10 +1,10 @@
-import {createFighter} from './engine.js?v=randomness-52';
-import {normalizeMaterials,getWeaponMaterials} from './materials.js?v=randomness-52';
-import {getBeastArmors} from './mounts.js?v=randomness-52';
-import {getBeastAbilities} from './beast-abilities.js?v=randomness-52';
-import {hybridParts,hybridAnimals} from './hybrids.js?v=randomness-52';
-import {createDuelBattle,takeDuelTurn} from './turns.js?v=randomness-52';
-import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn} from './teams.js?v=randomness-52';
+import {createFighter} from './engine.js?v=anime-53';
+import {normalizeMaterials,getWeaponMaterials} from './materials.js?v=anime-53';
+import {getBeastArmors} from './mounts.js?v=anime-53';
+import {getBeastAbilities} from './beast-abilities.js?v=anime-53';
+import {hybridParts,hybridAnimals} from './hybrids.js?v=anime-53';
+import {createDuelBattle,takeDuelTurn} from './turns.js?v=anime-53';
+import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn} from './teams.js?v=anime-53';
 const pick=(pool,random)=>pool[Math.floor(random()*pool.length)];
 export function createBotFighter(config,random=Math.random){
  let picks=Object.fromEntries(Object.entries(config.offers).map(([key,pool])=>[key,pick(pool,random).id]));

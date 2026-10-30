@@ -1,4 +1,4 @@
-import {beasts} from './mounts.js?v=randomness-52';
+import {beasts} from './mounts.js?v=anime-53';
 const statNames={attack:'siły',defense:'ochrony',health:'HP',speed:'szybkości',accuracy:'celności',stamina:'kondycji',pierce:'przebicia'};
 const describe=stats=>Object.entries(stats).map(([k,n])=>`${n>=0?'+':''}${n} ${statNames[k]}`).join(' · ');
 const strategy=(id,name,plan,stats,target='weakest')=>({id,name,icon:'⚑',plan,stats,target,desc:`Cała armia: ${describe(stats)}. ${plan==='aggressive'?'Agresywny atak (+5 siły, −4 ochrony).':plan==='cautious'?'Ostrożny atak (−3 siły, +15 pkt proc. celności).':'Zrównoważony atak.'} Cel: ${target==='strongest'?'najzdrowszy dostępny wróg':target==='random'?'losowy dostępny wróg':'najsłabszy dostępny wróg'}.`});

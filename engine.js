@@ -1,13 +1,13 @@
-import {lootArmors} from './progression.js?v=randomness-52';
-import {resolveHybrid} from './hybrids.js?v=randomness-52';
-import {resolveMount} from './mounts.js?v=randomness-52';
-import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=randomness-52';
-import {weaponMaterials,resolveMaterials} from './materials.js?v=randomness-52';
-export {weaponMaterials} from './materials.js?v=randomness-52';
-import {abilityRules} from './abilities.js?v=randomness-52';
-import {createCombatState,resolveTurn} from './combat.js?v=randomness-52';
-export {abilityRules} from './abilities.js?v=randomness-52';
-import {additions} from './catalog.js?v=randomness-52';
+import {lootArmors} from './progression.js?v=anime-53';
+import {resolveHybrid} from './hybrids.js?v=anime-53';
+import {resolveMount} from './mounts.js?v=anime-53';
+import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=anime-53';
+import {weaponMaterials,resolveMaterials} from './materials.js?v=anime-53';
+export {weaponMaterials} from './materials.js?v=anime-53';
+import {abilityRules} from './abilities.js?v=anime-53';
+import {createCombatState,resolveTurn} from './combat.js?v=anime-53';
+export {abilityRules} from './abilities.js?v=anime-53';
+import {additions} from './catalog.js?v=anime-53';
 const option=(id,name,icon,desc,stats={})=>({id,name,icon,desc,stats});
 export const categories=[
 {id:'weapon',name:'Broń',icon:'⚔',options:[option('sword','Miecz','⚔','Wszechstronny i celny.',{attack:4,accuracy:8}),option('axe','Topór','🪓','Silne, lecz wolniejsze ciosy.',{attack:9,speed:-3}),option('spear','Włócznia','↗','Zasięg i pierwszeństwo.',{attack:3,speed:5,accuracy:4}),option('hammer','Młot','🔨','Przełamuje ciężką ochronę.',{attack:7,pierce:7,speed:-5})]},

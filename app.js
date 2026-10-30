@@ -1,21 +1,22 @@
-import {setupArmies} from './army-ui.js?v=randomness-52';
-import {readProgress,saveProgress,buyBoxes,rewardProfiles,lootArmors,drawArmorOffer,redeemCode,claimGod} from './progression.js?v=randomness-52';
-import {readProfiles,writeProfiles} from './profiles.js?v=randomness-52';
-import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=randomness-52';
-import {textureAnimalSvg} from './surface-textures.js?v=randomness-52';
-import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=randomness-52';
-import {hybridParts,hybridAnimals,hybridDefaults,hybridOption,hybridSvg} from './hybrids.js?v=randomness-52';
-import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=randomness-52';
-import {tactics} from './tactics.js?v=randomness-52';
-import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=randomness-52';
-import {getBeastAbilities} from './beast-abilities.js?v=randomness-52';
-import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait,beastSkins,beastLootArmors,allBeasts,lootBeasts} from './mounts.js?v=randomness-52';
-import {setupTutorial} from './tutorial.js?v=randomness-52';
-import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=randomness-52';
-import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=randomness-52';
-import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=randomness-52';
-import {weaponSvg,weaponIcon} from './weapons.js?v=randomness-52';
-import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=randomness-52';
+import {setupAnime} from './anime-ui.js?v=anime-53';
+import {setupArmies} from './army-ui.js?v=anime-53';
+import {readProgress,saveProgress,buyBoxes,rewardProfiles,lootArmors,drawArmorOffer,redeemCode,claimGod} from './progression.js?v=anime-53';
+import {readProfiles,writeProfiles} from './profiles.js?v=anime-53';
+import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=anime-53';
+import {textureAnimalSvg} from './surface-textures.js?v=anime-53';
+import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=anime-53';
+import {hybridParts,hybridAnimals,hybridDefaults,hybridOption,hybridSvg} from './hybrids.js?v=anime-53';
+import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=anime-53';
+import {tactics} from './tactics.js?v=anime-53';
+import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=anime-53';
+import {getBeastAbilities} from './beast-abilities.js?v=anime-53';
+import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait,beastSkins,beastLootArmors,allBeasts,lootBeasts} from './mounts.js?v=anime-53';
+import {setupTutorial} from './tutorial.js?v=anime-53';
+import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=anime-53';
+import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=anime-53';
+import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=anime-53';
+import {weaponSvg,weaponIcon} from './weapons.js?v=anime-53';
+import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=anime-53';
 const $=id=>document.getElementById(id);
 let player=0,picks={},fighters=[],names=['Ragnar','Akira'],timer,result,index=0;
 let opponent='local',botTimer=null,rematchBattle=false;
@@ -26,7 +27,7 @@ let mode='classic',format='duel',teamBattle=null,mounted=false,hybrid=false;
 let mountOffers=[drawMountOptions(),drawMountOptions()];
 const rosterSize=()=>format==='teams'?4:2;
 const sideOf=i=>format==='teams'?teamOf(i):i;
-function settingsLocked(locked){document.querySelectorAll('.combatants .duel-tactic select').forEach(n=>n.disabled=locked);document.querySelectorAll('[data-preset],#enter-creator,#army-start,#army-massacre-start').forEach(n=>n.disabled=locked);for(const id of ['profile-settings','opponent-settings','playback-settings','format-settings','mode-settings','duration-settings','modification-settings'])$(id).disabled=locked;}
+function settingsLocked(locked){document.querySelectorAll('.combatants .duel-tactic select').forEach(n=>n.disabled=locked);document.querySelectorAll('[data-preset],#enter-creator,#army-start,#army-massacre-start,#anime-start').forEach(n=>n.disabled=locked);for(const id of ['profile-settings','opponent-settings','playback-settings','format-settings','mode-settings','duration-settings','modification-settings'])$(id).disabled=locked;}
 let duration='medium',offers=[drawOptions(),drawOptions()];
 let fantasyOffers=[drawFantasyOptions(),drawFantasyOptions()];
 const defaults=()=>normalizeMaterials({...hybridDefaults,beast:mountOffers[player][0].id,beastArmor:'none',beastAbility:mountOffers[player][0].id,...Object.fromEntries(fantasySlots.map(slot=>[slot.id,fantasyOffers[player][slot.id][0].id])),...Object.fromEntries(categories.map(c=>[c.id,offers[player][c.id][0].id]))});
@@ -355,3 +356,5 @@ $('god-form').addEventListener('submit',e=>{
 $('god-later').onclick=()=>$('god-dialog').close();
 
 setupArmies(warrior);
+
+setupAnime(warrior);
