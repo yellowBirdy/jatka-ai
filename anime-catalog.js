@@ -1,7 +1,7 @@
 // Named fruits from One Piece, including animated films and anime-only arcs.
 // Different models are separate choices; Gomu Gomu and Nika are one fruit.
 const groups={
- fire:['Mera Mera|ogień','Magu Magu|magma','Netsu Netsu|rozgrzewanie','Atsu Atsu|wysoka temperatura|extra'],
+ fire:['Gabu Gabu|alkohol i płomienie','Mera Mera|ogień','Magu Magu|magma','Netsu Netsu|rozgrzewanie','Atsu Atsu|wysoka temperatura|extra'],
  ice:['Hie Hie|lód','Yuki Yuki|śnieg','Hito Hito: Onyudo|lodowy yokai'],
  lightning:['Goro Goro|pioruny'],
  light:['Pika Pika|światło','Kira Kira|diament'],
@@ -16,7 +16,7 @@ const groups={
  evade:['Moku Moku|dym','Sube Sube|śliskie ciało','Suke Suke|niewidzialność','Mira Mira|lustra','Doa Doa|drzwi','Wapu Wapu|teleportacja','Nuke Nuke|przenikanie|extra','Hira Hira|powiewanie'],
  bind:['Hana Hana|wyrastające kończyny','Mochi Mochi|mochi','Nori Nori|ujeżdżanie','Nui Nui|zszywanie','Ori Ori|klatki','Maki Maki|zwoje','Hiso Hiso|rozmowa ze zwierzętami|extra','Kobu Kobu|zagrzewanie do boju','Kibi Kibi|dango'],
  weaken:['Awa Awa|bańki','Woshu Woshu|pranie','Noro Noro|spowalnianie','Horo Horo|duchy','Hobi Hobi|zabawki','Mero Mero|petryfikacja','Shibo Shibo|wyciskanie','Juku Juku|dojrzewanie','Toshi Toshi|wiek','Shiku Shiku|choroby'],
- confuse:['Memo Memo|wspomnienia','Mane Mane|naśladowanie','Fuku Fuku|ubrania','Kuku Kuku|gotowanie','Mato Mato|namierzanie','Giro Giro|przenikliwe spojrzenie','Nagi Nagi|cisza','Buku Buku|książki','Fude Fude|rysunki','Uta Uta|śpiew','Hito Hito|człowiek','Hito Hito: Daibutsu|złoty Budda'],
+ confuse:['Nomi Nomi|nieograniczona wiedza','Memo Memo|wspomnienia','Mane Mane|naśladowanie','Fuku Fuku|ubrania','Kuku Kuku|gotowanie','Mato Mato|namierzanie','Giro Giro|przenikliwe spojrzenie','Nagi Nagi|cisza','Buku Buku|książki','Fude Fude|rysunki','Uta Uta|śpiew','Hito Hito|człowiek','Hito Hito: Daibutsu|złoty Budda'],
  energy:['Gomu Gomu / Hito Hito: Nika|gumowe ciało i wyzwolenie','Bara Bara|rozdzielanie ciała','Bane Bane|sprężyny','Riki Riki|nadludzka siła','Wara Wara|słoma','Jake Jake|kurtka','Guru Guru|śmigła'],
  beast:['Mogu Mogu|kret','Ushi Ushi: Bison|bizon','Ushi Ushi: Giraffe|żyrafa','Inu Inu: Dachshund|jamnik','Inu Inu: Jackal|szakal','Inu Inu: Wolf|wilk','Inu Inu: Kyubi no Kitsune|dziewięcioogonowy lis','Inu Inu: Okuchi no Makami|boski wilk','Inu Inu: Tanuki|tanuki','Neko Neko: Leopard|lampart','Neko Neko: Saber Tiger|tygrys szablozębny','Tori Tori: Falcon|sokół','Tori Tori: Albatross|albatros','Uma Uma|koń','Uma Uma: Pegasus|pegaz','Zou Zou|słoń','Zou Zou: Mammoth|mamut','Hebi Hebi: Anaconda|anakonda','Hebi Hebi: King Cobra|kobra królewska','Hebi Hebi: Yamata no Orochi|ośmiogłowy wąż','Sara Sara: Axolotl|aksolotl','Mushi Mushi: Kabutomushi|chrząszcz','Ryu Ryu: Allosaurus|allozaur','Ryu Ryu: Spinosaurus|spinozaur','Ryu Ryu: Pteranodon|pteranodon','Ryu Ryu: Brachiosaurus|brachiozaur','Ryu Ryu: Pachycephalosaurus|pachycefalozaur','Ryu Ryu: Triceratops|triceratops','Kumo Kumo: Rosamygale Grauvogeli|prehistoryczny pająk','Tama Tama|jajko','Tori Tori: Eagle|orzeł|extra','Uma Uma: Zebra|zebra','Ushi Ushi: Holstein|krowa holsztyńska','Koa Koa|koala|extra'],
  dragon:['Uo Uo: Seiryu|lazurowy smok'],
