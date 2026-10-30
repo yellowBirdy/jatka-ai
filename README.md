@@ -2,7 +2,11 @@
 
 Lokalna gra dla dwóch osób przy jednym ekranie. Każdy wybiera imię i po jednej cesze w ośmiu kategoriach (w każdym slocie oferta 5 wylosowanych cech z puli 20). Potem oglądacie automatyczny pojedynek i opis oparty na zdarzeniach walki. Dostępne są rewanż, edycja postaci i rozpoczęcie od nowa. Interfejs po polsku, responsywne postacie SVG, bez zewnętrznych obrazów, fontów i usług.
 
-## Walka anime (V55)
+## Walka anime (V56)
+
+Wewnątrz trybu jest przełącznik „Zrób własną postać”. Pozwala przypisać po jednym bohaterze z pełnej puli **74 postaci One Piece** do siły, szybkości, IQ, umiejętności, obrony i wytrzymałości. Bohater nie może zajmować dwóch slotów w tej samej postaci; wybory są niezależne dla obu graczy. Kreator ma wyszukiwanie, licznik sześciu obsadzonych slotów i losowanie sześciu różnych bohaterów. Wybór trybu tworzenia jest wspólny dla pojedynku i blokowany po zatwierdzeniu pierwszego wojownika; edycja zachowuje zbudowane postacie.
+
+Każda cecha wpływa na odpowiednią część rzeczywistego profilu walki. Bohater wybrany do umiejętności przekazuje swoje techniki lub owoc (np. Law — Ope Ope), co ustala taktyki podczas walki. Pozostałe sloty nie przyznają drugiego owocu ani dodatkowych technik. Oceny są autorską adaptacją do gry i nie są wyświetlane jako suche liczby. Ten wariant nie korzysta z osobnego losowania broni, dialu i Haki; postać jest złożona z sześciu wyborów. Działają zwykłe animacje anime, ataki, obrona, odpoczynek, automatyczna walka, rewanż i edycja.
 
 Osobna karta „Walka anime” otwiera pojedynek One Piece. Każdy gracz otrzymuje niezależne oferty 5 owoców z katalogu 166, 5 broni One Piece z 20, 5 diali z 19 i cztery Haki: uzbrojenia, obrony, obserwacji i królewskie. Można wybrać walkę bronią z jednym Haki albo pięściami z dwoma różnymi Haki. W drugim wariancie wybór broni znika, jej premie nie działają, a postać ma puste dłonie. Drugi slot Haki ma własną ofertę; duplikat pierwszego wyboru jest niedostępny. Dial w tym wariancie jest wyposażeniem rękawicy. Postęp EXP i ekwipunek profili pozostają oddzielone od tego trybu.
 

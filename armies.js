@@ -1,7 +1,7 @@
-import {buildArmyRoster} from './army-roster.js?v=anime-55';
-import {resolveArmyTraits} from './army-traits.js?v=anime-55';
-import {categories,createFighter} from './engine.js?v=anime-55';
-import {createCombatState,resolveTurn} from './combat.js?v=anime-55';
+import {buildArmyRoster} from './army-roster.js?v=anime-56';
+import {resolveArmyTraits} from './army-traits.js?v=anime-56';
+import {categories,createFighter} from './engine.js?v=anime-56';
+import {createCombatState,resolveTurn} from './combat.js?v=anime-56';
 export const armyBudgets=[500,800,1200,10000];
 const baseArmyUnits=[
  {id:'infantry',name:'Piechur',icon:'⚔',cost:80,role:'front',desc:'Tania, uniwersalna pierwsza linia.',picks:{weapon:'sword',armor:'mail',origin:'legionary',style:'balanced',ability:'breath',advantage:'endurance',weakness:'predictable'}},

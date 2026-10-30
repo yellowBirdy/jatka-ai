@@ -1,10 +1,10 @@
-import {fruitStyles,fruitTier,animeTactics} from './anime-styles.js?v=anime-55';
-import {animeWeapons,animeHaki,combineHaki} from './anime-equipment.js?v=anime-55';
-import {armoredFruits} from './anime-fruit-powers.js?v=anime-55';
-import {powerInteraction,isLogia} from './anime-lore.js?v=anime-55';
-import {animeFruits,animeDials} from './anime-catalog.js?v=anime-55';
-import {categories,createFighter} from './engine.js?v=anime-55';
-import {createCombatState,resolveTurn} from './combat.js?v=anime-55';
+import {fruitStyles,fruitTier,animeTactics} from './anime-styles.js?v=anime-56';
+import {animeWeapons,animeHaki,combineHaki} from './anime-equipment.js?v=anime-56';
+import {armoredFruits} from './anime-fruit-powers.js?v=anime-56';
+import {powerInteraction,isLogia} from './anime-lore.js?v=anime-56';
+import {animeFruits,animeDials} from './anime-catalog.js?v=anime-56';
+import {categories,createFighter} from './engine.js?v=anime-56';
+import {createCombatState,resolveTurn} from './combat.js?v=anime-56';
 export {animeFruits,animeDials};
 export {animeWeapons,animeHaki,fruitStyles};
 function draw(source,random){const pool=[...source];for(let i=pool.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}return pool.slice(0,5);}
