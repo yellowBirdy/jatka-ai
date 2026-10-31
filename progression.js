@@ -1,5 +1,5 @@
-import {beastLootArmors,beastSkins,lootBeasts,beasts} from './mounts.js?v=crossover-58';
-import {armorSkills} from './armor-skills.js?v=crossover-58';
+import {beastLootArmors,beastSkins,lootBeasts,beasts} from './mounts.js?v=guns-59';
+import {armorSkills} from './armor-skills.js?v=guns-59';
 const key='jatka.progress.v1';
 const names=['Przeszywanica rekruta','Płaszcz zwiadowcy','Nitowany kaftan','Kolczuga strażnika','Pancerz łowcy','Zbroja weterana','Łuski pustyni','Płyty legionisty','Pancerz husarza','Zbroja czempiona','Srebrna kolczuga','Pancerz nosorożca','Karmazynowa garda','Zbroja zdobywcy','Tytanowy bastion','Obsydianowy pancerz','Złoty kolos','Zbroja imperatora','Pancerz nieśmiertelnego','Zbroja boga wojny'];
 const chances=[30,12,8,6,5,5,5,4,4,4,2,2,2,2,2,2,1.5,1.5,1,1];

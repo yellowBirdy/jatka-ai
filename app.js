@@ -1,20 +1,21 @@
-import {setupCrossover} from './crossover-ui.js?v=crossover-58';
-import {readProgress,saveProgress,buyBoxes,rewardProfiles,lootArmors,drawArmorOffer,redeemCode,claimGod} from './progression.js?v=crossover-58';
-import {readProfiles,writeProfiles} from './profiles.js?v=crossover-58';
-import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=crossover-58';
-import {textureAnimalSvg} from './surface-textures.js?v=crossover-58';
-import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=crossover-58';
-import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=crossover-58';
-import {tactics} from './tactics.js?v=crossover-58';
-import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=crossover-58';
-import {getBeastAbilities} from './beast-abilities.js?v=crossover-58';
-import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait,beastSkins,beastLootArmors,allBeasts,lootBeasts} from './mounts.js?v=crossover-58';
-import {setupTutorial} from './tutorial.js?v=crossover-58';
-import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=crossover-58';
-import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=crossover-58';
-import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=crossover-58';
-import {weaponSvg,weaponIcon} from './weapons.js?v=crossover-58';
-import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=crossover-58';
+import {setupGunWorkshop} from './gun-ui.js?v=guns-59';
+import {setupCrossover} from './crossover-ui.js?v=guns-59';
+import {readProgress,saveProgress,buyBoxes,rewardProfiles,lootArmors,drawArmorOffer,redeemCode,claimGod} from './progression.js?v=guns-59';
+import {readProfiles,writeProfiles} from './profiles.js?v=guns-59';
+import {createBotFighter,chooseBotTactic,chooseBotTeamAction,simulateBotDuel,simulateBotTeams} from './bot.js?v=guns-59';
+import {textureAnimalSvg} from './surface-textures.js?v=guns-59';
+import {clearCombatVisuals,decorateCombat} from './combat-visuals.js?v=guns-59';
+import {createDuelBattle,takeDuelTurn,simulateTeamBattle} from './turns.js?v=guns-59';
+import {tactics} from './tactics.js?v=guns-59';
+import {animateBeastSkill,clearBeastEffects} from './beast-effects.js?v=guns-59';
+import {getBeastAbilities} from './beast-abilities.js?v=guns-59';
+import {drawMountOptions,getBeastArmors,normalizeMount,mountedPortrait,beastSkins,beastLootArmors,allBeasts,lootBeasts} from './mounts.js?v=guns-59';
+import {setupTutorial} from './tutorial.js?v=guns-59';
+import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn,teamOf} from './teams.js?v=guns-59';
+import {fantasySlots,drawFantasyOptions} from './fantasy.js?v=guns-59';
+import {weaponMaterials,getWeaponMaterials,normalizeMaterials,resolveMaterials} from './materials.js?v=guns-59';
+import {weaponSvg,weaponIcon} from './weapons.js?v=guns-59';
+import {categories,createFighter,simulate,describe,drawOptions,durations,abilityRules} from './engine.js?v=guns-59';
 const $=id=>document.getElementById(id);
 let player=0,picks={},fighters=[],names=['Ragnar','Akira'],timer,result,index=0;
 let opponent='local',botTimer=null,rematchBattle=false;
@@ -25,7 +26,7 @@ let mode='classic',format='duel',teamBattle=null,mounted=false;
 let mountOffers=[drawMountOptions(),drawMountOptions()];
 const rosterSize=()=>format==='teams'?4:2;
 const sideOf=i=>format==='teams'?teamOf(i):i;
-function settingsLocked(locked){document.querySelectorAll('.combatants .duel-tactic select').forEach(n=>n.disabled=locked);document.querySelectorAll('[data-preset],#enter-creator,#cross-start').forEach(n=>n.disabled=locked);for(const id of ['profile-settings','opponent-settings','playback-settings','format-settings','mode-settings','duration-settings','modification-settings'])$(id).disabled=locked;}
+function settingsLocked(locked){document.querySelectorAll('.combatants .duel-tactic select').forEach(n=>n.disabled=locked);document.querySelectorAll('[data-preset],#enter-creator,#cross-start,#gun-start').forEach(n=>n.disabled=locked);for(const id of ['profile-settings','opponent-settings','playback-settings','format-settings','mode-settings','duration-settings','modification-settings'])$(id).disabled=locked;}
 let duration='medium',offers=[drawOptions(),drawOptions()];
 let fantasyOffers=[drawFantasyOptions(),drawFantasyOptions()];
 const defaults=()=>normalizeMaterials({beast:mountOffers[player][0].id,beastArmor:'none',beastAbility:mountOffers[player][0].id,...Object.fromEntries(fantasySlots.map(slot=>[slot.id,fantasyOffers[player][slot.id][0].id])),...Object.fromEntries(categories.map(c=>[c.id,offers[player][c.id][0].id]))});
@@ -334,3 +335,5 @@ $('god-form').addEventListener('submit',e=>{
 $('god-later').onclick=()=>$('god-dialog').close();
 
 setupCrossover();
+
+setupGunWorkshop();

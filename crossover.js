@@ -1,4 +1,4 @@
-import {dbPowers,opPowers,crossStyles,crossWeaknesses,crossHaki} from './crossover-catalog.js?v=crossover-58';
+import {dbPowers,opPowers,crossStyles,crossWeaknesses,crossHaki} from './crossover-catalog.js?v=guns-59';
 export {dbPowers,opPowers,crossStyles,crossWeaknesses,crossHaki};
 const pools={db:dbPowers,op:opPowers,style:crossStyles,weakness:crossWeaknesses,haki:crossHaki};
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));

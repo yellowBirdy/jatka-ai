@@ -1,5 +1,5 @@
-import {dbPowers,opPowers,crossStyles,crossWeaknesses,crossHaki,drawCrossOffers,createCrossFighter,createCrossBattle,advanceCross,availableCrossActions,chooseCrossAction} from './crossover.js?v=crossover-58';
-import {crossPortrait,showCrossEffects,clearCrossEffects} from './crossover-visuals.js?v=crossover-58';
+import {dbPowers,opPowers,crossStyles,crossWeaknesses,crossHaki,drawCrossOffers,createCrossFighter,createCrossBattle,advanceCross,availableCrossActions,chooseCrossAction} from './crossover.js?v=guns-59';
+import {crossPortrait,showCrossEffects,clearCrossEffects} from './crossover-visuals.js?v=guns-59';
 const slots=[['db','Moc Dragon Balla',dbPowers],['op','Moc One Piece',opPowers],['style','Styl walki',crossStyles],['weakness','Słabość',crossWeaknesses],['haki','Haki',crossHaki]];
 export function setupCrossover(){
  const $=id=>document.getElementById(id);let offers=[],drafts=[],fighters=[],stage=0,battle=null,snapshot=[],timer=null,botTimer=null,running=false;

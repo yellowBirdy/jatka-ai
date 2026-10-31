@@ -2,6 +2,18 @@
 
 Lokalna gra dla dwóch osób przy jednym ekranie. Każdy wybiera imię i po jednej cesze w ośmiu kategoriach (w każdym slocie oferta 5 wylosowanych cech z puli 20). Potem oglądacie automatyczny pojedynek i opis oparty na zdarzeniach walki. Dostępne są rewanż, edycja postaci i rozpoczęcie od nowa. Interfejs po polsku, responsywne postacie SVG, bez zewnętrznych obrazów, fontów i usług.
 
+## Warsztat broni palnej (V59)
+
+Osobna karta otwiera pełny kreator fantastycznej broni i pojedynek dwóch konstrukcji. Najpierw gracz 1 wybiera części, przechodzi do ekranu nazwy i zatwierdza broń; później gracz 2 robi to samo. Dopiero po zatwierdzeniu obu projektów pojawia się arena. Powrót do części lub pierwszego gracza zachowuje dotychczasowe wybory i nazwy.
+
+Pełna pula jest zawsze dostępna, bez ofert pięciu i bez blokad zgodności. Dziesięć kategorii części (korpus, lufa, kolba, chwyt, celownik, magazynek, amunicja, nasadka, mechanizm i wykończenie) ma po 20 opcji. Do tego dochodzą trzy osobne sloty diali, każdy z 20 opcjami: 19 diali i brak dialu. Można użyć identycznego dialu w kilku slotach. Razem daje to **20^13 = 81 920 000 000 000 000 ustawień**, wliczając wygląd. Licznik używa BigInt, więc nie zaokrągla tak dużej wartości.
+
+Podgląd SVG reaguje na części i wykończenie; konstrukcję można przeszukiwać według kategorii albo losować jako opcjonalny skrót. Części bojowe wpływają na fikcyjne parametry areny: moc, celność, magazynek, serię, nagrzewanie, chłodzenie, przebicie, osłonę i wytrzymałość. Wykończenie zmienia wyłącznie wygląd.
+
+W walce są pojedynczy strzał, seria, celowanie, osłona, chłodzenie, przeładowanie i osobne przyciski trzech diali. Strzały zużywają amunicję i nagrzewają konstrukcję. Diale mają po trzy ładunki, niezależne przerwy dwóch własnych ruchów i własne efekty (m.in. ogień, przegrzanie, osłony, odrzut, oślepienie i zakłócenie rywala). Przeładowanie odzyskuje po jednym ładunku każdego aktywnego dialu. Impact i Reject mają odrzut, ograniczany osłoną konstrukcji.
+
+Można rozgrywać kolejne ruchy ręcznie albo włączyć automatyczną walkę z szybkością ×1/×2/×3, przewinąć do wyniku, obejrzeć historię, zagrać rewanż i edytować obie bronie. Limit wynosi 180 ruchów, po czym porównuje się pozostałą proporcję wytrzymałości. Rewanż resetuje amunicję, temperaturę, ładunki i efekty. Warsztat nie modyfikuje EXP ani kolekcji profili.
+
 ## Dragon Ball × One Piece — Turniej Przebudzenia (V58)
 
 Osobna karta otwiera nowy crossover 1 na 1. Bohater łączy jedną technikę Dragon Balla z jedną mocą One Piece, stylem walki, słabością i Haki. Dla mocy DB, mocy OP, stylu i słabości katalog ma po 20 propozycji, z których gracz otrzymuje 5 różnych ofert. Cztery rodzaje Haki są zawsze dostępne. Każdy gracz ma własne oferty; edycja zachowuje wybory, a ponowne losowanie dotyczy tylko aktualnego gracza. Dostępne są dwie osoby przy wspólnym ekranie oraz PvE przeciw botowi.
