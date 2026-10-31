@@ -2,17 +2,21 @@
 
 Lokalna gra dla dwóch osób przy jednym ekranie. Każdy wybiera imię i po jednej cesze w ośmiu kategoriach (w każdym slocie oferta 5 wylosowanych cech z puli 20). Potem oglądacie automatyczny pojedynek i opis oparty na zdarzeniach walki. Dostępne są rewanż, edycja postaci i rozpoczęcie od nowa. Interfejs po polsku, responsywne postacie SVG, bez zewnętrznych obrazów, fontów i usług.
 
-## Warsztat broni palnej (V59)
+## Warsztat broni palnej (V60)
 
 Osobna karta otwiera pełny kreator fantastycznej broni i pojedynek dwóch konstrukcji. Najpierw gracz 1 wybiera części, przechodzi do ekranu nazwy i zatwierdza broń; później gracz 2 robi to samo. Dopiero po zatwierdzeniu obu projektów pojawia się arena. Powrót do części lub pierwszego gracza zachowuje dotychczasowe wybory i nazwy.
 
 Pełna pula jest zawsze dostępna, bez ofert pięciu i bez blokad zgodności. Dziesięć kategorii części (korpus, lufa, kolba, chwyt, celownik, magazynek, amunicja, nasadka, mechanizm i wykończenie) ma po 20 opcji. Do tego dochodzą trzy osobne sloty diali, każdy z 20 opcjami: 19 diali i brak dialu. Można użyć identycznego dialu w kilku slotach. Razem daje to **20^13 = 81 920 000 000 000 000 ustawień**, wliczając wygląd. Licznik używa BigInt, więc nie zaokrągla tak dużej wartości.
 
-Podgląd SVG reaguje na części i wykończenie; konstrukcję można przeszukiwać według kategorii albo losować jako opcjonalny skrót. Części bojowe wpływają na fikcyjne parametry areny: moc, celność, magazynek, serię, nagrzewanie, chłodzenie, przebicie, osłonę i wytrzymałość. Wykończenie zmienia wyłącznie wygląd.
+Podgląd SVG reaguje na części i wykończenie; konstrukcję można przeszukiwać według kategorii albo losować jako opcjonalny skrót. Części bojowe zachowują wpływ na przebieg walki, ale żadne liczbowe statystyki, procenty ani premie nie są pokazywane. Opisy dotyczą sylwetki i materiałów; zachowanie konstrukcji poznaje się w pojedynku. Wykończenie zmienia wyłącznie wygląd.
 
-W walce są pojedynczy strzał, seria, celowanie, osłona, chłodzenie, przeładowanie i osobne przyciski trzech diali. Strzały zużywają amunicję i nagrzewają konstrukcję. Diale mają po trzy ładunki, niezależne przerwy dwóch własnych ruchów i własne efekty (m.in. ogień, przegrzanie, osłony, odrzut, oślepienie i zakłócenie rywala). Przeładowanie odzyskuje po jednym ładunku każdego aktywnego dialu. Impact i Reject mają odrzut, ograniczany osłoną konstrukcji.
+Po nazwaniu drugiej broni pojedynek uruchamia się automatycznie. Konstrukcje same wybierają strzał, serię, celowanie, osłonę, chłodzenie, przeładowanie i diale. W trakcie walki gracz ma tylko pauzę/wznowienie, szybkość i przejście do wyniku. Strzały zużywają amunicję i nagrzewają konstrukcję. Diale mają po trzy ładunki, niezależne przerwy dwóch własnych ruchów i własne efekty (m.in. ogień, przegrzanie, osłony, odrzut, oślepienie i zakłócenie rywala). Przeładowanie odzyskuje po jednym ładunku każdego aktywnego dialu. Impact i Reject mają odrzut, ograniczany osłoną konstrukcji.
 
-Można rozgrywać kolejne ruchy ręcznie albo włączyć automatyczną walkę z szybkością ×1/×2/×3, przewinąć do wyniku, obejrzeć historię, zagrać rewanż i edytować obie bronie. Limit wynosi 180 ruchów, po czym porównuje się pozostałą proporcję wytrzymałości. Rewanż resetuje amunicję, temperaturę, ładunki i efekty. Warsztat nie modyfikuje EXP ani kolekcji profili.
+Można obserwować automatyczną walkę z szybkością ×1/×2/×3, przewinąć do wyniku, obejrzeć historię, zagrać rewanż i edytować obie bronie. Limit wynosi 180 ruchów, po czym porównuje się pozostałą proporcję wytrzymałości. Rewanż resetuje amunicję, temperaturę, ładunki i efekty. Warsztat nie modyfikuje EXP ani kolekcji profili.
+
+Materiały są rysowane warstwowo: gradienty i krawędzie, szczotkowana stal, słoje drewna, skórzane pory i szwy, nacięcia gumy, fasety kryształu, łuski oraz ceramika. Nity, przetłoczenia, soczewki, okna magazynków i symbole diali mają osobne detale. Każda kategoria ma 20 odmiennych miniatur. Przycisk „Obejrzyj broń z bliska” otwiera powiększony, przewijany podgląd. Przestrzenie nazw SVG zapobiegają mieszaniu tekstur pomiędzy broniami i miniaturami.
+
+Synergie są uruchamiane automatycznie podczas ostrzału, gdy oba diale mają ładunek i nie odpoczywają. Zużywają po jednym ładunku każdego użytego dialu i respektują ich niezależne przerwy. Kolejność slotów nie ma znaczenia. Flame + Flavour daje wybuchowe strzały; Thunder + Water burzowe pociski; Breath + Axe wietrzne ostrza; Jet + Impact taran odrzutowy; Vision + Flash oślepiający znacznik. Efekty wpływają na walkę i mają własne trafienia wizualne, a aktywne połączenie jest widoczne na podglądzie konstrukcji. Podstawowe liczby pozostają wewnątrz silnika; interfejs pokazuje opisowe stany amunicji, temperatury, osłon i diali oraz historię bez liczbowych obrażeń.
 
 ## Dragon Ball × One Piece — Turniej Przebudzenia (V58)
 

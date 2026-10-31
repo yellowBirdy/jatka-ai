@@ -1,12 +1,12 @@
-import {lootArmors} from './progression.js?v=guns-59';
-import {resolveMount} from './mounts.js?v=guns-59';
-import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=guns-59';
-import {weaponMaterials,resolveMaterials} from './materials.js?v=guns-59';
-export {weaponMaterials} from './materials.js?v=guns-59';
-import {abilityRules} from './abilities.js?v=guns-59';
-import {createCombatState,resolveTurn} from './combat.js?v=guns-59';
-export {abilityRules} from './abilities.js?v=guns-59';
-import {additions} from './catalog.js?v=guns-59';
+import {lootArmors} from './progression.js?v=guns-60';
+import {resolveMount} from './mounts.js?v=guns-60';
+import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=guns-60';
+import {weaponMaterials,resolveMaterials} from './materials.js?v=guns-60';
+export {weaponMaterials} from './materials.js?v=guns-60';
+import {abilityRules} from './abilities.js?v=guns-60';
+import {createCombatState,resolveTurn} from './combat.js?v=guns-60';
+export {abilityRules} from './abilities.js?v=guns-60';
+import {additions} from './catalog.js?v=guns-60';
 const option=(id,name,icon,desc,stats={})=>({id,name,icon,desc,stats});
 export const categories=[
 {id:'weapon',name:'Broń',icon:'⚔',options:[option('sword','Miecz','⚔','Wszechstronny i celny.',{attack:4,accuracy:8}),option('axe','Topór','🪓','Silne, lecz wolniejsze ciosy.',{attack:9,speed:-3}),option('spear','Włócznia','↗','Zasięg i pierwszeństwo.',{attack:3,speed:5,accuracy:4}),option('hammer','Młot','🔨','Przełamuje ciężką ochronę.',{attack:7,pierce:7,speed:-5})]},
