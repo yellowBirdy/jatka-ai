@@ -1,9 +1,9 @@
-import {applyArmorSkill} from './armor-skills.js?v=anime-56';
-import {resolveTactic} from './tactics.js?v=anime-56';
-import {applyBeastAbility} from './beast-abilities.js?v=anime-56';
-import {rollChance} from './probability.js?v=anime-56';
-import {magicRules} from './fantasy.js?v=anime-56';
-import {abilityRules as rules} from './abilities.js?v=anime-56';
+import {applyArmorSkill} from './armor-skills.js?v=arena-57';
+import {resolveTactic} from './tactics.js?v=arena-57';
+import {applyBeastAbility} from './beast-abilities.js?v=arena-57';
+import {rollChance} from './probability.js?v=arena-57';
+import {magicRules} from './fantasy.js?v=arena-57';
+import {abilityRules as rules} from './abilities.js?v=arena-57';
 const clamp=(x,min,max)=>Math.max(min,Math.min(max,x));
 export function attackVariation(attack,random=Math.random){return (random()*2-1)*Math.max(8,attack*.25);}
 export function createCombatState(fighters){

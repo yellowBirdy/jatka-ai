@@ -1,10 +1,9 @@
-import {createFighter} from './engine.js?v=anime-56';
-import {normalizeMaterials,getWeaponMaterials} from './materials.js?v=anime-56';
-import {getBeastArmors} from './mounts.js?v=anime-56';
-import {getBeastAbilities} from './beast-abilities.js?v=anime-56';
-import {hybridParts,hybridAnimals} from './hybrids.js?v=anime-56';
-import {createDuelBattle,takeDuelTurn} from './turns.js?v=anime-56';
-import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn} from './teams.js?v=anime-56';
+import {createFighter} from './engine.js?v=arena-57';
+import {normalizeMaterials,getWeaponMaterials} from './materials.js?v=arena-57';
+import {getBeastArmors} from './mounts.js?v=arena-57';
+import {getBeastAbilities} from './beast-abilities.js?v=arena-57';
+import {createDuelBattle,takeDuelTurn} from './turns.js?v=arena-57';
+import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn} from './teams.js?v=arena-57';
 const pick=(pool,random)=>pool[Math.floor(random()*pool.length)];
 export function createBotFighter(config,random=Math.random){
  let picks=Object.fromEntries(Object.entries(config.offers).map(([key,pool])=>[key,pick(pool,random).id]));
@@ -12,9 +11,8 @@ export function createBotFighter(config,random=Math.random){
  for(const [key,group]of Object.entries(getWeaponMaterials(picks.weapon)))picks[key]=pick(group.options,random).id;
  picks=normalizeMaterials(picks);
  const beast=pick(config.mountOffers,random);picks.beast=beast.id;picks.beastArmor=pick(getBeastArmors(beast.id),random).id;picks.beastAbility=pick(getBeastAbilities(beast.id),random).id;
- for(const part of hybridParts)picks[part.id]=pick(hybridAnimals,random).id;
  const name=`Bot ${['Kruk','Ryś'][config.index%2||0]}`;
- return createFighter(name,picks,config.duration,config.mode,config.mounted,config.hybrid);
+ return createFighter(name,picks,config.duration,config.mode,config.mounted);
 }
 export function chooseBotTactic(battle,actor,target,random=Math.random){
  const {hp,energy}=battle.state,s=battle.fighters[actor].stats;

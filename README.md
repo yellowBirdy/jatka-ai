@@ -2,44 +2,6 @@
 
 Lokalna gra dla dwóch osób przy jednym ekranie. Każdy wybiera imię i po jednej cesze w ośmiu kategoriach (w każdym slocie oferta 5 wylosowanych cech z puli 20). Potem oglądacie automatyczny pojedynek i opis oparty na zdarzeniach walki. Dostępne są rewanż, edycja postaci i rozpoczęcie od nowa. Interfejs po polsku, responsywne postacie SVG, bez zewnętrznych obrazów, fontów i usług.
 
-## Walka anime (V56)
-
-Wewnątrz trybu jest przełącznik „Zrób własną postać”. Pozwala przypisać po jednym bohaterze z pełnej puli **74 postaci One Piece** do siły, szybkości, IQ, umiejętności, obrony i wytrzymałości. Bohater nie może zajmować dwóch slotów w tej samej postaci; wybory są niezależne dla obu graczy. Kreator ma wyszukiwanie, licznik sześciu obsadzonych slotów i losowanie sześciu różnych bohaterów. Wybór trybu tworzenia jest wspólny dla pojedynku i blokowany po zatwierdzeniu pierwszego wojownika; edycja zachowuje zbudowane postacie.
-
-Każda cecha wpływa na odpowiednią część rzeczywistego profilu walki. Bohater wybrany do umiejętności przekazuje swoje techniki lub owoc (np. Law — Ope Ope), co ustala taktyki podczas walki. Pozostałe sloty nie przyznają drugiego owocu ani dodatkowych technik. Oceny są autorską adaptacją do gry i nie są wyświetlane jako suche liczby. Ten wariant nie korzysta z osobnego losowania broni, dialu i Haki; postać jest złożona z sześciu wyborów. Działają zwykłe animacje anime, ataki, obrona, odpoczynek, automatyczna walka, rewanż i edycja.
-
-Osobna karta „Walka anime” otwiera pojedynek One Piece. Każdy gracz otrzymuje niezależne oferty 5 owoców z katalogu 166, 5 broni One Piece z 20, 5 diali z 19 i cztery Haki: uzbrojenia, obrony, obserwacji i królewskie. Można wybrać walkę bronią z jednym Haki albo pięściami z dwoma różnymi Haki. W drugim wariancie wybór broni znika, jej premie nie działają, a postać ma puste dłonie. Drugi slot Haki ma własną ofertę; duplikat pierwszego wyboru jest niedostępny. Dial w tym wariancie jest wyposażeniem rękawicy. Postęp EXP i ekwipunek profili pozostają oddzielone od tego trybu.
-
-Każdy owoc ma indywidualnie przypisaną technikę i inny rzeczywisty zestaw efektów. Po wyborze owocu wybiera się jeden z pięciu pasujących stylów: np. Ope Ope ma K-ROOM na mieczu, rozległy ROOM, Shambles, Counter Shock i Gamma Knife. Przy pięściach technika wymagająca miecza zmienia się na Scalpel. Techniki różnią się działaniem; pełne techniki wymagają odzyskania oddechu. Potęga owoców jest celowo nierówna: smoczy owoc, wstrząsy, magma, operacje i inne szczególnie silne moce przewyższają proste sztuczki, lecz nadal liczą się kontry, Haki i sposób walki.
-
-Karty i historia pokazują nazwy, techniki i opis sytuacji zamiast punktów statystyk i liczb obrażeń. Wewnętrzny silnik zachowuje deterministyczne reguły, limit długości i kontrolę zdrowia. Pasek wytrzymałości ma opis słowny. Dostępne są atak, obrona, odpoczynek, automatyczna walka, szybkość ×1/×2/×3, rewanż i edycja.
-
-Naturalne kontry działają w silniku: woda skleja Suna Suna i czasowo blokuje piaskowe techniki oraz niematerialność; wiatr rozwiewa Moku Moku; guma jest odporna na elektryczność; ogień nie rani ciała Mera Mera, a magma potrafi je przełamać. Zwykła broń nie trafia niematerialnej Logii. Haki uzbrojenia i końcówka Jitte z kamienia morskiego potrafią ją dosięgnąć. Twarde owoce całkowicie pochłaniają odrzut Impact Dialu; Haki uzbrojenia go łagodzi. Reject pozostaje bardziej niebezpieczny. Haki obserwacji pomaga unikać, Haki obrony wzmacnia osłonę ciała, a Haki królewskie może przerwać technikę presją woli.
-
-Postacie mają osobną piracką sylwetkę SVG, strój i akcenty zależne od owocu (np. dym Smokera, piaskowy płaszcz, słomkowy kapelusz lub smocze rogi). Ruchy walki korzystają z tych samych animacji co zwykły tryb: natarcie, odrzut, unik, obrona i odpoczynek. Duże nakładki owoców zastąpiono krótkimi efektami trafienia. Ograniczenie ruchu jest respektowane.
-
-Podczas walki lista taktyk zawiera pięć technik owocu aktywnego wojownika oraz odpoczynek i obronę. Wybrana technika rzeczywiście zmienia działanie owocu w tym ruchu; nie zmienia pierwotnego wyboru na stałe. Przykładowo Ope Ope może użyć Shambles do uniku albo Gamma Knife do przebicia osłony, a Suna Suna własnych piaskowych technik. Po zmianie atakującego lista dopasowuje się do jego owocu.
-
-Źródłowy spis kontrolny nazw owoców: [DevilFruits](https://github.com/conorkenn/DevilFruits/blob/main/fruits.js), zapisany w `tests/anime-fruit-reference.json`. To starszy katalog kontrolny, nie potwierdzenie kompletności najnowszych odcinków. Katalog pomija nienazwane moce i pozycje wyłącznie z gier lub pokazów scenicznych. Reguły walki są adaptacją do gry, a nie automatycznym odtworzeniem wszystkich zasad serialu. Referencje do aktualizacji: [Devil Fruit Encyclopedia](https://onepiece.fandom.com/wiki/Devil_Fruit/Devil_Fruit_Encyclopedia) i [Dials](https://onepiece.fandom.com/wiki/Dials).
-
-## Armie i Totalna miazga (V51)
-
-Karta „Armie” uruchamia rekrutację dwóch oddziałów. Obaj gracze dostają ten sam budżet: 500, 800 lub 1200 punktów, maksymalnie 12 żołnierzy. Osobna karta „Totalna miazga” uruchamia bitwę z **10 000 punktów rekrutacji na stronę i bez niezależnego limitu liczby żołnierzy** — liczebność ogranicza wyłącznie budżet. To nie jest EXP profilu; rekrutacja nie wydaje ani nie przyznaje EXP.
-
-Jednostki wybiera się z czterech osobnych kategorii: **1. Strzelcy, 2. Kawaleria, 3. Piechota, 4. Magowie**. Każda ma 20 unikalnych typów (80 łącznie), a każdy gracz dostaje własne 5 losowych propozycji z każdej kategorii. Automatyczna rekrutacja korzysta tylko z tych ofert. Oferta zachowuje się przy edycji; ponowne losowanie zmienia oferty i usuwa skład tylko bieżącej armii. Przyklejony do górnej krawędzi licznik pokazuje pozostałe punkty, wydane punkty i liczebność również po przewinięciu listy.
-
-Każdy z 80 typów ma własny rzeczywisty profil walki, nie tylko inną nazwę. Kawaleria używa 20 różnych gatunków wierzchowców, magowie mają 20 różnych mocy z istniejącego katalogu, a strzelcy oraz piechota autorskie zestawy uzbrojenia, umiejętności i premii. Opisy wyposażenia są składane z faktycznego katalogu jednostki. Karty pokazują bazowe HP, siłę, ochronę, szybkość, celność i przebicie przed premiami całej armii; rozwijane szczegóły podają broń, zbroję, technikę, wierzchowca i moc. Test sprawdza unikalność skutecznych profili, pomijając nazwy, ceny i opisy.
-
-Strzelcy mają łuki lub kusze, premię celności i +8 inicjatywy w pierwszej rundzie. Chroni ich pierwsza linia, ale kawaleria może ich oskrzydlić. Duże bitwy przedstawiają zwykłych żołnierzy kompaktowymi ikonami, zachowując osobne HP i pełne uczestnictwo każdej jednostki; magiczne bestie nadal mają pełny portret.
-
-Dodatkowo każda armia wybiera taktykę, pochodzenie i jedną magiczną bestię. Każda z tych trzech kategorii ma pulę 20 opcji i własną ofertę 5. Taktyka ustala sposób ataku i premiuje statystyki armii; pochodzenie daje niezależne premie. Magiczna bestia ma własne HP, inicjatywę, umiejętność gatunku i moc magiczną. Jest dodatkową jednostką bez kosztu rekrutacji, poza limitem 12 żołnierzy. Jeźdźcy nadal mają zwykłe wierzchowce. Nowe losowanie odświeża wszystkie cztery oferty tylko bieżącej armii i resetuje jej skład. Rewanż i edycja zachowują wybrane cechy.
-
-Każda jednostka korzysta z istniejącego silnika walki, własnego HP, kondycji, broni i umiejętności. Pierwsza linia chroni wsparcie, kawaleria omija ją i atakuje magów. Kolejność każdej rundy wynika z szybkości i losowania; każda żywa jednostka wykonuje jeden ruch w rundzie. Taktyka jest wybierana dla całej armii, a wyczerpane jednostki odpoczywają. Wygrywa armia, która wyeliminuje przeciwników. Przy limicie 160 ruchów na jednostkę decyduje średni procent pozostałego HP.
-
-Mniej liczna żywa armia otrzymuje premię do inicjatywy każdego członka: `6 × (liczebność przeciwnika − własna liczebność) / liczebność przeciwnika`, maksymalnie +6. Liczą się wszystkie żywe postacie, w tym magiczna bestia. Równe oraz liczniejsze armie nie otrzymują tej premii. Kolejność nadal uwzględnia szybkość, losowanie i premię otwarcia strzelców. Liczebność i premia są przeliczane na początku każdej rundy; straty nie przebudowują już rozpoczętej kolejki. Nad polem bitwy widnieje rzeczywiście zastosowana premia danej rundy. Statystyka szybkości nie jest zmieniana.
-
-Bitwę można oglądać automatycznie z prędkością ×1/×2/×3, rozgrywać krokami lub przewinąć do końca. Dostępne są historia walki, rewanż z pełnym zdrowiem i edycja obu składów. „Zwykła arena” wraca do poprzedniego wojownika bez resetowania profili i EXP.
-
 ## Balans bestii i Obsydianowy Kolos (V45)
 
 Tygrys szablozębny, gryf i smok skalny nadal przewyższają zwykłe bestie, ale mają niższe premie bojowe oraz słabsze umiejętności podstawowe. Smok skalny jest cięższym, mniej zwinnym wierzchowcem z kosztem kondycji. Szansa uruchomienia umiejętności pozostaje 25%. Najsilniejsze legendarne smoki zachowują swoje premie.
@@ -222,19 +184,10 @@ W turowym 1 na 1 gracze przy wspólnym ekranie wykonują na zmianę po jednej ak
 
 Inicjatywa, obrażenia i limit 160 akcji w pojedynku zachowują istniejące reguły. Po limicie rozstrzyga procent HP, a przy równości inicjator. Jad i podpalenie mogą zakończyć walkę przed wybraną akcją. Oba sposoby obsługują wynik, rewanż i edycję. Testy obejmują przejście tur, obronę, odpoczynek, decyzję po limicie, automatyczne drużyny, magię, bestie, pomijanie animacji i interfejs mobilny.
 
-## Modyfikacja: Hybrydy
-
-Włącz **Hybrydy** w sekcji Modyfikacje gry. Zamiast wojownika tworzysz zwierzę z pięciu części: głowy, tułowia, przednich kończyn, tylnych kończyn i ogona. Dla każdej części wybierasz spośród 10 gatunków: geparda, wilka, niedźwiedzia, lwa, nosorożca, krokodyla, orła, skorpiona, węża i goryla. Możliwe jest 100 000 połączeń, w tym powtarzanie tego samego gatunku. Wszystkie opcje części są dostępne bez losowania.
-
-Każda część wnosi opisane premie i koszty do statystyk, a jej kształt i kolor są widoczne na złożonej sylwetce SVG. Głowa mocniej wpływa na celność i uderzenie, tułów na HP i ochronę, przednie kończyny na siłę, tylne na szybkość, a ogon na równowagę i przebicie. Premie sumują się przed mnożnikiem HP. Hybryda korzysta z naturalnej broni i nie dostaje ukrytych premii wcześniejszych wyborów uzbrojenia, materiałów ani pochodzenia wojownika.
-
-Osobno wybierasz instynkt specjalny z dotychczasowych umiejętności (5 losowych propozycji z puli 20). Tryb fantastyczny nadal dodaje przedmiot i moc. Hybrydy działają w obu formatach oraz automatycznie i turowo, z atakiem, odpoczynkiem, obroną i taktykami. Hybryda jest samodzielną postacią — jej włączenie wyłącza Wierzchowce. Powrót do zwykłych wojowników zachowuje wybory części do kolejnego włączenia. Edycja i rewanż również zachowują budowę, a Losuj nowe opcje wybiera nowe zwierzęta dla wszystkich części bieżącej hybrydy.
-
-Testy obejmują każdą część i gatunek, dokładne statystyki, wyłączenie premii ekwipunku, skalowanie HP, oba tryby i formaty, obie metody walki, edycję, przełączanie, samouczek oraz widok mobilny.
 
 ## Tekstury i kolorowy przebieg walki
 
-Hybrydy i wierzchowce mają wzory futra, cętek, łusek, piór lub grubej skóry, zachowując kolor wybranego zwierzęcia. Metal wyposażenia ma nową szczotkowaną teksturę z refleksami, krawędziami i nitami. Każdy portret ma własne identyfikatory wzorów SVG, aby tekstury nie mieszały się między postaciami.
+Wierzchowce mają wzory futra, cętek, łusek, piór lub grubej skóry, zachowując kolor wybranego zwierzęcia. Metal wyposażenia ma nową szczotkowaną teksturę z refleksami, krawędziami i nitami. Każdy portret ma własne identyfikatory wzorów SVG, aby tekstury nie mieszały się między postaciami.
 
 W walce kolor i podpis razem odróżniają obrażenia (czerwone), leczenie (zielone), obronę/unik (niebieskie), kondycję (złote), magię (fioletowe) i bestie (pomarańczowe). Nad postaciami pojawiają się osobne napisy, także przy jednoczesnym leczeniu i otrzymaniu obrażeń. Pod areną są kolorowe komunikaty z imionami oraz legenda. Liczby wynikają z rzeczywistych wydarzeń; nie ma fikcyjnych trafień krytycznych ani premii.
 
@@ -250,7 +203,7 @@ Animacja ciosu ma wyraźniejszy zamach i doskok, a trafiona postać reaguje odrz
 
 ## PvE — gracz kontra bot
 
-W sekcji **Przeciwnik** wybierz **Gracz kontra bot (PvE)**. W 1 na 1 tworzysz tylko swoją postać; w 2 na 2 tworzysz dwóch sojuszników drużyny A. Przeciwników bot dobiera automatycznie z własnych ofert według tych samych zasad i bez dodatkowych premii. Działa z magią, wierzchowcami, hybrydami i każdą długością walki. Zmiana przeciwnika rozpoczyna tworzenie nowych postaci, a PvE domyślnie wybiera walkę turową.
+W sekcji **Przeciwnik** wybierz **Gracz kontra bot (PvE)**. W 1 na 1 tworzysz tylko swoją postać; w 2 na 2 tworzysz dwóch sojuszników drużyny A. Przeciwników bot dobiera automatycznie z własnych ofert według tych samych zasad i bez dodatkowych premii. Działa z magią, wierzchowcami i każdą długością walki. Zmiana przeciwnika rozpoczyna tworzenie nowych postaci, a PvE domyślnie wybiera walkę turową.
 
 W turach kierujesz swoją stroną. Bot wykonuje swój ruch po krótkiej chwili; panel pokazuje „Bot wybiera ruch…”, a sterowanie przeciwnikiem jest wtedy zablokowane. Odpoczywa przy kondycji poniżej 7, jeśli nie jest na skraju porażki, stara się dobijać osłabione cele, czasem broni się przy niskim HP oraz dobiera agresywną lub ostrożną taktykę. W drużynie wybiera dostępnego wojownika i żywego przeciwnika z najmniejszym pozostałym HP. Nie korzysta z przyszłych losowań walki.
 
