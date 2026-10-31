@@ -1,9 +1,9 @@
-import {createFighter} from './engine.js?v=arena-57';
-import {normalizeMaterials,getWeaponMaterials} from './materials.js?v=arena-57';
-import {getBeastArmors} from './mounts.js?v=arena-57';
-import {getBeastAbilities} from './beast-abilities.js?v=arena-57';
-import {createDuelBattle,takeDuelTurn} from './turns.js?v=arena-57';
-import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn} from './teams.js?v=arena-57';
+import {createFighter} from './engine.js?v=crossover-58';
+import {normalizeMaterials,getWeaponMaterials} from './materials.js?v=crossover-58';
+import {getBeastArmors} from './mounts.js?v=crossover-58';
+import {getBeastAbilities} from './beast-abilities.js?v=crossover-58';
+import {createDuelBattle,takeDuelTurn} from './turns.js?v=crossover-58';
+import {createTeamBattle,availableAttackers,availableTargets,takeTeamTurn} from './teams.js?v=crossover-58';
 const pick=(pool,random)=>pool[Math.floor(random()*pool.length)];
 export function createBotFighter(config,random=Math.random){
  let picks=Object.fromEntries(Object.entries(config.offers).map(([key,pool])=>[key,pick(pool,random).id]));

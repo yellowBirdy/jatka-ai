@@ -1,12 +1,12 @@
-import {lootArmors} from './progression.js?v=arena-57';
-import {resolveMount} from './mounts.js?v=arena-57';
-import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=arena-57';
-import {weaponMaterials,resolveMaterials} from './materials.js?v=arena-57';
-export {weaponMaterials} from './materials.js?v=arena-57';
-import {abilityRules} from './abilities.js?v=arena-57';
-import {createCombatState,resolveTurn} from './combat.js?v=arena-57';
-export {abilityRules} from './abilities.js?v=arena-57';
-import {additions} from './catalog.js?v=arena-57';
+import {lootArmors} from './progression.js?v=crossover-58';
+import {resolveMount} from './mounts.js?v=crossover-58';
+import {gameModes,fantasyDefaults,resolveFantasy} from './fantasy.js?v=crossover-58';
+import {weaponMaterials,resolveMaterials} from './materials.js?v=crossover-58';
+export {weaponMaterials} from './materials.js?v=crossover-58';
+import {abilityRules} from './abilities.js?v=crossover-58';
+import {createCombatState,resolveTurn} from './combat.js?v=crossover-58';
+export {abilityRules} from './abilities.js?v=crossover-58';
+import {additions} from './catalog.js?v=crossover-58';
 const option=(id,name,icon,desc,stats={})=>({id,name,icon,desc,stats});
 export const categories=[
 {id:'weapon',name:'Broń',icon:'⚔',options:[option('sword','Miecz','⚔','Wszechstronny i celny.',{attack:4,accuracy:8}),option('axe','Topór','🪓','Silne, lecz wolniejsze ciosy.',{attack:9,speed:-3}),option('spear','Włócznia','↗','Zasięg i pierwszeństwo.',{attack:3,speed:5,accuracy:4}),option('hammer','Młot','🔨','Przełamuje ciężką ochronę.',{attack:7,pierce:7,speed:-5})]},

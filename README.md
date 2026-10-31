@@ -2,6 +2,16 @@
 
 Lokalna gra dla dwóch osób przy jednym ekranie. Każdy wybiera imię i po jednej cesze w ośmiu kategoriach (w każdym slocie oferta 5 wylosowanych cech z puli 20). Potem oglądacie automatyczny pojedynek i opis oparty na zdarzeniach walki. Dostępne są rewanż, edycja postaci i rozpoczęcie od nowa. Interfejs po polsku, responsywne postacie SVG, bez zewnętrznych obrazów, fontów i usług.
 
+## Dragon Ball × One Piece — Turniej Przebudzenia (V58)
+
+Osobna karta otwiera nowy crossover 1 na 1. Bohater łączy jedną technikę Dragon Balla z jedną mocą One Piece, stylem walki, słabością i Haki. Dla mocy DB, mocy OP, stylu i słabości katalog ma po 20 propozycji, z których gracz otrzymuje 5 różnych ofert. Cztery rodzaje Haki są zawsze dostępne. Każdy gracz ma własne oferty; edycja zachowuje wybory, a ponowne losowanie dotyczy tylko aktualnego gracza. Dostępne są dwie osoby przy wspólnym ekranie oraz PvE przeciw botowi.
+
+Atak buduje pasek przebudzenia, a ładowanie odnawia zarówno Ki, jak i przebudzenie. Technika Dragon Balla zużywa 40% paska, technika One Piece 35%, a wspólny superatak 60%; wszystkie wymagają także Ki. Pełny pasek pozwala wybrać transformację Dragon Balla albo przebudzenie owocu. Formy wzmacniają różne rodzaje natarcia, trwają cztery własne ruchy i nie mogą być aktywne jednocześnie. Pojawiają się zmiana wyglądu, aura i efekty ataków. Animacje respektują ograniczenie ruchu.
+
+To adaptacja obu światów do wspólnych zasad: ki może dosięgnąć Logii, a zwykły cios potrzebuje odpowiedniej kontry lub Haki. Guma zatrzymuje elektryczność, wiatr rozwiewa dym, żar topi lód, a ciemność przełamuje osłonę żywiołu. Kontry są respektowane również w części One Piece wspólnego superataku. Bariera pochłania obrażenia, obrona osłabia następne trafienie, trucizna i ogień działają w następnych ruchach, a rozbita koncentracja blokuje użycie technik. Własne przebudzenia owoców są interpretacją na potrzeby gry, a nie listą potwierdzonych form z serialu.
+
+Walkę rozgrywa się przyciskami albo automatycznie, z szybkością ×1/×2/×3. Są wspólna długość walki, historia, przewinięcie do wyniku, rewanż z pełnym zdrowiem i pustymi paskami oraz edycja obu bohaterów. Limit wynosi 160 ruchów; potem porównywana jest pozostała proporcja wytrzymałości, z możliwością remisu. Ten tryb nie zmienia EXP ani kolekcji profili.
+
 ## Balans bestii i Obsydianowy Kolos (V45)
 
 Tygrys szablozębny, gryf i smok skalny nadal przewyższają zwykłe bestie, ale mają niższe premie bojowe oraz słabsze umiejętności podstawowe. Smok skalny jest cięższym, mniej zwinnym wierzchowcem z kosztem kondycji. Szansa uruchomienia umiejętności pozostaje 25%. Najsilniejsze legendarne smoki zachowują swoje premie.
