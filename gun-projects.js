@@ -1,0 +1,5 @@
+import {buildGun,gunSlots} from './gun-workshop.js?v=guns-61';
+const key='jatka.gun-projects.v1';
+export function readGunProjects(storage){try{const rows=JSON.parse(storage.getItem(key)||'[]');if(!Array.isArray(rows))return [];return rows.filter(row=>{try{return typeof row.id==='string'&&!!buildGun(row.name,row.picks);}catch{return false;}}).map(row=>({id:row.id,name:row.name,picks:Object.fromEntries(gunSlots.map(s=>[s.id,row.picks[s.id]]))}));}catch{return [];}}
+export function saveGunProject(storage,gun,id){const valid=buildGun(gun.name,gun.picks),rows=readGunProjects(storage),project={id:id||globalThis.crypto.randomUUID(),name:valid.name,picks:Object.fromEntries(gunSlots.map(s=>[s.id,valid.picks[s.id]]))},index=rows.findIndex(row=>row.id===project.id);if(index<0)rows.push(project);else rows[index]=project;storage.setItem(key,JSON.stringify(rows));return project;}
+export function deleteGunProject(storage,id){storage.setItem(key,JSON.stringify(readGunProjects(storage).filter(row=>row.id!==id)));}

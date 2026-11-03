@@ -240,3 +240,5 @@ Rewanż zachowuje przeciwników i Twoje postacie. Edycja pozwala zmienić Twoją
 
 
 Gra korzysta z klasycznych postaci i wyposażenia SVG oraz prostych kart cech. Ilustrowane menu areny zachowuje ciemny, turkusowy styl.
+
+Warsztat broni: po złożeniu i nazwaniu konstrukcji można zapisać ją w „Mojej kolekcji projektów”, a następnie wczytać dla dowolnego gracza. Kolekcja pozostaje po odświeżeniu strony w tej samej przeglądarce; nie synchronizuje się między urządzeniami. Wczytany projekt można zmienić i ponownie zapisać. Próbny ostrzał korzysta z rzeczywistej mechaniki diali i amunicji, ale nie zmienia pojedynku ani EXP. Wybór areny jest wspólny i blokuje się po zatwierdzeniu pierwszej broni: deszcz chłodzi i gasi, wiatr różnie wpływa na rodzaje amunicji, a pustynia zwiększa nagrzewanie. Nowe części obejmują obrotowe bloki luf, korpus miniguna, magazynki karabinowe, bębny i taśmy.

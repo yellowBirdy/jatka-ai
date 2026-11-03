@@ -1,9 +1,9 @@
-import {applyArmorSkill} from './armor-skills.js?v=guns-60';
-import {resolveTactic} from './tactics.js?v=guns-60';
-import {applyBeastAbility} from './beast-abilities.js?v=guns-60';
-import {rollChance} from './probability.js?v=guns-60';
-import {magicRules} from './fantasy.js?v=guns-60';
-import {abilityRules as rules} from './abilities.js?v=guns-60';
+import {applyArmorSkill} from './armor-skills.js?v=guns-61';
+import {resolveTactic} from './tactics.js?v=guns-61';
+import {applyBeastAbility} from './beast-abilities.js?v=guns-61';
+import {rollChance} from './probability.js?v=guns-61';
+import {magicRules} from './fantasy.js?v=guns-61';
+import {abilityRules as rules} from './abilities.js?v=guns-61';
 const clamp=(x,min,max)=>Math.max(min,Math.min(max,x));
 export function attackVariation(attack,random=Math.random){return (random()*2-1)*Math.max(8,attack*.25);}
 export function createCombatState(fighters){

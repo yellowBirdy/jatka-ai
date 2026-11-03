@@ -1,5 +1,6 @@
-import {readyGunSynergy} from './gun-synergies.js?v=guns-60';
-import {gunSlots,gunDials} from './gun-catalog.js?v=guns-60';
+import {gunArenas} from './gun-arenas.js?v=guns-61';
+import {readyGunSynergy} from './gun-synergies.js?v=guns-61';
+import {gunSlots,gunDials} from './gun-catalog.js?v=guns-61';
 export {gunSlots,gunDials};
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 export const gunDefaults=()=>Object.fromEntries(gunSlots.map(slot=>[slot.id,slot.options[0].id]));
@@ -12,14 +13,15 @@ export function buildGun(name,picks){
  stats.damage=clamp(stats.damage,10,48);stats.accuracy=clamp(stats.accuracy,40,97);stats.capacity=clamp(stats.capacity,2,18);stats.cooling=clamp(stats.cooling,20,50);stats.armor=clamp(stats.armor,0,22);stats.health=clamp(stats.health,150,260);stats.heat=clamp(stats.heat,6,30);stats.burst=clamp(stats.burst,2,4);
  return {name:name.trim(),picks:{...picks},parts,stats,dials:[parts.dial1,parts.dial2,parts.dial3]};
 }
-export function createGunBattle(guns,random=Math.random){
- if(!Array.isArray(guns)||guns.length!==2)throw Error('Potrzebne są dwie bronie.');const actor=random()<.5?0:1;
- return {guns,actor,random,events:[],finished:false,winner:null,reason:null,state:{hp:guns.map(g=>g.stats.health),ammo:guns.map(g=>g.stats.capacity),heat:[0,0],shield:[0,0],guard:[false,false],focus:[0,0],boost:[0,0],evade:[0,0],charges:guns.map(g=>g.dials.map(d=>d.id==='none'?0:3)),cooldowns:guns.map(()=>[0,0,0]),status:guns.map(()=>({burn:0,poison:0,slow:0,blind:0,jam:0,silence:0,marked:0})),armorDamage:[0,0]}};
+export function createGunBattle(guns,random=Math.random,arenaId='neutral'){
+ if(!Array.isArray(guns)||guns.length!==2)throw Error('Potrzebne są dwie bronie.');const arena=gunArenas.find(a=>a.id===arenaId);if(!arena)throw Error('Nieznana arena.');const actor=random()<.5?0:1;
+ return {guns,arena,actor,random,events:[],finished:false,winner:null,reason:null,state:{hp:guns.map(g=>g.stats.health),ammo:guns.map(g=>g.stats.capacity),heat:[0,0],shield:[0,0],guard:[false,false],focus:[0,0],boost:[0,0],evade:[0,0],charges:guns.map(g=>g.dials.map(d=>d.id==='none'?0:3)),cooldowns:guns.map(()=>[0,0,0]),status:guns.map(()=>({burn:0,poison:0,slow:0,blind:0,jam:0,silence:0,marked:0})),armorDamage:[0,0]}};
 }
 export function gunActions(b){if(b.finished)return [];const i=b.actor,s=b.state,list=['reload','cool','guard','aim'];if(s.ammo[i]>0&&s.heat[i]<85&&!s.status[i].jam)list.push('shoot');if(s.ammo[i]>=2&&s.heat[i]<75&&!s.status[i].jam)list.push('burst');for(let n=0;n<3;n++)if(s.charges[i][n]>0&&!s.cooldowns[i][n]&&!s.status[i].silence)list.push(`dial${n+1}`);return list;}
 export function advanceGun(b,action){
  if(!gunActions(b).includes(action))throw Error(b.finished?'Walka jest zakończona.':'Ta akcja jest teraz niedostępna.');
  const actor=b.actor,target=1-actor,g=b.guns[actor],enemy=b.guns[target],s=b.state,old={...s.status[actor]},combo=readyGunSynergy(b,actor),e={actor,target,action,synergy:null,ammoEffect:null,impacts:0,damage:0,selfDamage:0,shots:[],dial:null,details:[],text:''};
+ s.heat[actor]=Math.max(0,s.heat[actor]-b.arena.cooling);if(b.arena.id==='rain'){old.burn=0;s.status[actor].burn=0;}
  s.guard[actor]=false;for(let n=0;n<3;n++)s.cooldowns[actor][n]=Math.max(0,s.cooldowns[actor][n]-1);
  for(const key of ['burn','poison'])if(old[key]){const n=Math.min(s.hp[actor],key==='burn'?4:3);s.hp[actor]-=n;e.selfDamage+=n;e.details.push(key==='burn'?'Ogień nadal uszkadza konstrukcję.':'Trująca energia nadal osłabia konstrukcję.');}
  for(const key of Object.keys(old))s.status[actor][key]=Math.max(0,s.status[actor][key]-1);
@@ -38,8 +40,8 @@ export function advanceGun(b,action){
    e.ammoEffect=g.parts.ammo.effect;
    if(combo){e.synergy=combo.id;for(const n of combo.slots){s.charges[actor][n]--;s.cooldowns[actor][n]=2;}e.details.push(`${combo.name}: ${combo.desc}`);}
    const count=action==='burst'?Math.min(g.stats.burst,s.ammo[actor]):1,focused=s.focus[actor],boost=s.boost[actor];s.focus[actor]=0;if(boost)s.boost[actor]--;
-   const chance=clamp((g.stats.accuracy+(combo?.accuracy||0)+focused*12+(s.status[target].marked?10:0)-(old.blind?25:0)-(old.slow?8:0)-(action==='burst'?10:0))/100,.15,.99);
-   for(let n=0;n<count&&s.hp[target]>0;n++){s.ammo[actor]--;s.heat[actor]=Math.min(100,s.heat[actor]+g.stats.heat+(combo?.heat||0));const dealt=b.random()<chance?hit((g.stats.damage+(b.random()*10-5)+(boost?6:0)+(combo?.bonus||0))*(action==='burst'?.75:1),g.stats.pierce+(g.parts.ammo.effect==='pierce'?6:0)+(combo?.pierce||0),true):0;e.shots.push(dealt);if(s.heat[actor]>=100)break;}
+   const chance=clamp((g.stats.accuracy+(b.arena.id==='wind'?(g.parts.ammo.effect==='push'?10:['heavy','pierce'].includes(g.parts.ammo.effect)?-5:b.arena.accuracy):0)+(combo?.accuracy||0)+focused*12+(s.status[target].marked?10:0)-(old.blind?25:0)-(old.slow?8:0)-(action==='burst'?10:0))/100,.15,.99);
+   for(let n=0;n<count&&s.hp[target]>0;n++){s.ammo[actor]--;s.heat[actor]=Math.min(100,s.heat[actor]+g.stats.heat+(combo?.heat||0)+(b.arena.heat||0));const dealt=b.random()<chance?hit((g.stats.damage+(b.random()*10-5)+(boost?6:0)+(combo?.bonus||0))*(action==='burst'?.75:1),g.stats.pierce+(g.parts.ammo.effect==='pierce'?6:0)+(combo?.pierce||0),true):0;e.shots.push(dealt);if(s.heat[actor]>=100)break;}
    if(combo&&e.impacts>0){for(const key of ['burn','blind','marked','jam'])if(combo[key])s.status[target][key]=Math.max(s.status[target][key],combo[key]);if(combo.armor)s.armorDamage[target]=Math.min(10,s.armorDamage[target]+combo.armor);}
    if(combo?.recoil){const recoil=Math.min(combo.recoil,Math.max(0,s.hp[actor]-1));s.hp[actor]-=recoil;e.selfDamage+=recoil;e.details.push('Taran odrzutowy wstrząsa również własną konstrukcją.');}
    if(e.damage>0){switch(g.parts.ammo.effect){case 'burn':s.status[target].burn=2;break;case 'slow':s.status[target].slow=2;break;case 'shock':s.status[target].jam=1;break;case 'blind':s.status[target].blind=1;break;case 'poison':s.status[target].poison=2;break;case 'mark':s.status[target].marked=2;break;case 'focus':s.focus[actor]=1;break;case 'silence':s.status[target].silence=1;break;case 'push':s.focus[target]=0;break;case 'bounce':s.shield[actor]=Math.max(4,s.shield[actor]);break;}}

@@ -1,5 +1,5 @@
-import {gunMaterial} from './gun-surfaces.js?v=guns-60';
-import {gunSynergies} from './gun-synergies.js?v=guns-60';
+import {gunMaterial} from './gun-surfaces.js?v=guns-61';
+import {gunSynergies} from './gun-synergies.js?v=guns-61';
 const tint=(hex,delta)=>'#'+[1,3,5].map(i=>Math.max(0,Math.min(255,parseInt(hex.slice(i,i+2),16)+delta)).toString(16).padStart(2,'0')).join('');
 const ammoColor={burn:'#da8c50',slow:'#84bccf',shock:'#dccc7a',blind:'#aab5b2',poison:'#a88bc6',pierce:'#b6c4bd','shield-break':'#c58c6e',mark:'#bed194',focus:'#94bfb4',push:'#a9d1c4',ki:'#8dbddf',silence:'#a1a6ca',bounce:'#dfba88'};
 const dialColor={impact:'#d6ba7e',reject:'#ca707b',burn:'#ec9646',heat:'#c7684d',shield:'#7399c3',cool:'#71b9ca',blind:'#ded294',shock:'#d8bd50',decoy:'#b5bb7c',mark:'#80baa8'};
@@ -46,6 +46,11 @@ export function gunSvg(gun,prefix='gun-preview',onlyPart=null){
  if(d.id==='none')parts[key]+=`<circle cx="${x}" cy="195" r="16" fill="none" stroke="#668071" stroke-width="1.5" stroke-dasharray="4 4"/>`;else parts[key]+=`<circle cx="${x}" cy="195" r="19" fill="url(#${prefix}-shell)"/><circle cx="${x}" cy="195" r="15" fill="${color}" opacity=".75"/>`+Array.from({length:12},(_,n)=>{const a=n*Math.PI/6;return `<path d="M${x+Math.cos(a)*15} ${195+Math.sin(a)*15}l${Math.cos(a)*5} ${Math.sin(a)*5}" stroke="#5d6450" stroke-width=".7" opacity=".7"/>`;}).join('')+`<path d="M${x-12} 197q-5-16 9-18q18-1 17 15q-2 15-15 10q-10-6-1-13q8-4 9 4q-1 6-5 2" fill="none" stroke="#fff0bd" stroke-width="3"/><path d="M${x-8} 184q12-6 18 7" fill="none" stroke="#ffffff" stroke-width="1.2" opacity=".8"/>`;
  if(d.id!=='none')parts[key]+=`<circle cx="${x}" cy="195" r="8.5" fill="${color}" stroke="#f0dfab" stroke-width=".8"/><path d="${dialMarks[d.id]}" transform="translate(${x} 195) scale(.8)" fill="none" stroke="#fff7d5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
  parts[key]+=bolt(x-19,195,1.3)+bolt(x+19,195,1.3);}
+
+ if(body>=20)parts.body+=metal('body',`M205 ${91-(body-20)*3}H320V145H205Z`)+Array.from({length:body-16},(_,i)=>bolt(215+i*17,105)).join('');
+ if(bar>=20){parts.barrel=Array.from({length:bar===20?3:bar===21?6:bar===22?4:5},(_,i)=>metal('barrel',`M${end} ${94+i*8}h${barrel}v6H${end}Z`)).join('')+metal('barrel',`M${end+20} 90h9v${bar===21?54:42}h-9Z`)+metal('barrel',`M${tip-10} 90h10v${bar===21?54:42}h-10Z`);}
+ if(mag>=20)parts.magazine=mag===21?Array.from({length:8},(_,i)=>metal('magazine',`M${280+i*7} ${153+i*5}h14v9h-14Z`)).join(''):mag===22?metal('magazine','M270 150h40v30h-40Z')+`<circle cx="270" cy="191" r="22" fill="url(#${prefix}-magazine-surface)" stroke="#cfbc84"/><circle cx="313" cy="191" r="22" fill="url(#${prefix}-magazine-surface)" stroke="#cfbc84"/>`:metal('magazine',`M271 150h30q${10+(mag-20)*5} 38 ${25+(mag-20)*4} 69l-24 9q-26-35-31-78Z`)+Array.from({length:5},(_,i)=>`<path d="M${280+i*3} ${165+i*9}l20-4" stroke="#cad6c3" stroke-width="2"/>`).join('');
+ if(mech>=20)parts.mechanism+=Array.from({length:mech-16},(_,i)=>bolt(212+i*12,144,2)).join('');
  const crops={body:'180 80 215 90',barrel:'330 95 205 60',stock:'60 90 145 100',grip:'197 135 75 95',magazine:'248 140 100 115',sight:'225 45 160 60',muzzle:'400 95 150 60',mechanism:'203 115 90 75',ammo:'68 210 110 42',dial1:'335 165 62 65',dial2:'389 165 62 65',dial3:'443 165 62 65'};
  const keys=onlyPart&&onlyPart!=='finish'?[onlyPart]:Object.keys(parts),viewBox=onlyPart&&crops[onlyPart]?crops[onlyPart]:(stock===0?'165 30 410 250':'45 30 515 250');
  const picture=keys.map(key=>`<g data-gun-part="${key}" data-variant="${p[key]?.index??0}" ${key==='ammo'&&stock===0&&!onlyPart?'transform="translate(110 0)"':''} ${key.startsWith('dial')?`data-dial="${p[key].id}"`:''}>${parts[key]}</g>`).join('');
@@ -55,10 +60,15 @@ export function gunSvg(gun,prefix='gun-preview',onlyPart=null){
  return `<svg class="gun-workshop-svg" viewBox="${viewBox}" role="img" aria-label="Szczegółowy wygląd części broni"><defs>${defs}</defs>${onlyPart?'':'<ellipse cx="310" cy="261" rx="230" ry="10" fill="#0005"/>'}<g filter="url(#${prefix}-drop)">${picture}</g>${conduit}</svg>`;
 }
 let fxTimer;
-export function clearGunEffects(){clearTimeout(fxTimer);document.querySelectorAll('.gun-burst-flash,.gun-explosion').forEach(n=>n.remove());}
+export function clearGunEffects(){clearTimeout(fxTimer);document.querySelectorAll('.gun-burst-flash,.gun-explosion,.gun-projectile').forEach(n=>n.remove());}
 export function showGunEffects(event){
  clearGunEffects();if(!event.shots.length&&!event.dial)return;const card=document.getElementById(`gun-combatant-${event.actor}`);if(!card)return;
  const fx=document.createElement('span');fx.className='gun-burst-flash';fx.textContent=event.synergy==='explosive-shot'?'✺':event.dial?'✹':'✧';if(!event.synergy&&event.ammoEffect)fx.style.color=ammoColor[event.ammoEffect]||'#ffe6a5';card.append(fx);
+ const kind=event.synergy==='explosive-shot'?'explosive':({burn:'fire',slow:'ice',shock:'lightning',poison:'poison',push:'wind',ki:'energy'})[event.ammoEffect]||'bullet';
+ const field=document.getElementById('gun-field');if(field&&event.shots.length){const shot=document.createElement('div');shot.className=`gun-projectile gun-projectile-${kind} gun-projectile-side-${event.actor}`;shot.dataset.projectile=kind;shot.setAttribute('aria-hidden','true');shot.innerHTML=projectileSvg(kind);field.append(shot);}
+
  if(event.synergy&&event.impacts>0){const impact=document.createElement('div');impact.className=`gun-explosion gun-synergy-${event.synergy}`;impact.dataset.gunExplosion=event.synergy;impact.innerHTML='<svg viewBox="0 0 200 200" aria-hidden="true"><circle class="gun-blast-wave" cx="100" cy="100" r="60"/><path class="gun-blast-flame" d="M100 15 119 62 165 34 143 81 190 100 143 119 165 165 119 142 100 190 81 141 34 165 59 119 11 100 58 80 33 34 81 59Z"/><circle cx="100" cy="100" r="30"/></svg>';document.getElementById(`gun-combatant-${event.target}`)?.append(impact);}
- fxTimer=setTimeout(()=>{fx.remove();document.querySelectorAll('.gun-explosion').forEach(n=>n.remove());},700);
+ fxTimer=setTimeout(()=>{fx.remove();document.querySelectorAll('.gun-explosion,.gun-projectile').forEach(n=>n.remove());},700);
 }
+
+export function projectileSvg(kind){const shapes={fire:'<path d="M7 22Q28 2 48 10L39 19Q69 0 82 23Q60 43 40 29L20 36Z" fill="#ff782b"/><path d="M36 23Q62 13 74 23Q56 32 36 23" fill="#fff3a1"/>',ice:'<path d="M10 23 42 5 80 23 42 41Z" fill="#99edff" stroke="#eaffff"/><path d="M42 5V41M10 23H80" stroke="#3296cb"/>',explosive:'<circle cx="56" cy="23" r="17" fill="#ff7a23" stroke="#ffe295" stroke-width="4"/><path d="M4 14 34 23 4 33M17 4 39 15M17 42 39 31" stroke="#ffbb42" stroke-width="4"/>',lightning:'<path d="M3 29 30 8 39 22 60 5 51 23 82 15 59 39 46 28 22 39 29 25Z" fill="#fff09a"/>',wind:'<path d="M4 12Q70 0 77 18Q88 37 13 34M2 24H69" fill="none" stroke="#abf9db" stroke-width="4"/>',poison:'<circle cx="53" cy="23" r="16" fill="#b88bdf"/><circle cx="23" cy="15" r="7" fill="#8dce76"/><circle cx="14" cy="32" r="5" fill="#b88bdf"/>',energy:'<ellipse cx="51" cy="23" rx="28" ry="17" fill="#72c5ff" stroke="#efffff" stroke-width="4"/>',bullet:'<path d="M9 17H60L80 23 60 29H9Z" fill="#ffda8b" stroke="#fff3ce"/>'};return `<svg viewBox="0 0 90 46">${shapes[kind]||shapes.bullet}</svg>`;}
