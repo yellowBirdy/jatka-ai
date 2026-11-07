@@ -1,9 +1,9 @@
-import {animals,tiers,pickAnimal,formatChance,godPool} from './ritual-animals.js?v=ritual-65';
+import {animals,tiers,pickAnimal,formatChance,godPool} from './ritual-animals.js?v=ritual-66';
 const card=document.getElementById('card'),btn=document.getElementById('btn'),hist=document.getElementById('hist');
 
 let godPending=false;
 const codeInput=document.getElementById('ritual-code'),codeSubmit=document.getElementById('ritual-code-submit'),codeStatus=document.getElementById('ritual-code-status');
-document.getElementById('ritual-code-form').onsubmit=e=>{e.preventDefault();if(btn.disabled)return;if(codeInput.value.trim().toLowerCase()!=='god'){codeStatus.textContent=godPending?'Nieprawidłowy kod. Poprzednio aktywowany kod nadal czeka na losowanie.':'Nieprawidłowy kod.';return;}if(godPending){codeStatus.textContent='Kod jest już aktywny na następne losowanie.';return;}godPending=true;codeInput.value='';codeStatus.textContent='Kod aktywny: następne losowanie da formę antyczną (bez pteranodona) lub mityczną, w tym formy Starszyzny.';};
+document.getElementById('ritual-code-form').onsubmit=e=>{e.preventDefault();if(btn.disabled)return;if(codeInput.value.trim().toLowerCase()!=='god'){codeStatus.textContent=godPending?'Nieprawidłowy kod. Poprzednio aktywowany kod nadal czeka na losowanie.':'Nieprawidłowy kod.';return;}if(godPending){codeStatus.textContent='Kod jest już aktywny na następne losowanie.';return;}godPending=true;codeInput.value='';codeStatus.textContent='Kod aktywny: 50% szans na mityczne (w tym formy Starszyzny) i 50% na antyczne bez pteranodona. Dotyczy jednego następnego losowania.';};
 document.getElementById('pool-info').textContent=`${animals.length} form do odkrycia`;
 function profile(a){const box=document.createElement('div');box.className='profile';for(const [label,value]of [['Predyspozycje',a.strengths],...(a.ability?[['Zdolność specjalna',a.ability]]:[])]){const p=document.createElement('p'),b=document.createElement('b');b.textContent=label+': ';p.append(b,document.createTextNode(value));box.append(p);}return box;}
 const displayName=a=>a.name.replace(/ \(SMILE\)$/,'');

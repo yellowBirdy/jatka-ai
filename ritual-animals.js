@@ -787,6 +787,9 @@ export const animals=Object.entries(tiers).flatMap(([tier,{budget}])=>{
  const group=rows.filter(row=>row.tier===tier),base=Math.floor(budget/group.length),remainder=budget%group.length;
  return group.map((a,i)=>Object.freeze({...a,form:a.kind==='SMILE'?'Częściowa forma zwierzęca':'Forma zwierzęca lub hybrydowa',chance:base+(i<remainder?1:0)}));
 });
-export const godPool=()=>animals.filter(a=>a.tier!=='zwykle'&&a.name!=='Pteranodon');
+export const godPool=()=>['antyczne','mityczne'].flatMap(tier=>{
+ const group=animals.filter(a=>a.tier===tier&&a.name!=='Pteranodon'),base=Math.floor(5000/group.length),remainder=5000%group.length;
+ return group.map((a,i)=>Object.freeze({...a,chance:base+(i<remainder?1:0)}));
+});
 export function pickAnimal(random=Math.random,pool=animals){const total=pool.reduce((s,a)=>s+a.chance,0);if(!total)throw Error('Pula losowania jest pusta.');const point=Math.min(total-1,Math.max(0,Math.floor(random()*total+1e-10)));let sum=0;return pool.find(a=>(sum+=a.chance)>point);}
 export const formatChance=chance=>(chance/100).toLocaleString('pl-PL',{minimumFractionDigits:0,maximumFractionDigits:2})+'%';
