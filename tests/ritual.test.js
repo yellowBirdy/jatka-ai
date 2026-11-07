@@ -13,3 +13,5 @@ test('Loki, his hammer and five Elder forms share the unchanged mythical chance 
  assert.ok(!('fruit' in animals.find(a=>a.name==='Gyuki — demon-pająk')));
  assert.ok(!('ability' in animals.find(a=>a.name==='Nordycki smok')));
 });
+
+test('god pool excludes ordinary forms and pteranodon but retains every other ancient and mythical interval',async()=>{const {godPool}=await import('../ritual-animals.js');const pool=godPool();assert.equal(pool.length,animals.filter(a=>a.tier!=='zwykle').length-1);assert.ok(pool.every(a=>a.tier!=='zwykle'&&a.name!=='Pteranodon'));const sum=pool.reduce((s,a)=>s+a.chance,0);let offset=0;for(const a of pool){assert.equal(pickAnimal(()=>(offset+.5)/sum,pool),a);offset+=a.chance;}assert.equal(pickAnimal(()=>0,pool).name,'Mamut');assert.equal(pickAnimal(()=>.999999,pool).name,'Sandworm — olbrzymi czerw');assert.ok(pool.includes(animals.find(a=>a.name==='Nordycki smok')));assert.equal(animals.reduce((s,a)=>s+a.chance,0),10000);});
