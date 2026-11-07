@@ -1,4 +1,4 @@
-import {animals,tiers,pickAnimal,formatChance} from './ritual-animals.js?v=ritual-63';
+import {animals,tiers,pickAnimal,formatChance} from './ritual-animals.js?v=ritual-64';
 const card=document.getElementById('card'),btn=document.getElementById('btn'),hist=document.getElementById('hist');
 document.getElementById('pool-info').textContent=`${animals.length} form do odkrycia`;
 function profile(a){const box=document.createElement('div');box.className='profile';for(const [label,value]of [['Predyspozycje',a.strengths],...(a.ability?[['Zdolność specjalna',a.ability]]:[])]){const p=document.createElement('p'),b=document.createElement('b');b.textContent=label+': ';p.append(b,document.createTextNode(value));box.append(p);}return box;}

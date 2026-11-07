@@ -713,7 +713,75 @@ const rows=[
   "source": "kanon",
   "kind": "SMILE",
   "strengths": "Psia forma. Częściowa, trwała zwierzęca przemiana."
- }
+ },
+{
+ "name": "Nordycki smok",
+ "emoji": "🐲",
+ "user": "Loki",
+ "source": "wskazowka-gracza",
+ "strengths": "Smocza sylwetka, mocne szczęki i siła wielkiego ciała.",
+ "tier": "mityczne",
+ "kind": "Forma mityczna"
+},
+{
+ "name": "Lodowa wiewiórka",
+ "emoji": "🐿️",
+ "user": "Młot Lokiego",
+ "source": "wskazowka-gracza",
+ "strengths": "Zwinność, niewielkie rozmiary i sprawne poruszanie się.",
+ "ability": "Władanie lodem.",
+ "tier": "mityczne",
+ "kind": "Forma mityczna"
+},
+{
+ "name": "Gyuki — demon-pająk",
+ "emoji": "🕷️",
+ "user": "Jaygarcia Saturn",
+ "source": "kanon",
+ "strengths": "Wiele ostrych odnóży, duży zasięg i potężna pajęcza sylwetka.",
+ "ability": "Paraliżujący wzrok i jad.",
+ "tier": "mityczne",
+ "kind": "Forma mityczna"
+},
+{
+ "name": "Itsumade — potworny ptak",
+ "emoji": "🦅",
+ "user": "Marcus Mars",
+ "source": "kanon",
+ "strengths": "Ogromny zasięg skrzydeł, silny dziób i mobilność w powietrzu.",
+ "ability": "Lot.",
+ "tier": "mityczne",
+ "kind": "Forma mityczna"
+},
+{
+ "name": "Fengxi — olbrzymi dzik",
+ "emoji": "🐗",
+ "user": "Topman Warcury",
+ "source": "kanon",
+ "strengths": "Niezwykle twarda skóra, ogromna siła szarży i potężne kły.",
+ "tier": "mityczne",
+ "kind": "Forma mityczna"
+},
+{
+ "name": "Bakotsu — szkieletowy koń",
+ "emoji": "💀",
+ "user": "Ethanbaron V. Nusjuro",
+ "source": "kanon",
+ "strengths": "Bardzo szybkie przemieszczanie się, siła kopnięć i szkieletowa końska sylwetka.",
+ "ability": "Mroźne cięcia w formie hybrydowej.",
+ "tier": "mityczne",
+ "kind": "Forma mityczna"
+},
+{
+ "name": "Sandworm — olbrzymi czerw",
+ "emoji": "🪱",
+ "user": "Shepherd Ju Peter",
+ "source": "kanon",
+ "strengths": "Ogromna paszcza, silny zasysający oddech i masywne ciało.",
+ "ability": "Przemieszczanie się pod ziemią i pochłanianie przeciwników.",
+ "tier": "mityczne",
+ "kind": "Forma mityczna"
+}
 ];
 export const animals=Object.entries(tiers).flatMap(([tier,{budget}])=>{
  const group=rows.filter(row=>row.tier===tier),base=Math.floor(budget/group.length),remainder=budget%group.length;
