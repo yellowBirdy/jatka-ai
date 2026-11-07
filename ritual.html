@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rytuał przejścia</title>
+<style>
+:root{--bg:#f4efe6;--card:#fffaf0;--text:#2b2118;--muted:#7a6a58;--line:#d9ccb8;--z:#5c7a3a;--a:#b0742a;--m:#7a3fb0;--btn:#2b2118;--btntext:#fffaf0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17130f;--card:#241d16;--text:#f1e7d6;--muted:#a8977f;--line:#3d3226;--z:#8fb35e;--a:#e0a152;--m:#b88aef;--btn:#f1e7d6;--btntext:#17130f}}
+:root[data-theme="dark"]{--bg:#17130f;--card:#241d16;--text:#f1e7d6;--muted:#a8977f;--line:#3d3226;--z:#8fb35e;--a:#e0a152;--m:#b88aef;--btn:#f1e7d6;--btntext:#17130f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Georgia,"Times New Roman",serif;padding:20px 16px 40px}
+main{max-width:560px;margin:0 auto}
+h1{text-align:center;font-size:1.7rem;margin:8px 0 4px}
+.sub{text-align:center;color:var(--muted);margin:0 0 20px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:24px 16px;text-align:center;min-height:250px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px}
+.emoji{font-size:5rem;line-height:1}
+.name{font-size:2rem;font-weight:bold}
+.hyb{font-size:1.1rem;color:var(--muted)}
+.badge{display:inline-block;padding:3px 12px;border-radius:99px;color:#fff;font-size:.85rem;font-family:system-ui,sans-serif}
+.zwykle{background:var(--z)}.antyczne{background:var(--a)}.mityczne{background:var(--m)}
+.card.zwykle-b{border-color:var(--z)}.card.antyczne-b{border-color:var(--a)}.card.mityczne-b{border-color:var(--m);box-shadow:0 0 24px var(--m)}
+button{display:block;width:100%;margin:16px 0;padding:16px;font-size:1.3rem;font-family:inherit;font-weight:bold;background:var(--btn);color:var(--btntext);border:0;border-radius:14px;cursor:pointer}
+button:disabled{opacity:.6}
+h2{font-size:1.1rem;margin:24px 0 8px}
+ol{padding-left:22px;margin:0}
+li{margin:4px 0}
+details{margin-top:20px;border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:var(--card)}
+summary{cursor:pointer;font-weight:bold}
+.tier{margin:10px 0 2px;font-weight:bold}
+.row{display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:2px 0;font-size:.95rem}
+a{color:var(--text)}.row{gap:12px;text-align:left}.row span:last-child{white-space:nowrap}.name{overflow-wrap:anywhere}.profile{text-align:left;font-family:system-ui,sans-serif;font-size:.95rem;line-height:1.6;max-width:100%}.profile p{margin:8px 0}.source{font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted)}.animal-entry{border-bottom:1px solid var(--line);padding:12px 0}.animal-entry summary{line-height:1.5}.catalog-name{font-weight:bold}.card .name{font-size:1.8rem}@media(prefers-reduced-motion:no-preference){.card.revealed{animation:reveal .4s ease-out}@keyframes reveal{from{transform:scale(.95);opacity:.5}to{transform:scale(1);opacity:1}}}
+</style>
+</head>
+<body>
+<main>
+<nav><a href="./">← Wróć do JATKI</a></nav><h1>🌙 Rytuał przejścia</h1>
+<p class="sub">Odkryj swoją formę Zoana · One Piece</p>
+<p class="sub">Zwykłe i SMILE 94% · antyczne 5% · mityczne 1%</p><div id="card" role="status" aria-live="polite" class="card"><div class="emoji">❓</div><div class="name">Kim się staniesz?</div></div>
+<button id="btn">🎲 Losuj</button>
+<p class="sub" id="pool-info"></p><details><summary>Co jest w puli?</summary><p>Rozpoznane modele Zoanów z głównej serii oraz filmów, anime, gier i pokazów. Dodatki mają osobną etykietę. SMILE to sztuczne, zwykle częściowe przemiany — trafiają do wspólnej puli zwykłych. Nazwy nieujawnionych owoców nie są zgadywane. Kopia smoka Momonosuke nie tworzy drugiego identycznego losu.</p><p>Opis podaje właściwości formy, nie Haki, broń ani pochodzenie użytkownika. Bez przypisywania wszystkim posiadaczom przebudzenia. Nienazwane, nierozpoznane moce nie mają wymyślonych modeli.</p></details><h2>Historia losowań</h2>
+<ol id="hist"></ol>
+<details><summary>Zoany, zdolności i szanse</summary><p>Każde losowanie jest niezależne. Szanse sumują się dokładnie do 100% i są zasadami tej gry, a nie procentami z anime.</p><div id="tbl"></div></details>
+</main>
+<script type="module" src="ritual.js?v=ritual-62"></script>
+</body>
+</html>
