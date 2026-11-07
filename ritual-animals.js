@@ -1,4 +1,4 @@
-export const tiers={zwykle:{name:'Zwykłe i SMILE',budget:9400},antyczne:{name:'Antyczne',budget:500},mityczne:{name:'Mityczne',budget:100}};
+export const tiers={zwykle:{name:'Zwykłe',budget:9400},antyczne:{name:'Antyczne',budget:500},mityczne:{name:'Mityczne',budget:100}};
 const rows=[
  {
   "tier": "zwykle",
@@ -154,7 +154,7 @@ const rows=[
   "user": "Smiley",
   "source": "kanon",
   "kind": "Zoan",
-  "strengths": "Elastyczna płazia forma; nie daje automatycznie odporności na morze."
+  "strengths": "Elastyczna płazia forma."
  },
  {
   "tier": "zwykle",
@@ -226,7 +226,7 @@ const rows=[
   "user": "Minotaurus",
   "source": "kanon",
   "kind": "Zoan",
-  "strengths": "Wielka siła i wytrzymałość; strażnik jest przebudzonym Zoanem."
+  "strengths": "Wielka siła i wytrzymałość."
  },
  {
   "tier": "zwykle",
@@ -236,7 +236,7 @@ const rows=[
   "user": "Minozebra",
   "source": "kanon",
   "kind": "Zoan",
-  "strengths": "Szybkość i odporność przebudzonego strażnika."
+  "strengths": "Szybkość i odporność tej formy."
  },
  {
   "tier": "zwykle",
@@ -256,7 +256,7 @@ const rows=[
   "user": "Minokoala",
   "source": "kanon",
   "kind": "Zoan",
-  "strengths": "Siła chwytu i odporność przebudzonego strażnika."
+  "strengths": "Siła chwytu i odporność tej formy."
  },
  {
   "tier": "zwykle",
@@ -266,7 +266,7 @@ const rows=[
   "user": "Minochihuahua",
   "source": "kanon",
   "kind": "Zoan",
-  "strengths": "Zwinność oraz wytrzymałość przebudzonego strażnika."
+  "strengths": "Zwinność oraz wytrzymałość tej formy."
  },
  {
   "tier": "zwykle",
@@ -276,7 +276,7 @@ const rows=[
   "user": "Pomsky",
   "source": "kanon",
   "kind": "Zoan",
-  "strengths": "Sprawność ruchowa i siła uderzeń; Zoan nadal nie może pływać w morzu."
+  "strengths": "Sprawność ruchowa i siła uderzeń."
  },
  {
   "tier": "zwykle",
@@ -358,7 +358,7 @@ const rows=[
   "source": "kanon",
   "kind": "Zoan",
   "strengths": "Moc szarży i osłona kryzą.",
-  "ability": "Wirowanie kryzą pozwala Sasakiemu latać."
+  "ability": "Wirowanie kryzą pozwala latać."
  },
  {
   "tier": "antyczne",
@@ -369,7 +369,7 @@ const rows=[
   "source": "kanon",
   "kind": "Zoan",
   "strengths": "Ogromna masa, siła uścisku i wytrzymałość.",
-  "ability": "Wężowa część ciała może oddzielić się i oplatać cel; cybernetyczne lasery nie są mocą owocu."
+  "ability": "Wężowa część ciała może oddzielić się i oplatać cel."
  },
  {
   "tier": "antyczne",
@@ -380,7 +380,7 @@ const rows=[
   "source": "kanon",
   "kind": "Zoan",
   "strengths": "Szybki lot i mocne uderzenia dziobem.",
-  "ability": "Lot i wystrzeliwanie głowy jak pocisku; lunariański ogień Kinga nie pochodzi z owocu."
+  "ability": "Lot i wystrzeliwanie głowy jak pocisku."
  },
  {
   "tier": "antyczne",
@@ -401,7 +401,7 @@ const rows=[
   "source": "kanon",
   "kind": "Zoan",
   "strengths": "Kontrola przestrzeni i wiele odnóży.",
-  "ability": "Tworzenie lepkich pajęczyn; ogień jej broni nie jest mocą pajęczego owocu."
+  "ability": "Tworzenie lepkich pajęczyn."
  },
  {
   "tier": "mityczne",
@@ -487,7 +487,7 @@ const rows=[
   "user": "Monkey D. Luffy",
   "source": "kanon",
   "kind": "Zoan",
-  "strengths": "Gumowe ciało i ogromna swoboda ruchu; ostrza i Haki nadal zagrażają.",
+  "strengths": "Gumowe ciało i ogromna swoboda ruchu; podatność na ostrza.",
   "ability": "Rozciąganie ciała; po przebudzeniu nadawanie gumowych właściwości otoczeniu. Przebudzenie nie oznacza nieograniczonej mocy."
  },
  {
@@ -562,7 +562,7 @@ const rows=[
   "user": "Sheepshead",
   "source": "kanon",
   "kind": "SMILE",
-  "strengths": "Twarde rogi i siła uderzeń. Częściowa, trwała zwierzęca przemiana; nie jest pełnym naturalnym Zoanem."
+  "strengths": "Twarde rogi i siła uderzeń. Częściowa, trwała zwierzęca przemiana."
  },
  {
   "tier": "zwykle",
@@ -572,7 +572,7 @@ const rows=[
   "user": "Holdem",
   "source": "kanon",
   "kind": "SMILE",
-  "strengths": "Siła szczęk i pazury. Częściowa, trwała zwierzęca przemiana; nie jest pełnym naturalnym Zoanem."
+  "strengths": "Siła szczęk i pazury. Częściowa, trwała zwierzęca przemiana."
  },
  {
   "tier": "zwykle",
@@ -582,7 +582,7 @@ const rows=[
   "user": "Gazelleman",
   "source": "kanon",
   "kind": "SMILE",
-  "strengths": "Szybkość biegu. Częściowa, trwała zwierzęca przemiana; nie jest pełnym naturalnym Zoanem."
+  "strengths": "Szybkość biegu. Częściowa, trwała zwierzęca przemiana."
  },
  {
   "tier": "zwykle",
@@ -592,7 +592,7 @@ const rows=[
   "user": "Batman",
   "source": "kanon",
   "kind": "SMILE",
-  "strengths": "Lot i wyczulony słuch. Częściowa, trwała zwierzęca przemiana; nie jest pełnym naturalnym Zoanem."
+  "strengths": "Lot i wyczulony słuch. Częściowa, trwała zwierzęca przemiana."
  },
  {
   "tier": "zwykle",
@@ -602,7 +602,7 @@ const rows=[
   "user": "Mouseman",
   "source": "kanon",
   "kind": "SMILE",
-  "strengths": "Małe rozmiary i zwinność. Częściowa, trwała zwierzęca przemiana; nie jest pełnym naturalnym Zoanem."
+  "strengths": "Małe rozmiary i zwinność. Częściowa, trwała zwierzęca przemiana."
  },
  {
   "tier": "zwykle",
@@ -612,7 +612,7 @@ const rows=[
   "user": "Rabbitman",
   "source": "kanon",
   "kind": "SMILE",
-  "strengths": "Skoki i szybkie odbicia. Częściowa, trwała zwierzęca przemiana; nie jest pełnym naturalnym Zoanem."
+  "strengths": "Skoki i szybkie odbicia. Częściowa, trwała zwierzęca przemiana."
  },
  {
   "tier": "zwykle",
@@ -622,7 +622,7 @@ const rows=[
   "user": "Madilloman",
   "source": "kanon",
   "kind": "SMILE",
-  "strengths": "Twardy pancerz. Częściowa, trwała zwierzęca przemiana; nie jest pełnym naturalnym Zoanem."
+  "strengths": "Twardy pancerz. Częściowa, trwała zwierzęca przemiana."
  },
  {
   "tier": "zwykle",
@@ -632,7 +632,7 @@ const rows=[
   "user": "Dobon",
   "source": "kanon",
   "kind": "SMILE",
-  "strengths": "Ogromne szczęki i masa. Częściowa, trwała zwierzęca przemiana; nie jest pełnym naturalnym Zoanem."
+  "strengths": "Ogromne szczęki i masa. Częściowa, trwała zwierzęca przemiana."
  },
  {
   "tier": "zwykle",
@@ -642,7 +642,7 @@ const rows=[
   "user": "Daifugo",
   "source": "kanon",
   "kind": "SMILE",
-  "strengths": "Wiele nóg i ataki ogonem. Częściowa, trwała zwierzęca przemiana; nie jest pełnym naturalnym Zoanem."
+  "strengths": "Wiele nóg i ataki ogonem. Częściowa, trwała zwierzęca przemiana."
  },
  {
   "tier": "zwykle",
@@ -652,7 +652,7 @@ const rows=[
   "user": "Solitaire",
   "source": "kanon",
   "kind": "SMILE",
-  "strengths": "Dodatkowe kończyny. Częściowa, trwała zwierzęca przemiana; nie jest pełnym naturalnym Zoanem."
+  "strengths": "Dodatkowe kończyny. Częściowa, trwała zwierzęca przemiana."
  },
  {
   "tier": "zwykle",
@@ -662,7 +662,7 @@ const rows=[
   "user": "Bao Huang",
   "source": "kanon",
   "kind": "SMILE",
-  "strengths": "Szybowanie; sieć obserwacji Bao Huang nie jest automatycznie zdolnością każdego Zoana. Częściowa, trwała zwierzęca przemiana; nie jest pełnym naturalnym Zoanem."
+  "strengths": "Szybowanie. Częściowa, trwała zwierzęca przemiana."
  },
  {
   "tier": "zwykle",
@@ -672,7 +672,7 @@ const rows=[
   "user": "Fourtricks",
   "source": "kanon",
   "kind": "SMILE",
-  "strengths": "Ptasia budowa i silne nogi. Częściowa, trwała zwierzęca przemiana; nie jest pełnym naturalnym Zoanem."
+  "strengths": "Ptasia budowa i silne nogi. Częściowa, trwała zwierzęca przemiana."
  },
  {
   "tier": "zwykle",
@@ -682,7 +682,7 @@ const rows=[
   "user": "Mizerka / Briscola",
   "source": "kanon",
   "kind": "SMILE",
-  "strengths": "Duża siła ramion. Częściowa, trwała zwierzęca przemiana; nie jest pełnym naturalnym Zoanem."
+  "strengths": "Duża siła ramion. Częściowa, trwała zwierzęca przemiana."
  },
  {
   "tier": "zwykle",
@@ -692,7 +692,7 @@ const rows=[
   "user": "Poker",
   "source": "kanon",
   "kind": "SMILE",
-  "strengths": "Elastyczność i zasięg węża. Częściowa, trwała zwierzęca przemiana; nie jest pełnym naturalnym Zoanem."
+  "strengths": "Elastyczność i zasięg węża. Częściowa, trwała zwierzęca przemiana."
  },
  {
   "tier": "zwykle",
@@ -702,7 +702,7 @@ const rows=[
   "user": "Caimanlady",
   "source": "kanon",
   "kind": "SMILE",
-  "strengths": "Silne szczęki i łuski. Częściowa, trwała zwierzęca przemiana; nie jest pełnym naturalnym Zoanem."
+  "strengths": "Silne szczęki i łuski. Częściowa, trwała zwierzęca przemiana."
  },
  {
   "tier": "zwykle",
@@ -712,12 +712,12 @@ const rows=[
   "user": "Wanyudo",
   "source": "kanon",
   "kind": "SMILE",
-  "strengths": "Psia forma; ogień obracającej się broni nie jest mocą SMILE. Częściowa, trwała zwierzęca przemiana; nie jest pełnym naturalnym Zoanem."
+  "strengths": "Psia forma. Częściowa, trwała zwierzęca przemiana."
  }
 ];
 export const animals=Object.entries(tiers).flatMap(([tier,{budget}])=>{
  const group=rows.filter(row=>row.tier===tier),base=Math.floor(budget/group.length),remainder=budget%group.length;
- return group.map((a,i)=>Object.freeze({...a,form:a.kind==='SMILE'?'Częściowa forma SMILE':'Forma zwierzęca lub hybrydowa',chance:base+(i<remainder?1:0)}));
+ return group.map((a,i)=>Object.freeze({...a,form:a.kind==='SMILE'?'Częściowa forma zwierzęca':'Forma zwierzęca lub hybrydowa',chance:base+(i<remainder?1:0)}));
 });
 export function pickAnimal(random=Math.random){const point=Math.min(9999,Math.max(0,Math.floor(random()*10000+1e-10)));let sum=0;return animals.find(a=>(sum+=a.chance)>point);}
 export const formatChance=chance=>(chance/100).toLocaleString('pl-PL',{minimumFractionDigits:0,maximumFractionDigits:2})+'%';
