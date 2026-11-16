@@ -11,7 +11,7 @@ const $=s=>document.querySelector(s),clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),rn
 const NAMES=['Złomek','Młot','Cyklon','Zgniatacz','Viper','Rdza','Burza','Tytan','Kafar','Szrapnel','Widmo','Iskra','Raptor','Echo','Kobalt','Onyks'];
 const settings={budget:140,bots:7,difficulty:'normal',arena:'foundry',assist:false,sound:true,shadows:!matchMedia('(pointer:coarse)').matches};
 let build={...DEFAULT_BUILD};
-try{const saved=JSON.parse(localStorage.getItem('mechBuild'));if(validBuild(saved,settings.budget))build={...saved};}catch{}
+try{const saved=JSON.parse(localStorage.getItem('mechBuild'));if(validBuild(saved,180)){build={...saved};if(costOf(build)>settings.budget)settings.budget=180;}}catch{}
 const randBuild=minCost=>randomBuild(minCost,Math.random,settings.budget);
 /* ---------- 2. MODELE 3D ---------- */
 const surface=document.createElement('canvas');surface.width=surface.height=128;const surfaceCtx=surface.getContext('2d'),surfaceImage=surfaceCtx.createImageData(128,128);let grainSeed=718;for(let i=0;i<surfaceImage.data.length;i+=4){grainSeed=(Math.imul(grainSeed,1664525)+1013904223)>>>0;const v=200+grainSeed%45;surfaceImage.data[i]=surfaceImage.data[i+1]=surfaceImage.data[i+2]=v;surfaceImage.data[i+3]=255;}surfaceCtx.putImageData(surfaceImage,0,0);surfaceCtx.strokeStyle='#abb7be';surfaceCtx.lineWidth=.5;for(let i=0;i<128;i+=16){surfaceCtx.beginPath();surfaceCtx.moveTo(0,i);surfaceCtx.lineTo(128,i);surfaceCtx.stroke();}const steelTexture=new THREE.CanvasTexture(surface);steelTexture.wrapS=steelTexture.wrapT=THREE.RepeatWrapping;steelTexture.repeat.set(2,2);steelTexture.encoding=THREE.sRGBEncoding;
