@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {createOrbit,rotateOrbit,screenMotion,orbitPosition} from '../mech-camera.js';
+test('chase camera starts low behind the mech and drag clamps elevation without changing distance',()=>{const orbit=createOrbit(Math.PI),before={...orbit},p=orbitPosition({x:0,z:0},orbit);assert.ok(p.y<7&&p.z>5);rotateOrbit(orbit,100,-5000);assert.notEqual(orbit.yaw,before.yaw);assert.ok(orbit.pitch<Math.PI/3);assert.equal(orbit.distance,before.distance);rotateOrbit(orbit,0,5000);assert.ok(orbit.pitch>0);});
+test('movement follows the camera heading and preserves joystick magnitude',()=>{const front=screenMotion(0,-1,Math.PI/2);assert.ok(Math.abs(front.x-1)<1e-8&&Math.abs(front.z)<1e-8);const right=screenMotion(1,0,Math.PI);assert.ok(Math.abs(right.x-1)<1e-8);for(const yaw of [0,1,2,Math.PI]){const p=screenMotion(.3,-.4,yaw);assert.ok(Math.abs(Math.hypot(p.x,p.z)-.5)<1e-8);}});
