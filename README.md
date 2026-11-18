@@ -262,3 +262,5 @@ Wariant walki wybierasz przed startem: 3 boty (domyślnie) lub 7 botów. Kamera 
 Ręczne przeładowanie działa pod R i przyciskiem na ekranie. Każda broń ma własny magazynek; pusty przeładowuje się automatycznie. Przeładowywana broń nie może strzelać, a boty korzystają z tych samych zasad. HUD pokazuje stan amunicji opisowo, bez liczb.
 
 Gra ma trzy areny z osobnymi układami osłon i podjazdami: Odlewnię, Port orbitalny oraz Rdzeń danych. Nowe modele korzystają z metalicznych materiałów, warstwowych pancerzy i oddzielnych modułów uzbrojenia. Muzyka „aura” to oryginalne, generowane lokalnie tło elektroniczne; startuje po rozpoczęciu walki, ma regulację głośności i wyciszenie, zatrzymuje się przy pauzie, ukryciu karty i zakończeniu gry.
+
+Kod `unreal2` dodaje 1 000 000 złota jednorazowo, niezależnie od wcześniejszego kodu `unreal`. Muzyka to autorski instrumental aura phonk: przesterowany bas 808, stopa, werbel, hi-haty i cowbell, z zachowaniem wyciszenia i głośności. Mapy mają ukształtowaną siatkę terenu ze wzgórzami i zagłębieniami, teksturowane podłoże, szczegółowe osłony, podjazdy oraz trójwymiarową zabudowę tła.

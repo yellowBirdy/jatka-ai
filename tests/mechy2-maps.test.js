@@ -1,2 +1,4 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {MAPS,terrainHeight} from '../mechy2-maps.js';
 test('map layouts keep covers inside the arena and spawn ring clear',()=>{assert.equal(MAPS.length,3);for(const map of MAPS){assert.equal(terrainHeight(map,100,100),0);for(const [x,z,r]of map.covers){assert.ok(Math.hypot(x,z)+r<39);assert.ok(Number.isFinite(terrainHeight(map,x,z)));}for(const p of map.pads){assert.equal(terrainHeight(map,p.x,p.z),p.h);assert.equal(terrainHeight(map,p.x+p.w/2,p.z),0);const h=terrainHeight(map,p.x+p.w*.4,p.z);assert.ok(h>0&&h<p.h);}}});
+
+test('terrain includes continuous hills and depressions with a level boundary',()=>{for(const map of MAPS){assert.ok(map.relief.some(p=>p.h>0));assert.ok(map.relief.some(p=>p.h<0));for(const p of map.relief){assert.ok(Math.abs(terrainHeight(map,p.x,p.z)-p.h)<1e-6);assert.ok(Math.abs(terrainHeight(map,p.x+p.r,p.z))<1e-6);}assert.equal(terrainHeight(map,45,0),0);}});

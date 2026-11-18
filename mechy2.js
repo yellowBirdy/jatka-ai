@@ -1,12 +1,12 @@
-import {createAuraPlayer} from './mechy2-music.js?v=mechs-71';
-import {createMech} from './mechy2-models.js?v=mechs-71';
-import {MAPS,createArena,terrainHeight} from './mechy2-maps.js?v=mechs-71';
-import {createAmmo,spendRound,tickAmmo,reloadAmmo} from './mechy2-ammo.js?v=mechs-71';
-import {createView,rotateView,moveRelative,cameraPosition} from './mechy2-camera.js?v=mechs-71';
-import {weaponAim,segmentHitTime,beamHitDistance} from './mechy2-aim.js?v=mechs-71';
-import {createFullscreenController} from './mechy2-fullscreen.js?v=mechs-71';
-import {RAR,LEGS,BODY,HEAD,WPN,SP,MAGE,CAT,CRATES,MAGE_PRICE,WIN_GOLD,CODES,PAL,ACC,NAMES,hex} from './mechy2-data.js?v=mechs-71';
-import {fresh,validState,buyCrate,redeemCode,completeMatch} from './mechy2-state.js?v=mechs-71';
+import {createAuraPlayer} from './mechy2-music.js?v=mechs-72';
+import {createMech} from './mechy2-models.js?v=mechs-72';
+import {MAPS,createArena,terrainHeight} from './mechy2-maps.js?v=mechs-72';
+import {createAmmo,spendRound,tickAmmo,reloadAmmo} from './mechy2-ammo.js?v=mechs-72';
+import {createView,rotateView,moveRelative,cameraPosition} from './mechy2-camera.js?v=mechs-72';
+import {weaponAim,segmentHitTime,beamHitDistance} from './mechy2-aim.js?v=mechs-72';
+import {createFullscreenController} from './mechy2-fullscreen.js?v=mechs-72';
+import {RAR,LEGS,BODY,HEAD,WPN,SP,MAGE,CAT,CRATES,MAGE_PRICE,WIN_GOLD,CODES,PAL,ACC,NAMES,hex} from './mechy2-data.js?v=mechs-72';
+import {fresh,validState,buyCrate,redeemCode,completeMatch} from './mechy2-state.js?v=mechs-72';
 'use strict';
 /* =====================================================================
  *  MECHY – losuj części, zdobywaj złoto, otwieraj skrzynki i wygrywaj Battle Royale
@@ -53,7 +53,7 @@ gscene.background=new THREE.Color(0x06130f);scene.background=new THREE.Color(0x0
 function resize(){W=innerWidth;H=innerHeight;renderer.setSize(W,H,false);cam.aspect=W/H;cam.updateProjectionMatrix();const hc=$('#hc');hc.width=W;hc.height=H}
 addEventListener('resize',()=>{resize();if(mode==='garage')garCam()});
 function garCam(){cam.position.set(0,3.8,10);cam.lookAt(0,1.8,0);const n=W<760,r=W>1000;cam.setViewOffset(W,H,n?0:-(r?70:215),n?H*.3:0,W,H)}
-function disposeTree(root){const geos=new Set(),mats=new Set();root.traverse(o=>{if(o.geometry)geos.add(o.geometry);if(o.material&&!Object.values(MATS).includes(o.material))mats.add(o.material);});geos.forEach(g=>{if(![SHELL,BUL,ROC,FXG].includes(g))g.dispose();});mats.forEach(m=>m.dispose());}
+function disposeTree(root){const geos=new Set(),mats=new Set();root.traverse(o=>{if(o.geometry)geos.add(o.geometry);if(o.material&&!Object.values(MATS).includes(o.material))mats.add(o.material);});geos.forEach(g=>{if(![SHELL,BUL,ROC,FXG].includes(g))g.dispose();});mats.forEach(m=>m.dispose());for(const texture of root.userData.ownedTextures||[])texture.dispose();}
 function showGarMech(){if(garMech){gscene.remove(garMech.g);disposeTree(garMech.g);}garMech=mkMech(equipped(),PAL[SV.col],ACC[SV.acc]);gscene.add(garMech.g)}
 
 /* ---------- 5. GARAŻ I SKLEP ---------- */
@@ -84,7 +84,7 @@ function renderGarage(){
  const mg=$('#mg');if(mg)mg.onclick=()=>{if(SV.gold<MAGE_PRICE)return;SV.gold-=MAGE_PRICE;SV.mage=ri(MAGE.length);save();renderGarage();showGarMech();const m=MAGE[SV.mage];modal(`<div style="font-size:60px">${m.ic}</div><h2>${m.n}</h2><p>${mageDescriptions[SV.mage]}</p>`,'#a855f7')};
  const ck=$('#cok');if(ck)ck.onclick=redeem;const ci=$('#code');if(ci)ci.onkeydown=e=>{e.stopPropagation();if(e.key==='Enter')redeem()};
  $('#go2')&&($('#go2').onclick=startMatch)}
-function redeem(){const input=$('#code').value||'',result=redeemCode(SV,input);codeMsg=result==='ok'?'✅ Kod przyjęty! +100 000 💰':result==='used'?'⚠️ Ten kod został już użyty.':'❌ Nieznany kod.';if(result==='ok')save();renderGarage();}
+function redeem(){const input=$('#code').value||'',before=SV.gold,result=redeemCode(SV,input);codeMsg=result==='ok'?`✅ Kod przyjęty! +${(SV.gold-before).toLocaleString('pl-PL')} 💰`:result==='used'?'⚠️ Ten kod został już użyty.':'❌ Nieznany kod.';if(result==='ok')save();renderGarage();}
 function modal(html,rc){const m=$('#modal');m.style.setProperty('--rc',rc);m.innerHTML=`<div class="box">${html}<button class="btn" id="mok">OK</button></div>`;m.classList.remove('hide');$('#mok').onclick=()=>m.classList.add('hide')}
 function modalPart(p){const r=RAR[p.r],t=CAT[p.slot][p.t];modal(`<div class="rr" style="color:${r.c};font-weight:900;font-size:20px;text-transform:uppercase">${r.n}</div><div style="font-size:64px">${t.ic}</div><h2>${t.n}</h2><p class="mut">${pinfo(p)}</p>`,r.c)}
 
@@ -97,7 +97,7 @@ function startMatch(){
  document.activeElement?.blur();resetInput();paused=false;$('#pause').classList.add('hide');if(G)clearArena();mode='arena';$('#gp').classList.add('hide');$('#rp').classList.add('hide');$('#hud').classList.remove('hide');$('#end').classList.add('hide');if(matchMedia('(pointer:coarse)').matches)$('#touch').classList.remove('hide');
  const map=MAPS.find(m=>m.id===matchSettings.map),art=createArena(THREE,map);scene.background=new THREE.Color(map.fog).convertSRGBToLinear();scene.fog.color.copy(scene.background);scene.add(art.root);
  const zone=new THREE.Mesh(new THREE.CylinderGeometry(R_ARENA,R_ARENA,7,48,1,true),new THREE.MeshBasicMaterial({color:0xef4444,transparent:true,opacity:.16,side:THREE.DoubleSide}));zone.position.y=3.5;scene.add(zone);
- G={map,total:matchSettings.bots+1,ents:[],obst:art.obstacles,proj:[],beams:[],fx:[],kits:[],feed:[],t:0,cd:3.2,over:false,shown:false,zr:40,stage:0,phase:'wait',timer:18,r0:40,r1:40,ground:art.root,grid:null,zone,stages:[{w:18,s:14,r:27},{w:14,s:12,r:16},{w:12,s:10,r:8},{w:10,s:8,r:3}]};
+ G={map,total:matchSettings.bots+1,ents:[],obst:art.obstacles,proj:[],beams:[],fx:[],kits:[],feed:[],t:0,cd:3.2,over:false,shown:false,zr:40,stage:0,phase:'wait',timer:18,r0:40,r1:40,ground:art.root,surfaces:art.surfaces,grid:null,zone,stages:[{w:18,s:14,r:27},{w:14,s:12,r:16},{w:12,s:10,r:8},{w:10,s:8,r:3}]};
  for(let i=0;i<10;i++){const a=rnd(0,6.283),d=rnd(4,34),m=new THREE.Mesh(new THREE.BoxGeometry(.8,.8,.8),glow(0x22c55e));m.position.set(Math.cos(a)*d,.7+terrainHeight(map,Math.cos(a)*d,Math.sin(a)*d),Math.sin(a)*d);scene.add(m);G.kits.push({x:m.position.x,z:m.position.z,m})}
  const mine=equipped(),avg=avgR(mine);
  for(let i=0;i<G.total;i++){const a=i/G.total*6.283+.3,p=i===0,R=p?mine:botR(avg),e=mkEnt(R,p?'Ty':NAMES[i],p,p?PAL[SV.col]:PAL[ri(8)],p?ACC[SV.acc]:ACC[ri(6)]);e.x=Math.cos(a)*31;e.z=Math.sin(a)*31;e.aim=Math.atan2(-e.x,-e.z);e.face=e.aim;e.torso=e.aim;e.wa=[e.aim,e.aim];G.ents.push(e);scene.add(e.model.g)}
@@ -137,10 +137,10 @@ function useSp(e){if(e.spCd>0)return;const k=e.S.sp.k,m=e.S.spm;e.spCd=e.S.spCd;
  if(e.isP)sfx(260,.25,'sawtooth',.04)}
 const lerpA=(a,b,t)=>a+angd(a,b)*clamp(t,0,1);
 const aimRay=new THREE.Raycaster(),aimPlane=new THREE.Plane(new THREE.Vector3(0,1,0),0),aimPoint=new THREE.Vector3();
-function aimWorld(){aimRay.setFromCamera(new THREE.Vector2(viewDrag?0:mouse.x/W*2-1,viewDrag?0:1-mouse.y/H*2),cam);const objects=[];function collect(o,shield){if(!o.visible||o===shield)return;if(o.isMesh)objects.push(o);o.children.forEach(c=>collect(c,shield));}if(G){G.ents.filter(e=>e.alive&&!e.isP).forEach(e=>collect(e.model.g,e.model.sh));G.obst.forEach(o=>collect(o.mesh,null));}const hit=aimRay.intersectObjects(objects,false)[0];if(hit)return {x:hit.point.x,y:hit.point.y,z:hit.point.z};if(aimRay.ray.intersectPlane(aimPlane,aimPoint))return {x:aimPoint.x,y:aimPoint.y,z:aimPoint.z};const direction=aimRay.ray.direction;return {x:aimRay.ray.origin.x+direction.x*100,y:aimRay.ray.origin.y+direction.y*100,z:aimRay.ray.origin.z+direction.z*100};}
+function aimWorld(){aimRay.setFromCamera(new THREE.Vector2(viewDrag?0:mouse.x/W*2-1,viewDrag?0:1-mouse.y/H*2),cam);const objects=[];function collect(o,shield){if(!o.visible||o===shield)return;if(o.isMesh)objects.push(o);o.children.forEach(c=>collect(c,shield));}if(G){G.ents.filter(e=>e.alive&&!e.isP).forEach(e=>collect(e.model.g,e.model.sh));G.obst.forEach(o=>collect(o.mesh,null));(G.surfaces||[]).forEach(o=>collect(o,null));}const hit=aimRay.intersectObjects(objects,false)[0];if(hit)return {x:hit.point.x,y:hit.point.y,z:hit.point.z};if(aimRay.ray.intersectPlane(aimPlane,aimPoint))return {x:aimPoint.x,y:aimPoint.y,z:aimPoint.z};const direction=aimRay.ray.direction;return {x:aimRay.ray.origin.x+direction.x*100,y:aimRay.ray.origin.y+direction.y*100,z:aimRay.ray.origin.z+direction.z*100};}
 function toScreen(x,y,z){const point=new THREE.Vector3(x,y,z).project(cam);return point.z>1?null:{x:(point.x+1)*W/2,y:(1-point.y)*H/2};}
 const viewRay=new THREE.Raycaster();
-function updateCamera(){cam.clearViewOffset();const desired=cameraPosition(camP,view),base=G?.player.groundY||0,target=new THREE.Vector3(camP.x,1.8+base,camP.z),delta=new THREE.Vector3(desired.x,desired.y+base,desired.z).sub(target);viewRay.set(target,delta.clone().normalize());viewRay.far=delta.length();const wall=viewRay.intersectObjects(G?.obst.map(o=>o.mesh)||[],true)[0];if(wall)delta.setLength(Math.max(.7,wall.distance-.3));cam.position.copy(target).add(delta);cam.lookAt(camP.x+Math.sin(view.yaw)*12,2+base,camP.z+Math.cos(view.yaw)*12);cam.updateMatrixWorld();}
+function updateCamera(){cam.clearViewOffset();const desired=cameraPosition(camP,view),base=G?.player.groundY||0,target=new THREE.Vector3(camP.x,1.8+base,camP.z),delta=new THREE.Vector3(desired.x,desired.y+base,desired.z).sub(target);viewRay.set(target,delta.clone().normalize());viewRay.far=delta.length();const wall=viewRay.intersectObjects(G?[...G.obst.map(o=>o.mesh),...(G.surfaces||[])]:[],true)[0];if(wall)delta.setLength(Math.max(.7,wall.distance-.3));cam.position.copy(target).add(delta);cam.lookAt(camP.x+Math.sin(view.yaw)*12,2+base,camP.z+Math.cos(view.yaw)*12);cam.updateMatrixWorld();}
 function nearestEnemy(e){let b=null,bd=1e9;G.ents.forEach(o=>{if(o===e||!o.alive)return;const d=Math.hypot(o.x-e.x,o.z-e.z);if(d<bd){bd=d;b=o}});return{e:b,d:bd}}
 
 /* ---------- 7. AI BOTÓW ---------- */
