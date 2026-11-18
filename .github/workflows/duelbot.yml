@@ -1,0 +1,59 @@
+name: Build downloadable Fabric mod
+on:
+  push:
+    branches: [master]
+    paths:
+      - downloads/duelbot-fabric-1.21.4-source.zip
+      - .github/workflows/duelbot.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: duelbot-release
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Extract project
+        run: |
+          unzip -q downloads/duelbot-fabric-1.21.4-source.zip -d mod-build
+          chmod +x mod-build/duelbot-fabric/gradlew
+      - name: Compile and test Minecraft 1.21.4 client mod
+        working-directory: mod-build/duelbot-fabric
+        run: ./gradlew --no-daemon build
+      - name: Package mod with Fabric API
+        run: |
+          mkdir -p release/mods
+          cp mod-build/duelbot-fabric/build/libs/duelbot-1.21.4-1.0.0.jar release/mods/
+          api_jar=$(find "$HOME/.gradle/caches/modules-2/files-2.1/net.fabricmc.fabric-api/fabric-api/0.119.2+1.21.4" -name '*.jar' -print -quit)
+          test -n "$api_jar"
+          cp "$api_jar" release/mods/
+          cd release
+          zip -q -j duelbot-fabric-1.21.4-mods.zip mods/*.jar
+      - uses: actions/upload-artifact@v4
+        with:
+          name: duelbot-fabric-1.21.4
+          path: release/
+      - name: Publish downloadable files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cat > /tmp/duelbot-release.md <<'NOTES'
+          Fabric client mod for Minecraft Java 1.21.4.
+
+          The mods ZIP contains the mod and its Fabric API dependency. Extract both JAR files into your client's mods directory. Fabric Loader 0.16.10+ and Minecraft 1.21.4 are required. R toggles the feature.
+
+          Built by GitHub Actions with Java 21; compilation and automated math tests must pass before publication. Not tested inside a running Minecraft client. For agreed private duels.
+          NOTES
+          if gh release view duelbot-1.21.4-v1 > /dev/null 2>&1; then
+            gh release upload duelbot-1.21.4-v1 release/mods/duelbot-1.21.4-1.0.0.jar release/duelbot-fabric-1.21.4-mods.zip --clobber
+          else
+            gh release create duelbot-1.21.4-v1 release/mods/duelbot-1.21.4-1.0.0.jar release/duelbot-fabric-1.21.4-mods.zip --target "$GITHUB_SHA" --title 'Private Duel Bot — Fabric 1.21.4' --notes-file /tmp/duelbot-release.md
+          fi
