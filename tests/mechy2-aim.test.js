@@ -4,3 +4,5 @@ test('both offset gun barrels converge on a close reticle target in three dimens
 test('near targets do not leave the shot starting beyond its destination',()=>{const g=weaponAim({x:0,z:0,torso:0},{offset:0,forward:0,height:2,length:3},{x:0,y:1,z:1});assert.ok(g.z<1);assert.ok(Number.isFinite(g.slope));});
 
 test('fast projectiles crossing an entire target between frames still register the first intersection',async()=>{const {segmentHitTime}=await import('../mechy2-aim.js');assert.equal(segmentHitTime(-5,0,5,0,0,0,1),.4);assert.equal(segmentHitTime(-5,3,5,3,0,0,1),null);assert.equal(segmentHitTime(0,0,0,0,0,0,1),0);});
+
+test('laser beams pass above low cover and hit a target at the correct elevation',async()=>{const {beamHitDistance}=await import('../mechy2-aim.js');const origin={x:0,y:4,z:0};assert.equal(beamHitDistance(origin,0,0,30,{x:0,z:5,r:1,base:0,height:2}),null);assert.equal(beamHitDistance(origin,0,0,30,{x:0,z:10,r:1,base:2,height:3}),9);assert.equal(beamHitDistance(origin,0,-.5,30,{x:0,z:5,r:1,base:0,height:3}),4);});

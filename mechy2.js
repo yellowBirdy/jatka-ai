@@ -1,12 +1,12 @@
-import {createAuraPlayer} from './mechy2-music.js?v=mechs-70';
-import {createMech} from './mechy2-models.js?v=mechs-70';
-import {MAPS,createArena,terrainHeight} from './mechy2-maps.js?v=mechs-70';
-import {createAmmo,spendRound,tickAmmo,reloadAmmo} from './mechy2-ammo.js?v=mechs-70';
-import {createView,rotateView,moveRelative,cameraPosition} from './mechy2-camera.js?v=mechs-70';
-import {weaponAim,segmentHitTime} from './mechy2-aim.js?v=mechs-70';
-import {createFullscreenController} from './mechy2-fullscreen.js?v=mechs-70';
-import {RAR,LEGS,BODY,HEAD,WPN,SP,MAGE,CAT,CRATES,MAGE_PRICE,WIN_GOLD,CODES,PAL,ACC,NAMES,hex} from './mechy2-data.js?v=mechs-70';
-import {fresh,validState,buyCrate,redeemCode,completeMatch} from './mechy2-state.js?v=mechs-70';
+import {createAuraPlayer} from './mechy2-music.js?v=mechs-71';
+import {createMech} from './mechy2-models.js?v=mechs-71';
+import {MAPS,createArena,terrainHeight} from './mechy2-maps.js?v=mechs-71';
+import {createAmmo,spendRound,tickAmmo,reloadAmmo} from './mechy2-ammo.js?v=mechs-71';
+import {createView,rotateView,moveRelative,cameraPosition} from './mechy2-camera.js?v=mechs-71';
+import {weaponAim,segmentHitTime,beamHitDistance} from './mechy2-aim.js?v=mechs-71';
+import {createFullscreenController} from './mechy2-fullscreen.js?v=mechs-71';
+import {RAR,LEGS,BODY,HEAD,WPN,SP,MAGE,CAT,CRATES,MAGE_PRICE,WIN_GOLD,CODES,PAL,ACC,NAMES,hex} from './mechy2-data.js?v=mechs-71';
+import {fresh,validState,buyCrate,redeemCode,completeMatch} from './mechy2-state.js?v=mechs-71';
 'use strict';
 /* =====================================================================
  *  MECHY – losuj części, zdobywaj złoto, otwieraj skrzynki i wygrywaj Battle Royale
@@ -124,8 +124,8 @@ function shoot(e,i){if(!spendRound(e.ammo[i]))return;e.recoil=.1;e.shots=(e.shot
  if(g.k==='flame'){G.ents.forEach(t=>{if(t===e||!t.alive)return;const ex=t.x-m.x,ez=t.z-m.z,d=Math.hypot(ex,ez);if(d<g.range+t.rad&&(Math.abs(angd(A0,Math.atan2(ex,ez)))<.42||d<t.rad+1.2)){hurt(t,D,e);t.burnT=2;t.burnDps=3;t.burnSrc=e}});
   boom(m.x+Math.sin(A0)*2,m.z+Math.cos(A0)*2,1.3,0xf97316,Math.sin(A0)*8,Math.cos(A0)*8,.3);if(e.isP&&Math.random()<.3)sfx(90,.1,'sawtooth',.02);return}
  if(g.k==='laser'){const dx=Math.sin(A0),dz=Math.cos(A0);let best=g.range,hit=null;
-  G.obst.forEach(o=>{const ex=o.x-m.x,ez=o.z-m.z,t=ex*dx+ez*dz;if(t>0&&t<best&&ex*ex+ez*ez-t*t<o.r*o.r)best=t});
-  G.ents.forEach(t2=>{if(t2===e||!t2.alive)return;const ex=t2.x-m.x,ez=t2.z-m.z,t=ex*dx+ez*dz;if(t>0&&t<best&&ex*ex+ez*ez-t*t<t2.rad*t2.rad){best=t;hit=t2}});
+  G.obst.forEach(o=>{const t=beamHitDistance(m,A0,m.slope,best,o);if(t!==null&&t<best)best=t;});
+  G.ents.forEach(t2=>{if(t2===e||!t2.alive)return;const t=beamHitDistance(m,A0,m.slope,best,{x:t2.x,z:t2.z,r:t2.rad,base:t2.groundY||0,height:t2.model.height});if(t!==null&&t<best){best=t;hit=t2;}});
   if(hit)hurt(hit,D,e);const b=new THREE.Mesh(new THREE.BoxGeometry(.1,.1,1),glow(0x22d3ee));const direction=new THREE.Vector3(dx,m.slope,dz);b.position.set(m.x+dx*best/2,m.y+m.slope*best/2,m.z+dz*best/2);b.scale.z=best*direction.length();b.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),direction.normalize());scene.add(b);G.beams.push({m:b,l:.07});if(e.isP)sfx(900,.06,'sine',.02);return}
  const n=g.pellets||1;for(let k=0;k<n;k++){const a=A0+rnd(-g.sp,g.sp),mesh=new THREE.Mesh(g.k==='rocket'?ROC:g.k==='cannon'?SHELL:BUL,glow(g.k==='rocket'?0xf97316:g.k==='cannon'?0xfde047:0xfbbf24));
   mesh.position.set(m.x,m.y,m.z);mesh.rotation.y=a;if(g.k==='rocket')mesh.rotation.x=Math.PI/2;scene.add(mesh);G.proj.push({x:m.x,z:m.z,vx:Math.sin(a)*g.v,vz:Math.cos(a)*g.v,vy:m.slope*g.v,d:D,own:e,life:g.range/g.v,sp:g.splash||0,m:mesh})}
