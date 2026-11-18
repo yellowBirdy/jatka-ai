@@ -272,3 +272,7 @@ V74: działo zachowuje pełne naładowanie podczas trzymania ognia i oddaje strz
 V75: mroczny phonk ma wolniejszy puls, cięższą stopę, przesterowany bas i niski metaliczny motyw. Nowa rzadkość Boski obejmuje 20 nazwanych części z własnymi zdolnościami działającymi po wyposażeniu. Jednorazowy kod `od` losuje dwie różne boskie części do kolekcji, nie zmieniając założonego wyposażenia. Pełna lista zdolności znajduje się w zakładce Mech. Stare zapisy i kody pozostają zgodne.
 
 Pajęczy Tron jest jednym z 20 boskich projektów: odblokowuje cztery niezależnie wybierane bronie, osobne magazynki, ładowanie i przeładowanie. Przy pierwszym założeniu dostarcza brakujące podstawowe uzbrojenie dodatkowych mocowań. Cytadela ma cztery windy kursujące z różnymi przesunięciami czasu; pełne poziomy areny mają osłony i punkty naprawy. Kamera obracana prawym przyciskiem pozwala patrzeć stromo w dół i w górę.
+
+V76 wzmacnia już posiadane boskie części: większa bazowa moc rzadkości, mocniejsze zdolności obronne, regeneracja i efekty ofensywne. Grom Zeusa zadaje znacznie silniejsze bezpośrednie trafienia, ma większy zasięg i wolniej się przegrzewa; łuk razi do trzech pobliskich przeciwników. Zmiany nie wymagają ponownego losowania ani używania kodu `od`.
+
+Jednorazowy kod `sigma` przyznaje 1 000 000 złota i dwie różne losowe boskie części, niezależnie od kodu `od`.

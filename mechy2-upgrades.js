@@ -1,9 +1,9 @@
-import {beamHitDistance} from './mechy2-aim.js?v=mechs-75';
+import {beamHitDistance} from './mechy2-aim.js?v=mechs-76';
 export const BODY_ABILITIES=[{kind:'cloak',name:'Kamuflaż',description:'Znika z celowników botów; strzał ujawnia mecha.',duration:4,cd:13},{kind:'flight',name:'Skok odrzutowy',description:'Krótki lot ponad przeszkodami.',duration:3,cd:12},{kind:'shield',name:'Rozkładana tarcza',description:'Przechwytuje ostrzał nadchodzący z przodu.',duration:4,cd:14},{kind:'charge',name:'Szarża',description:'Przyspiesza i odrzuca trafionego przeciwnika.',duration:1.1,cd:9}];
 export function activateBody(e,index,rarity){if(rarity<4||!Number.isInteger(rarity)||e.bodyCd>0)return false;const a=BODY_ABILITIES[index];e.bodyKind=a.kind;e.bodyT=a.duration;e.bodyCd=a.cd;e.rammed=new Set();return true;}
 export function tickBody(e,dt){e.bodyCd=Math.max(0,(e.bodyCd||0)-dt);e.bodyT=Math.max(0,(e.bodyT||0)-dt);}
 export function tickWeapons(e,dt){for(const w of e.weaponState){w.heat=Math.max(0,(w.heat||0)-dt*.25);if(w.hot&&w.heat<.25)w.hot=false;}}
-export function canFireWeapon(e,i,kind,trigger,dt){const w=e.weaponState[i];if(kind==='cannon'){if(trigger){w.charge=Math.min(.65,(w.charge||0)+dt);return false;}const ready=(w.charge||0)>=.65;w.charge=0;return ready;}if(!trigger)return false;if(kind==='laser'){if(w.hot)return false;w.heat=(w.heat||0)+.19;if(w.heat>=1)w.hot=true;}return true;}
+export function canFireWeapon(e,i,kind,trigger,dt){const w=e.weaponState[i];if(kind==='cannon'){if(trigger){w.charge=Math.min(.65,(w.charge||0)+dt);return false;}const ready=(w.charge||0)>=.65;w.charge=0;return ready;}if(!trigger)return false;if(kind==='laser'){if(w.hot)return false;w.heat=(w.heat||0)+(e.S?.G[i]?.heat??.19);if(w.heat>=1)w.hot=true;}return true;}
 export const paintFor=(s,slot)=>s.paint?.[slot]??s.col;
 export const validPaint=p=>p===undefined||!!p&&typeof p==='object'&&!Array.isArray(p)&&Object.entries(p).every(([k,v])=>['body','legs','gl','gr','gx','gy'].includes(k)&&Number.isInteger(v)&&v>=0&&v<8);
 export function steerRocket(p,origin,target,dt){const speed=Math.hypot(p.vx,p.vz),a=Math.atan2(p.vx,p.vz),b=Math.atan2(target.x-origin.x,target.z-origin.z),d=Math.atan2(Math.sin(b-a),Math.cos(b-a)),n=a+Math.max(-dt*1.6,Math.min(dt*1.6,d));p.vx=Math.sin(n)*speed;p.vz=Math.cos(n)*speed;}

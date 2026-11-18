@@ -1,5 +1,5 @@
 export const RAR=[{n:'Zwykły',c:'#9ca3af',m:1,sell:30},{n:'Niezwykły',c:'#22c55e',m:1.15,sell:80},{n:'Rzadki',c:'#3b82f6',m:1.32,sell:200},{n:'Epicki',c:'#a855f7',m:1.55,sell:600},{n:'Legendarny',c:'#f59e0b',m:1.85,sell:1800},{n:'Mityczny',c:'#ef4444',m:2.3,sell:5000}];
-RAR.push({n:'Boski',c:'#fff2a8',m:2.65,sell:9000});
+RAR.push({n:'Boski',c:'#fff2a8',m:3.4,sell:9000});
 export const LEGS=[{n:'Koła',ic:'🛞',k:'wheel',hp:20,spd:8.4},{n:'Nogi bojowe',ic:'🦿',k:'bi',hp:50,spd:6.2},{n:'Czteronóg',ic:'🕷️',k:'quad',hp:80,spd:5},{n:'Gąsienice',ic:'⚙️',k:'trk',hp:110,spd:4.2}];
 export const BODY=[{n:'Lekki korpus',ic:'🔹',hp:90,m:0,arm:0,s:[1.4,1,1.1]},{n:'Średni korpus',ic:'🟧',hp:140,m:.7,arm:.06,s:[1.7,1.2,1.3]},{n:'Ciężki korpus',ic:'⬛',hp:210,m:1.4,arm:.12,s:[2.1,1.4,1.5]},{n:'Szturmowy korpus',ic:'🔶',hp:170,m:1,arm:.18,s:[1.9,1.1,1.7]}];
 export const HEAD=[{n:'Kopuła pancerna',ic:'🪖',k:'arm',hp:40,t:'+HP'},{n:'Celownik snajpera',ic:'🎯',k:'snp',dmg:.12,range:.12,t:'+obrażenia i zasięg'},{n:'Chłodzenie',ic:'❄️',k:'cool',rate:.15,t:'+szybkostrzelność'},{n:'Czujnik zwiadowcy',ic:'📡',k:'scout',spd:.12,dmg:.04,t:'+szybkość'}];
@@ -8,7 +8,7 @@ export const SP=[{n:'Dopalacze',ic:'💨',k:'dash',cd:3.5,t:'szybki unik'},{n:'T
 export const MAGE=[{n:'Pyromanta',k:'pyr',ic:'🔥',t:'trafienia podpalają wroga (3 obr./s przez 3 s)'},{n:'Kriomanta',k:'kri',ic:'❄️',t:'trafienia spowalniają wroga o 35%'},{n:'Burzowiec',k:'bur',ic:'⚡',t:'18% szans na łuk błyskawicy (14 obr.)'},{n:'Wampir',k:'wam',ic:'🩸',t:'leczy 8% zadanych obrażeń'},{n:'Cień',k:'cie',ic:'🌑',t:'12% szans na unik trafienia'},{n:'Strażnik Ziemi',k:'zie',ic:'🪨',t:'+15% HP i +12% pancerza'}];
 export const CAT={legs:LEGS,body:BODY,head:HEAD,wpn:WPN,sp:SP};
 export const CRATES=[{n:'Skrzynka zwykła',p:250,w:[70,22,6,1.8,.2,0],c:'#9ca3af'},{n:'Skrzynka rzadka',p:1000,w:[25,40,25,8,2,0],c:'#3b82f6'},{n:'Skrzynka epicka',p:4000,w:[0,20,45,28,6.5,.5],c:'#a855f7'},{n:'Skrzynka mityczna',p:12000,w:[0,0,20,45,28,7],c:'#ef4444'}];
-export const MAGE_PRICE=10000,WIN_GOLD=100,CODES={od:{parts:2},unreal:{gold:100000},unreal2:{gold:1000000}};
+export const MAGE_PRICE=10000,WIN_GOLD=100,CODES={sigma:{gold:1000000,parts:2},od:{parts:2},unreal:{gold:100000},unreal2:{gold:1000000}};
 export const PAL=[0xf97316,0xe11d48,0xf59e0b,0x22c55e,0x06b6d4,0x3b82f6,0xa855f7,0x64748b];export const ACC=[0x374151,0xe5e7eb,0x111827,0xfbbf24,0x7dd3fc,0x86efac];
 export const NAMES=['Złomek','Młot','Cyklon','Zgniatacz','Viper','Rdza','Burza','Tytan','Kafar'];
 export const hex=c=>'#'+c.toString(16).padStart(6,'0');

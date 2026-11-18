@@ -1,14 +1,14 @@
-import {weaponSlots,DIVINE,divineDesign,divinePowers,tickDivine,defendDivine,attackDivine,powerDivine} from './mechy2-divine.js?v=mechs-75';
-import {stepVertical,liftRouteHeight,damageStage,damageBarrel,interactionSurface,BODY_ABILITIES,activateBody,tickBody,canFireWeapon,tickWeapons,boxHitTime,coverBeamDistance,paintFor,steerRocket,liftHeight} from './mechy2-upgrades.js?v=mechs-75';
-import {createAuraPlayer} from './mechy2-music.js?v=mechs-75';
-import {createMech} from './mechy2-models.js?v=mechs-75';
-import {ARENA_RADIUS,MAPS,createArena,terrainHeight} from './mechy2-maps.js?v=mechs-75';
-import {createAmmo,spendRound,tickAmmo,reloadAmmo} from './mechy2-ammo.js?v=mechs-75';
-import {viewDirection,createView,rotateView,moveRelative,cameraPosition} from './mechy2-camera.js?v=mechs-75';
-import {weaponAim,segmentHitTime,beamHitDistance} from './mechy2-aim.js?v=mechs-75';
-import {createFullscreenController} from './mechy2-fullscreen.js?v=mechs-75';
-import {RAR,LEGS,BODY,HEAD,WPN,SP,MAGE,CAT,CRATES,MAGE_PRICE,WIN_GOLD,CODES,PAL,ACC,NAMES,hex} from './mechy2-data.js?v=mechs-75';
-import {ensureSpiderArms,fresh,validState,buyCrate,redeemCode,completeMatch} from './mechy2-state.js?v=mechs-75';
+import {divineWeapon,stormTargets,weaponSlots,DIVINE,divineDesign,divinePowers,tickDivine,defendDivine,attackDivine,powerDivine} from './mechy2-divine.js?v=mechs-76';
+import {stepVertical,liftRouteHeight,damageStage,damageBarrel,interactionSurface,BODY_ABILITIES,activateBody,tickBody,canFireWeapon,tickWeapons,boxHitTime,coverBeamDistance,paintFor,steerRocket,liftHeight} from './mechy2-upgrades.js?v=mechs-76';
+import {createAuraPlayer} from './mechy2-music.js?v=mechs-76';
+import {createMech} from './mechy2-models.js?v=mechs-76';
+import {ARENA_RADIUS,MAPS,createArena,terrainHeight} from './mechy2-maps.js?v=mechs-76';
+import {createAmmo,spendRound,tickAmmo,reloadAmmo} from './mechy2-ammo.js?v=mechs-76';
+import {viewDirection,createView,rotateView,moveRelative,cameraPosition} from './mechy2-camera.js?v=mechs-76';
+import {weaponAim,segmentHitTime,beamHitDistance} from './mechy2-aim.js?v=mechs-76';
+import {createFullscreenController} from './mechy2-fullscreen.js?v=mechs-76';
+import {RAR,LEGS,BODY,HEAD,WPN,SP,MAGE,CAT,CRATES,MAGE_PRICE,WIN_GOLD,CODES,PAL,ACC,NAMES,hex} from './mechy2-data.js?v=mechs-76';
+import {ensureSpiderArms,fresh,validState,buyCrate,redeemCode,completeMatch} from './mechy2-state.js?v=mechs-76';
 'use strict';
 /* =====================================================================
  *  MECHY – losuj części, zdobywaj złoto, otwieraj skrzynki i wygrywaj Battle Royale
@@ -29,7 +29,7 @@ const mm=p=>RAR[p.r].m;
 function stats(R){const L=LEGS[R.legs.t],B=BODY[R.body.t],Hd=HEAD[R.head.t],mL=mm(R.legs),mB=mm(R.body),mH=mm(R.head),MG=MAGE[R.mage],z=MG.k==='zie';
  const hd={dmg:Hd.dmg*mH||0,rng:Hd.range*mH||0,rate:Hd.rate*mH||0,spd:Hd.spd*mH||0};
  const hp=(B.hp*mB+L.hp*mL+(Hd.hp?Hd.hp*mH:0))*(z?1.15:1),spd=Math.max(2.8,L.spd*Math.pow(mL,.4)-B.m)*(1+hd.spd);
- const G=weaponSlots(R).map(k=>R[k]).map(p=>{const w=WPN[p.t],m=mm(p);return{...w,d:w.d*m*(1+hd.dmg),r:w.r*(1+hd.rate)*Math.pow(m,.25),range:w.range*Math.pow(m,.25)*(1+hd.rng)}});
+ const G=weaponSlots(R).map(k=>R[k]).map(p=>{const w=WPN[p.t],m=mm(p);return divineWeapon({...w,d:w.d*m*(1+hd.dmg),r:w.r*(1+hd.rate)*Math.pow(m,.25),range:w.range*Math.pow(m,.25)*(1+hd.rng)},p)});
  const sp=SP[R.sp.t],spm=mm(R.sp);
  return{hp,spd:spd*(divinePowers(R).has('sprint')?1.2:1),arm:clamp(B.arm*mB+(z?.12:0),0,.55),G,rng:Math.min(G[0].range,G[1].range),dps:G.reduce((a,g)=>a+g.d*g.r*(g.pellets||1),0),sp,spm,spCd:sp.cd/Math.sqrt(spm),mage:MG,B,L,H:Hd,s:B.s,R}}
 const avgR=R=>['legs','body','head','gl','gr','sp'].reduce((a,k)=>a+R[k].r,0)/6;
@@ -88,7 +88,7 @@ function renderGarage(){
  const mg=$('#mg');if(mg)mg.onclick=()=>{if(SV.gold<MAGE_PRICE)return;SV.gold-=MAGE_PRICE;SV.mage=ri(MAGE.length);save();renderGarage();showGarMech();const m=MAGE[SV.mage];modal(`<div style="font-size:60px">${m.ic}</div><h2>${m.n}</h2><p>${mageDescriptions[SV.mage]}</p>`,'#a855f7')};
  const ck=$('#cok');if(ck)ck.onclick=redeem;const ci=$('#code');if(ci)ci.onkeydown=e=>{e.stopPropagation();if(e.key==='Enter')redeem()};
  $('#go2')&&($('#go2').onclick=startMatch)}
-function redeem(){const input=$('#code').value||'',before=SV.gold,count=SV.inv.length,result=redeemCode(SV,input);codeMsg=result==='ok'&&SV.inv.length>count?`✦ Wylosowano: ${SV.inv.slice(count).map(p=>divineDesign(p).name).join(' oraz ')}. Części czekają w kolekcji.`:result==='ok'?`✅ Kod przyjęty! +${(SV.gold-before).toLocaleString('pl-PL')} 💰`:result==='used'?'⚠️ Ten kod został już użyty.':'❌ Nieznany kod.';if(result==='ok')save();renderGarage();}
+function redeem(){const input=$('#code').value||'',before=SV.gold,count=SV.inv.length,result=redeemCode(SV,input);codeMsg=result==='ok'&&SV.inv.length>count?`✦ Wylosowano: ${SV.inv.slice(count).map(p=>divineDesign(p).name).join(' oraz ')}. Części czekają w kolekcji.${SV.gold>before?' +'+(SV.gold-before).toLocaleString('pl-PL')+' złota.':''}`:result==='ok'?`✅ Kod przyjęty! +${(SV.gold-before).toLocaleString('pl-PL')} 💰`:result==='used'?'⚠️ Ten kod został już użyty.':'❌ Nieznany kod.';if(result==='ok')save();renderGarage();}
 function modal(html,rc){const m=$('#modal');m.style.setProperty('--rc',rc);m.innerHTML=`<div class="box">${html}<button class="btn" id="mok">OK</button></div>`;m.classList.remove('hide');$('#mok').onclick=()=>m.classList.add('hide')}
 function modalPart(p){const r=RAR[p.r],t={...CAT[p.slot][p.t],n:divineDesign(p)?.name||CAT[p.slot][p.t].n};modal(`<div class="rr" style="color:${r.c};font-weight:900;font-size:20px;text-transform:uppercase">${r.n}</div><div style="font-size:64px">${t.ic}</div><h2>${t.n}</h2><p class="mut">${pinfo(p)}</p>`,r.c)}
 
@@ -114,13 +114,13 @@ const alive=()=>G.ents.filter(e=>e.alive);
 function feed(t){G.feed.push({t,l:5});if(G.feed.length>5)G.feed.shift()}
 function boom(x,z,r,col=0xfbbf24,vx=0,vz=0,l=.4){if(G.fx.length>50)return;const m=new THREE.Mesh(FXG,new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.8}));m.position.set(x,terrainHeight(G.map,x,z)+1.4,z);scene.add(m);G.fx.push({m,r,l,t:l,vx,vz,x,z})}
 function nearestTo(e,ex,rng){let b=null,bd=rng;G.ents.forEach(o=>{if(o===e||o===ex||!o.alive||(o.bodyT>0&&o.bodyKind==='cloak'))return;const d=Math.hypot(o.x-e.x,o.z-e.z);if(d<bd){bd=d;b=o}});return b}
-function beamFx(a,b){const dx=b.x-a.x,dz=b.z-a.z,L=Math.hypot(dx,dz),m=new THREE.Mesh(new THREE.BoxGeometry(.12,.12,1),glow(0xfde047));m.position.set((a.x+b.x)/2,1.6,(a.z+b.z)/2);m.scale.z=L;m.rotation.y=Math.atan2(dx,dz);scene.add(m);G.beams.push({m,l:.12})}
+function beamFx(a,b){const start=new THREE.Vector3(a.x,(a.groundY||0)+1.8,a.z),end=new THREE.Vector3(b.x,(b.groundY||0)+1.8,b.z),direction=end.clone().sub(start),m=new THREE.Mesh(new THREE.BoxGeometry(.2,.2,1),glow(0x9ceaff));m.position.copy(start.add(end).multiplyScalar(.5));m.scale.z=direction.length();m.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),direction.normalize());scene.add(m);G.beams.push({m,l:.2});}
 function hurt(e,d,src,o){o=o||{};if(!e.alive||G.cd>0)return;
  if(e.bodyT>0&&e.bodyKind==='shield'&&src&&src!==e&&Math.abs(angd(e.torso,Math.atan2(src.x-e.x,src.z-e.z)))<1.25){boom(e.x,e.z,.65,0x52cfff);return;}
  if(!o.quiet){boom(e.x,e.z,.3,0xffdd75);e.damageFx=.15;}
  if(!o.quiet){d=defendDivine(e,d);if(d===0)return;}
  if(e.S.mage.k==='cie'&&!o.noProc&&Math.random()<.12)return;
- if(src&&src!==e&&!o.noProc)d=attackDivine(src,e,d,()=>{const n=nearestTo(e,src,9);if(n){hurt(n,12,src,{noProc:1});beamFx(e,n);}});
+ if(src&&src!==e&&!o.noProc)d=attackDivine(src,e,d,()=>{for(const n of stormTargets(e,src,G.ents)){hurt(n,Math.max(28,d*.8),src,{noProc:1});beamFx(e,n);}});
  d*=1-e.S.arm;if(e.shield>0){const a=Math.min(e.shield,d);e.shield-=a;d-=a}e.hp-=d;e.shT=5;e.lastHit=.6;
  if(e.isP&&!o.quiet){$('#flash').style.opacity=.9;setTimeout(()=>$('#flash').style.opacity=0,120)}
  const mg=src&&src!==e&&src.alive?src.S.mage:null;
@@ -137,7 +137,7 @@ function shoot(e,i){if(!spendRound(e.ammo[i]))return;if(e.bodyKind==='cloak')e.b
  if(g.k==='laser'){const dx=Math.sin(A0),dz=Math.cos(A0);let best=g.range,hit=null;
   G.obst.forEach(o=>{const t=coverBeamDistance(m,A0,m.slope,best,o);if(t!==null&&t<best)best=t;});
   G.ents.forEach(t2=>{if(t2===e||!t2.alive)return;const t=coverBeamDistance(m,A0,m.slope,best,{x:t2.x,z:t2.z,r:t2.rad,base:t2.groundY||0,height:t2.model.height});if(t!==null&&t<best){best=t;hit=t2;}});
-  for(const q of G.interactions){if(q.kind!=='barrel'||q.dead)continue;const d=coverBeamDistance(m,A0,m.slope,best,{...q,height:1.7});if(d!==null&&d<best){best=d;hit=q;}}if(hit){if(hit.kind==='barrel')hitBarrel(hit,D,e);else hurt(hit,D,e);}const b=new THREE.Mesh(new THREE.BoxGeometry(.1,.1,1),glow(0x22d3ee));const direction=new THREE.Vector3(dx,m.slope,dz);b.position.set(m.x+dx*best/2,m.y+m.slope*best/2,m.z+dz*best/2);b.scale.z=best*direction.length();b.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),direction.normalize());scene.add(b);G.beams.push({m:b,l:.07});if(e.isP)sfx(900,.06,'sine',.02);return}
+  for(const q of G.interactions){if(q.kind!=='barrel'||q.dead)continue;const d=coverBeamDistance(m,A0,m.slope,best,{...q,height:1.7});if(d!==null&&d<best){best=d;hit=q;}}if(hit){if(hit.kind==='barrel')hitBarrel(hit,D,e);else hurt(hit,D,e);}const b=new THREE.Mesh(new THREE.BoxGeometry(g.heat===.065?.22:.1,g.heat===.065?.22:.1,1),glow(g.heat===.065?0xd9f5ff:0x22d3ee));const direction=new THREE.Vector3(dx,m.slope,dz);b.position.set(m.x+dx*best/2,m.y+m.slope*best/2,m.z+dz*best/2);b.scale.z=best*direction.length();b.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),direction.normalize());scene.add(b);G.beams.push({m:b,l:g.heat===.065?.14:.07});if(e.isP)sfx(900,.06,'sine',.02);return}
  const n=g.pellets||1;for(let k=0;k<n;k++){const a=A0+rnd(-g.sp,g.sp),mesh=new THREE.Mesh(g.k==='rocket'?ROC:g.k==='cannon'?SHELL:BUL,glow(g.k==='rocket'?0xf97316:g.k==='cannon'?0xfde047:0xfbbf24));
   mesh.position.set(m.x,m.y,m.z);mesh.rotation.y=a;if(g.k==='rocket')mesh.rotation.x=Math.PI/2;scene.add(mesh);G.proj.push({x:m.x,z:m.z,vx:Math.sin(a)*g.v,vz:Math.cos(a)*g.v,vy:m.slope*g.v,d:D,own:e,life:g.range/g.v,homing:g.k==='rocket'||e.powers.has('seeker')?nearestEnemy(e).e:null,sp:g.splash||0,m:mesh})}
  if(e.isP||Math.hypot(e.x-G.player.x,e.z-G.player.z)<22)sfx(g.k==='cannon'||g.k==='rocket'?150:g.k==='shotgun'?110:380,.07,'square',.02)}
