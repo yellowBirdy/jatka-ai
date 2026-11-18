@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {createAmmo,spendRound,tickAmmo,reloadAmmo} from '../mechy2-ammo.js';
+test('each gun empties independently and blocks shooting until its automatic reload finishes',()=>{const mags=createAmmo([{k:'cannon'},{k:'mg'}]);const capacity=mags[1].remaining;while(mags[0].remaining)assert.ok(spendRound(mags[0]));assert.ok(mags[0].reload>0);assert.equal(spendRound(mags[0]),false);assert.equal(mags[1].remaining,capacity);tickAmmo(mags,100);assert.equal(mags[0].remaining,mags[0].capacity);assert.equal(mags[0].reload,0);});
+test('manual reload ignores full magazines and does not reset one already underway',()=>{const mags=createAmmo([{k:'laser'},{k:'rocket'}]);reloadAmmo(mags);assert.equal(mags[0].reload,0);spendRound(mags[0]);reloadAmmo(mags);tickAmmo(mags,.25);const remaining=mags[0].reload;reloadAmmo(mags);assert.equal(mags[0].reload,remaining);assert.equal(spendRound(mags[0]),false);});

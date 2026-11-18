@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {auraNotes,createAuraPlayer} from '../mechy2-music.js';
+test('aura progression loops without frequencies outside the audible synth range',()=>{for(let i=0;i<64;i++){const n=auraNotes(i);assert.ok(n.bass>20&&n.bass<150&&n.melody>100&&n.melody<1000);}assert.deepEqual(auraNotes(0),auraNotes(64));});
+test('music can be muted and audio initialization failures never block the game',async()=>{const player=createAuraPlayer(()=>{throw Error('unavailable');});assert.equal(await player.start(),false);player.setVolume(20);assert.equal(player.snapshot().volume,.6);player.setEnabled(false);assert.equal(await player.start(),false);player.stop();assert.equal(player.snapshot().playing,false);});

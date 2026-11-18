@@ -1,0 +1,6 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {weaponAim} from '../mechy2-aim.js';
+test('both offset gun barrels converge on a close reticle target in three dimensions',()=>{const e={x:3,z:2,torso:.6},target={x:5,y:1.8,z:8};const guns=[-1.8,1.8].map(offset=>weaponAim(e,{offset,forward:.25,height:2,length:2.3},target));assert.notEqual(guns[0].angle,guns[1].angle);for(const g of guns){const distance=Math.hypot(target.x-g.x,target.z-g.z);assert.ok(Math.abs(g.x+Math.sin(g.angle)*distance-target.x)<1e-8);assert.ok(Math.abs(g.z+Math.cos(g.angle)*distance-target.z)<1e-8);assert.ok(Math.abs(g.y+g.slope*distance-target.y)<1e-8);}});
+test('near targets do not leave the shot starting beyond its destination',()=>{const g=weaponAim({x:0,z:0,torso:0},{offset:0,forward:0,height:2,length:3},{x:0,y:1,z:1});assert.ok(g.z<1);assert.ok(Number.isFinite(g.slope));});
+
+test('fast projectiles crossing an entire target between frames still register the first intersection',async()=>{const {segmentHitTime}=await import('../mechy2-aim.js');assert.equal(segmentHitTime(-5,0,5,0,0,0,1),.4);assert.equal(segmentHitTime(-5,3,5,3,0,0,1),null);assert.equal(segmentHitTime(0,0,0,0,0,0,1),0);});

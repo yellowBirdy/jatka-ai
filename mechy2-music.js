@@ -1,0 +1,11 @@
+const chords=[[50,57,60,64],[46,53,57,60],[48,55,58,62],[45,52,57,60]];
+export function auraNotes(step){const chord=chords[Math.floor(step/16)%chords.length],midi=chord[step%4]+12;return {melody:440*2**((midi-69)/12),bass:440*2**((chord[0]-12-69)/12)};}
+export function createAuraPlayer(factory){let context,gain,timer=null,next=0,step=0,wanted=false,enabled=true,volume=.18;const voices=new Set();
+ function voice(frequency,time,duration,type,level){const oscillator=context.createOscillator(),envelope=context.createGain();oscillator.type=type;oscillator.frequency.setValueAtTime(frequency,time);envelope.gain.setValueAtTime(.0001,time);envelope.gain.exponentialRampToValueAtTime(level,time+.08);envelope.gain.exponentialRampToValueAtTime(.0001,time+duration);oscillator.connect(envelope);envelope.connect(gain);oscillator.onended=()=>{voices.delete(oscillator);oscillator.disconnect();envelope.disconnect();};voices.add(oscillator);oscillator.start(time);oscillator.stop(time+duration+.03);}
+ function schedule(){if(!wanted||!enabled||!context)return;if(next<context.currentTime-.2)next=context.currentTime+.05;while(next<context.currentTime+.35){const notes=auraNotes(step);voice(notes.melody,next,.65,'sine',.18);if(step%4===0){voice(notes.bass,next,1.5,'triangle',.22);voice(notes.melody/2,next,1.6,'sine',.08);}step++;next+=.4;}}
+ async function start(){wanted=true;if(!enabled)return false;try{if(!context){const Audio=globalThis.AudioContext||globalThis.webkitAudioContext;context=factory?factory():Audio?new Audio():null;if(!context)return false;gain=context.createGain();gain.connect(context.destination);}gain.gain.value=volume;await context.resume();if(!wanted||!enabled)return false;if(!timer){next=context.currentTime+.05;schedule();timer=setInterval(schedule,150);}return true;}catch{return false;}}
+ function stop(){wanted=false;if(timer){clearInterval(timer);timer=null;}for(const oscillator of voices){try{oscillator.stop();}catch{}}voices.clear();if(context)context.suspend().catch(()=>{});}
+ function setEnabled(value){enabled=!!value;if(!enabled)stop();}
+ function setVolume(value){volume=Math.max(0,Math.min(.6,Number(value)||0));if(gain)gain.gain.value=volume;}
+ return {start,stop,setEnabled,setVolume,snapshot:()=>({enabled,playing:!!timer,volume})};
+}

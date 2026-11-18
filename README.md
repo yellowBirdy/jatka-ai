@@ -252,3 +252,13 @@ Kod `god` w losowarce wzmacnia jedno następne losowanie: usuwa zwykłe formy i 
 „Mechy 2 — Kolekcja części” (`mechy.html`) zastępuje poprzednią grę z mechami przesłanym plikiem `mechy2 (1).html`. Startowy zestaw części i mag są losowane raz i zapisywane w tej przeglądarce. Garaż pozwala mieszać korpusy, podwozia, głowy, obie bronie i moce, dobierać dwa kolory oraz sprzedawać nieużywane części. Skrzynki kupowane za złoto dodają części o różnych rzadkościach. Zwycięstwo daje 100 złota; porażka nie daje nagrody. Kod `unreal` daje 100 000 złota raz na zapis, zgodnie z przesłanym plikiem. To osobny zapis `mechy2`, niezależny od EXP i przedmiotów pozostałych trybów JATKI.
 
 Sterowanie dostarczonej wersji: WASD / strzałki — ruch, mysz — celowanie, lewy przycisk — ogień, Spacja / E — specjalna moc. Telefon ma drążek ruchu, wspomagany ostrzał oraz przycisk mocy. P / Esc wstrzymuje grę; przełączenie karty lub utrata fokusu także ją zatrzymuje. Liczbowe parametry bojowe są ukryte. Ta wersja korzysta z modeli i mechaniki nowego pliku zamiast wcześniejszego silnika mechów. Three.js jest dołączony lokalnie wraz z licencją.
+
+Kliknięcie „Do areny” (także rewanżu) prosi przeglądarkę o pełny ekran. Powrót do garażu opuszcza pełny ekran włączony przez grę, a wyjście klawiszem Esc wstrzymuje walkę. Brak obsługi lub odmowa przeglądarki nie blokuje rozgrywki.
+
+Obie bronie zbiegają się w punkcie wskazanym celownikiem, z uwzględnieniem oddzielnych miejsc montażu. Lufy obracają się niezależnie; pociski i wiązki uwzględniają również wysokość wskazanego punktu.
+
+Wariant walki wybierasz przed startem: 3 boty (domyślnie) lub 7 botów. Kamera pokazuje mecha z tyłu; WASD i drążek działają względem kierunku patrzenia. Prawy przycisk myszy z przeciągnięciem obraca widok, kółko zmienia dystans, a lewy przycisk strzela obiema broniami. Na telefonie drugi drążek celuje i strzela, a przeciągnięcie wolnego terenu obraca kamerę.
+
+Ręczne przeładowanie działa pod R i przyciskiem na ekranie. Każda broń ma własny magazynek; pusty przeładowuje się automatycznie. Przeładowywana broń nie może strzelać, a boty korzystają z tych samych zasad. HUD pokazuje stan amunicji opisowo, bez liczb.
+
+Gra ma trzy areny z osobnymi układami osłon i podjazdami: Odlewnię, Port orbitalny oraz Rdzeń danych. Nowe modele korzystają z metalicznych materiałów, warstwowych pancerzy i oddzielnych modułów uzbrojenia. Muzyka „aura” to oryginalne, generowane lokalnie tło elektroniczne; startuje po rozpoczęciu walki, ma regulację głośności i wyciszenie, zatrzymuje się przy pauzie, ukryciu karty i zakończeniu gry.
