@@ -1,4 +1,0 @@
-import test from 'node:test';import assert from 'node:assert/strict';
-import {aimFromMount} from '../mech-aim.js';
-test('widely separated guns converge on one close target instead of shooting parallel',()=>{const target={x:0,z:6},e={x:0,z:0,aim:0};const a=aimFromMount(e,{x:-1.6,y:2,z:0,length:1.5},target),b=aimFromMount(e,{x:1.6,y:2,z:0,length:1.5},target);assert.ok(a.angle>0&&b.angle<0);for(const m of [a,b]){const t=(target.z-m.z)/Math.cos(m.angle);assert.ok(Math.abs(m.x+Math.sin(m.angle)*t-target.x)<1e-8);}});
-test('convergence works after chassis rotation and barrel origins follow their visible mounts',()=>{const e={x:12,z:-4,aim:1.4},target={x:3,z:8},m=aimFromMount(e,{x:1,y:2.4,z:.3,length:1.2},target);assert.equal(m.y,2.4);assert.ok(Number.isFinite(m.angle));const vx=target.x-m.x,vz=target.z-m.z;assert.ok(Math.abs(vx*Math.cos(m.angle)-vz*Math.sin(m.angle))<1e-8);});

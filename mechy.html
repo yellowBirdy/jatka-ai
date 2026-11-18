@@ -3,41 +3,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mechy – Battle Royale</title>
 <style>
-:root{--bg:#0d1117;--panel:#161b22ee;--ink:#e6edf3;--mut:#8b949e;--line:#30363d;--acc:#f59e0b;--ok:#3fb950;--bad:#f85149;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--panel:#fffffff0;--ink:#1c2128;--mut:#57606a;--line:#d0d7de;--acc:#b45309;--ok:#1a7f37;--bad:#cf222e;color-scheme:light}}
+:root{--bg:#07120f;--panel:#0c1a17ee;--ink:#e8f1ee;--mut:#8fa8a0;--line:#25443b;--acc:#f59e0b;--ok:#3fb950;--bad:#f85149;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--panel:#f4faf8f2;--ink:#14231e;--mut:#4b645b;--line:#b8d0c8;--acc:#b45309;color-scheme:light}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;margin:0;background:#0d1117;color:var(--ink);font-family:system-ui,"Segoe UI",Roboto,sans-serif;overflow:hidden;user-select:none;touch-action:none}
-canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
-#hc{pointer-events:none}
+html,body{height:100%;margin:0;background:#07120f;color:var(--ink);font-family:system-ui,"Segoe UI",Roboto,sans-serif;overflow:hidden;user-select:none;touch-action:none}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}#hc{pointer-events:none}
 .hide{display:none!important}
-#gp{position:fixed;left:0;top:0;bottom:0;width:370px;max-width:100%;background:var(--panel);border-right:1px solid var(--line);padding:14px;overflow:auto;touch-action:pan-y}
-@media(max-width:760px){#gp{top:auto;width:100%;height:56%;border-right:0;border-top:1px solid var(--line)}}
-h1{font-size:22px;margin:0 0 4px}h4{margin:14px 0 6px;font-size:13px;color:var(--mut);text-transform:uppercase;letter-spacing:.08em}
-.opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.opt{background:transparent;color:var(--ink);border:2px solid var(--line);border-radius:10px;padding:8px;text-align:left;font:inherit;cursor:pointer}
-.opt.sel{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 14%,transparent)}.opt:disabled{opacity:.35;cursor:not-allowed}
-.opt small{display:block;color:var(--mut);font-size:11.5px;margin-top:2px}
-.cols{display:flex;gap:8px;flex-wrap:wrap}.dot{width:30px;height:30px;border-radius:50%;border:3px solid var(--line);cursor:pointer}.dot.sel{border-color:var(--ink)}
-.st{display:grid;grid-template-columns:78px 1fr 40px;gap:6px;align-items:center;font-size:12.5px;margin:3px 0}.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc)}
-.btn{background:var(--acc);color:#111;border:0;border-radius:12px;padding:13px 18px;font-size:17px;font-weight:800;cursor:pointer;width:100%;margin-top:8px}.btn.s{background:transparent;color:var(--ink);border:1px solid var(--line)}
-#hud{position:fixed;inset:0;pointer-events:none}
-#top{position:absolute;top:8px;left:0;right:0;text-align:center;font-weight:700;text-shadow:0 1px 4px #000;font-size:16px}
-#me{position:absolute;left:12px;bottom:12px;width:240px;background:#0009;border-radius:12px;padding:8px 10px;font-size:12px;color:#e6edf3}
-#me .bar{height:12px;margin:3px 0;background:#444}#feed{position:absolute;right:10px;top:36px;text-align:right;font-size:13px;text-shadow:0 1px 3px #000;color:#fff}
+#gp{position:fixed;left:0;top:0;bottom:0;width:430px;max-width:100%;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column}
+#rp{position:fixed;right:0;top:0;bottom:0;width:290px;background:var(--panel);border-left:1px solid var(--line);padding:14px;overflow:auto}
+@media(max-width:1000px){#rp{display:none}}
+@media(max-width:760px){#gp{top:auto;width:100%;height:58%;border-right:0;border-top:1px solid var(--line)}}
+#tabs{display:flex;gap:4px;padding:8px;overflow-x:auto;flex:none}
+.tab{background:transparent;color:var(--ink);border:2px solid var(--line);border-radius:6px;padding:8px 10px;font:inherit;font-weight:800;font-size:13px;cursor:pointer;white-space:nowrap;text-transform:uppercase}.tab.sel{background:var(--ink);color:var(--bg)}
+#gc{flex:1;overflow:auto;padding:8px;touch-action:pan-y}#gf{padding:8px;border-top:1px solid var(--line);flex:none}
+.gold{font-weight:900;font-size:17px;color:#fbbf24;padding:8px 10px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px}
+.cd{position:relative;border:2px solid var(--rc);border-radius:8px;padding:8px;background:#0003;cursor:pointer;min-height:112px;text-align:center}
+.cd.eq{box-shadow:0 0 0 3px #facc15}.cd .ic{font-size:30px}.cd b{display:block;font-size:12.5px}.cd small{display:block;font-size:11px;color:var(--mut)}.cd .rr{font-size:10.5px;font-weight:800;color:var(--rc);text-transform:uppercase}
+.cd .sl{position:absolute;right:4px;bottom:3px;font-size:10px;color:#fca5a5;text-decoration:underline}
+.btn{background:var(--acc);color:#111;border:0;border-radius:10px;padding:12px 16px;font-size:16px;font-weight:800;cursor:pointer;width:100%;margin-top:6px}.btn.s{background:transparent;color:var(--ink);border:1px solid var(--line)}.btn:disabled{opacity:.4;cursor:not-allowed}
+h1{font-size:21px;margin:0 0 4px}h3{margin:10px 0 4px}p{margin:4px 0}.mut{color:var(--mut);font-size:12.5px}
+.st{display:grid;grid-template-columns:82px 1fr 46px;gap:6px;align-items:center;font-size:12.5px;margin:3px 0}.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc)}
+.dot{display:inline-block;width:28px;height:28px;border-radius:50%;border:3px solid var(--line);margin:2px;cursor:pointer}.dot.sel{border-color:#fff}
+.crate{border:2px solid var(--rc);border-radius:10px;padding:10px;margin:8px 0;background:#0003}
+input[type=text]{font:inherit;padding:10px;border-radius:8px;border:1px solid var(--line);background:#0005;color:var(--ink);width:100%}
+.row{display:flex;gap:6px}.row>*{flex:1}.tg{flex:1;padding:8px;border:2px solid var(--line);border-radius:8px;background:transparent;color:var(--ink);font:inherit;font-weight:700;cursor:pointer}.tg.sel{border-color:#facc15}
+#modal{position:fixed;inset:0;background:#000b;display:grid;place-items:center;z-index:9}#modal .box{background:var(--panel);border:3px solid var(--rc,#444);border-radius:16px;padding:22px;text-align:center;min-width:280px;max-width:92%;box-shadow:0 0 40px var(--rc,#000)}
+#hud{position:fixed;inset:0;pointer-events:none}#top{position:absolute;top:8px;left:0;right:0;text-align:center;font-weight:700;text-shadow:0 1px 4px #000;font-size:16px}
+#me{position:absolute;left:12px;bottom:12px;width:250px;background:#0009;border-radius:12px;padding:8px 10px;font-size:12px;color:#e6edf3}#me .bar{height:12px;margin:3px 0;background:#444}
+#feed{position:absolute;right:10px;top:36px;text-align:right;font-size:13px;text-shadow:0 1px 3px #000;color:#fff}
 #mm{position:absolute;right:10px;bottom:10px;width:150px;height:150px;border-radius:50%;background:#0008}
 #cd{position:fixed;inset:0;display:grid;place-items:center;font-size:110px;font-weight:900;color:#fff;text-shadow:0 4px 20px #000;pointer-events:none}
 #flash{position:fixed;inset:0;background:radial-gradient(transparent 55%,#f8514988);opacity:0;pointer-events:none;transition:opacity .25s}
-#end{position:fixed;inset:0;display:grid;place-items:center;background:#000a}#end .box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;text-align:center;min-width:280px}
+#end{position:fixed;inset:0;display:grid;place-items:center;background:#000a}#end .box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;text-align:center;min-width:290px}
 #touch{position:fixed;inset:0;pointer-events:none}#joy{position:absolute;left:18px;bottom:110px;width:130px;height:130px;border-radius:50%;background:#fff2;border:2px solid #fff4;pointer-events:auto}
 #knob{position:absolute;left:41px;top:41px;width:48px;height:48px;border-radius:50%;background:#fff6}
 .tb{position:absolute;width:84px;height:84px;border-radius:50%;background:#f59e0bcc;color:#111;font-weight:800;display:grid;place-items:center;pointer-events:auto}
-</style><link rel="stylesheet" href="mechy.css?v=mechs-68"></head><body>
-<canvas id="c"></canvas><canvas id="hc"></canvas>
-<div id="flash"></div>
-<div id="garage-hint"><span>JATKA / STALOWY FRONT</span><h2>Twój mech.<br>Twoja przewaga.</h2><p>Obróć model przeciągnięciem. Zbuduj maszynę i przetrwaj arenę.</p></div><div id="gp"></div>
-<div id="hud" class="hide"><div id="top"></div><button id="pause-btn" aria-label="Wstrzymaj grę">Ⅱ Pauza</button><div id="feed"></div><div id="me"></div><div id="ammo-state" role="status"></div><button id="reload-btn" type="button">Przeładuj</button><canvas id="mm" width="300" height="300"></canvas>
- <div id="touch" class="hide"><div id="joy"><div id="knob"></div></div><div id="aim-joy" role="group" aria-label="Drążek celowania"><div id="aim-knob"></div><small>CEL / OGIEŃ</small></div><button class="tb" id="bf" type="button" aria-label="Ogień ze wspomaganiem" style="right:20px;bottom:120px">OGIEŃ</button><button class="tb" id="bd" type="button" aria-label="Unik" style="right:116px;bottom:60px;background:#06b6d4cc;width:70px;height:70px">UNIK</button></div></div>
-<div id="pause" class="hide"><section><span class="eyebrow">SYSTEM WSTRZYMANY</span><h2>Pauza</h2><p>WASD / strzałki — ruch<br>Mysz — cel · lewy przycisk — obie bronie<br>Prawy przycisk + przeciągnięcie — obrót kamery<br>Kółko myszy — przybliżenie<br>Q / E — lewa / prawa broń<br>R — przeładuj · Spacja — dopalacze · P / Esc — pauza</p><p>Telefon: lewy drążek porusza, prawy celuje i strzela. Przycisk Ogień pomaga namierzyć najbliższego rywala. Przeciągnij pusty teren, aby obrócić kamerę.</p><button id="resume" class="btn">Wznów</button><button id="back-garage" class="btn s">Wróć do garażu</button></section></div><div id="load-error" class="hide" role="alert">Nie udało się uruchomić grafiki 3D. Włącz obsługę WebGL w przeglądarce. <a href="./">Wróć do JATKI</a></div><div id="cd" class="hide"></div>
-<div id="end" class="hide"><div class="box" id="eb"></div></div>
-<script src="assets/vendor/three-r128.min.js"></script>
-<script type="module" src="mechy.js?v=mechs-68"></script></body></html>
+.back-link{display:block;padding:10px;color:var(--ink);font-size:12px}#save-status{font-size:12px;color:#fbbf24;padding:0 10px}#mm{inset:auto 10px 10px auto}#pause-btn{position:absolute;right:10px;top:10px;pointer-events:auto;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:8px 12px}#top{right:85px;font-size:13px}#pause{position:fixed;inset:0;background:#000b;z-index:20;display:grid;place-items:center;padding:20px}#pause section{padding:24px;border:1px solid var(--line);border-radius:12px;background:var(--panel);width:min(420px,100%)}#pause p{line-height:1.8;font-size:12px}#load-error{position:fixed;inset:0;background:#07120f;color:#fff;z-index:30;display:grid;place-content:center;padding:24px}#load-error a{color:#9de6d0}.cd:focus-visible,.tab:focus-visible,.btn:focus-visible{outline:3px solid #facc15;outline-offset:2px}.grid .cd{touch-action:manipulation}@media(max-width:760px){#top{font-size:10px;padding:7px}#mm{width:72px;height:72px}#me{font-size:10px;width:220px}#tabs{touch-action:pan-x}.tab{font-size:11px;padding:7px}#gc{min-height:0}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.cd{min-width:0}.row{flex-wrap:wrap}}@media(prefers-reduced-motion:reduce){#flash{display:none}}
+</style></head><body>
+<canvas id="c"></canvas><canvas id="hc"></canvas><div id="flash"></div>
+<div id="gp"><a href="./" class="back-link">← Wróć do JATKI</a><div id="save-status" role="status"></div><div class="gold" id="gold"></div><div id="tabs"></div><div id="gc"></div><div id="gf"><button class="btn" id="go">▶ Do areny! (7 botów)</button></div></div>
+<div id="rp"></div>
+<div id="hud" class="hide"><div id="top"></div><button id="pause-btn" type="button">Pauza</button><div id="feed"></div><div id="me"></div><canvas id="mm" width="300" height="300"></canvas>
+ <div id="touch" class="hide"><div id="joy"><div id="knob"></div></div><div class="tb" id="bf" style="right:20px;bottom:120px">OGIEŃ</div><div class="tb" id="bd" style="right:116px;bottom:60px;background:#06b6d4cc;width:70px;height:70px">MOC</div></div></div>
+<div id="cd" class="hide"></div><div id="end" class="hide"><div class="box" id="eb"></div></div><div id="modal" class="hide"></div>
+<div id="pause" class="hide"><section><h2>Pauza</h2><p>WASD / strzałki — ruch · mysz — celowanie<br>Lewy przycisk — ogień · Spacja / E — moc</p><button id="resume" class="btn">Wznów</button><button id="garage-back" class="btn s">Garaż i sklep</button></section></div><div id="load-error" class="hide" role="alert">Grafika 3D wymaga WebGL. <a href="./">Wróć do JATKI</a></div><script src="assets/vendor/three-r128.min.js"></script><script type="module" src="mechy2.js?v=mechs-69"></script></body></html>
