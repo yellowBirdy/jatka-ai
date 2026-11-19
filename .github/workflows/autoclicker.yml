@@ -1,0 +1,63 @@
+name: Build standalone interval autoclicker
+on:
+  push:
+    branches: [master]
+    paths:
+      - downloads/autoclicker-source.zip
+      - .github/workflows/autoclicker.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract utility sources
+        run: unzip -q downloads/autoclicker-source.zip
+      - name: Test intervals and ten-minute scheduling
+        run: |
+          gcc -std=c11 -Wall -Wextra -Werror autoclicker/test_interval.c -lm -o /tmp/test-interval
+          /tmp/test-interval
+      - name: Install cross compiler
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends gcc-mingw-w64-x86-64
+      - name: Build native Windows executable
+        run: |
+          mkdir release
+          x86_64-w64-mingw32-gcc -std=c11 -Wall -Wextra -Werror -O2 -s -static -municode -mwindows -Wl,--dynamicbase,--nxcompat autoclicker/autoclicker.c -luser32 -lgdi32 -lm -o release/Autoclicker-Odstep.exe
+          cp autoclicker/CZYTAJ.txt autoclicker/LICENSE release/
+          cd release
+          zip -q Autoclicker-Odstep.zip Autoclicker-Odstep.exe CZYTAJ.txt LICENSE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: autoclicker-windows
+          path: release/
+  windows-test:
+    needs: build
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: autoclicker-windows
+          path: release
+      - name: Test executable and window controls without clicking
+        shell: pwsh
+        run: |
+          $process = Start-Process -FilePath "$PWD/release/Autoclicker-Odstep.exe" -ArgumentList '--self-test' -Wait -PassThru
+          if ($process.ExitCode -ne 0) { throw "Windows self-test failed: $($process.ExitCode)" }
+      - name: Publish tested executable
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cat > release/notes.txt <<'NOTES'
+          Samodzielny autoclicker Windows 10/11 x64. Dowolny odstęp: ms, sekundy, minuty lub godziny. Domyślnie klik co 10 minut. F6 start/stop, F8 STOP.
+
+          Testy harmonogramu oraz test utworzenia okna i ustawień na Windows przechodzą przed publikacją. Test Windows nie wykonuje kliknięć. EXE bez podpisu Authenticode; SmartScreen może ostrzegać. Program nie wyłącza zabezpieczeń systemu.
+          NOTES
+          gh release create autoclicker-odstep-v1 release/Autoclicker-Odstep.exe release/Autoclicker-Odstep.zip --target "$GITHUB_SHA" --title 'Autoclicker — dowolny odstęp' --notes-file release/notes.txt
