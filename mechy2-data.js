@@ -7,9 +7,29 @@ export const WPN=[{n:'Karabin',ic:'🔫',d:4,r:8,range:24,v:46,k:'mg',sp:.05,len
 export const SP=[{n:'Dopalacze',ic:'💨',k:'dash',cd:3.5,t:'szybki unik'},{n:'Tarcza energii',ic:'🛡️',k:'shield',cd:12,t:'osłona 90 na 4 s'},{n:'Nanonaprawa',ic:'💚',k:'repair',cd:16,t:'leczy 35% HP przez 4 s'},{n:'Przeciążenie',ic:'⚡',k:'over',cd:14,t:'+60% obrażeń przez 5 s'},{n:'Impuls EMP',ic:'📶',k:'emp',cd:15,t:'ogłusza wrogów w promieniu 9'}];
 export const MAGE=[{n:'Pyromanta',k:'pyr',ic:'🔥',t:'trafienia podpalają wroga (3 obr./s przez 3 s)'},{n:'Kriomanta',k:'kri',ic:'❄️',t:'trafienia spowalniają wroga o 35%'},{n:'Burzowiec',k:'bur',ic:'⚡',t:'18% szans na łuk błyskawicy (14 obr.)'},{n:'Wampir',k:'wam',ic:'🩸',t:'leczy 8% zadanych obrażeń'},{n:'Cień',k:'cie',ic:'🌑',t:'12% szans na unik trafienia'},{n:'Strażnik Ziemi',k:'zie',ic:'🪨',t:'+15% HP i +12% pancerza'}];
 export const CAT={legs:LEGS,body:BODY,head:HEAD,wpn:WPN,sp:SP};
-export const CRATES=[{n:'Skrzynka zwykła',p:250,w:[70,22,6,1.8,.2,0],c:'#9ca3af'},{n:'Skrzynka rzadka',p:1000,w:[25,40,25,8,2,0],c:'#3b82f6'},{n:'Skrzynka epicka',p:4000,w:[0,20,45,28,6.5,.5],c:'#a855f7'},{n:'Skrzynka mityczna',p:12000,w:[0,0,20,45,28,7],c:'#ef4444'}];
-export const MAGE_PRICE=10000,WIN_GOLD=100,CODES={sigma:{gold:1000000,parts:2},od:{parts:2},unreal:{gold:100000},unreal2:{gold:1000000}};
+export const CRATES=[{n:'Skrzynka zwykła',p:250,w:[70,22,6,1.8,.2,0],c:'#9ca3af'},{n:'Skrzynka rzadka',p:1000,w:[25,40,25,8,2,0],c:'#3b82f6'},{n:'Skrzynka epicka',p:4000,w:[0,20,45,28,6.5,.5],c:'#a855f7'},{n:'Skrzynka mityczna',p:12000,w:[0,0,20,45,28,7],c:'#ef4444'},{n:'Skrzynka boska',p:400000,w:[0,0,0,0,0,0,100],c:'#fff2a8'}];
+export const MAGE_PRICE=10000,WIN_GOLD=100,CODES={bles:{gold:4000000},sigma:{gold:1000000,parts:2},od:{parts:2},unreal:{gold:100000},unreal2:{gold:1000000}};
 export const PAL=[0xf97316,0xe11d48,0xf59e0b,0x22c55e,0x06b6d4,0x3b82f6,0xa855f7,0x64748b];export const ACC=[0x374151,0xe5e7eb,0x111827,0xfbbf24,0x7dd3fc,0x86efac];
 export const NAMES=['Złomek','Młot','Cyklon','Zgniatacz','Viper','Rdza','Burza','Tytan','Kafar'];
 export const hex=c=>'#'+c.toString(16).padStart(6,'0');
 
+
+export const BOT_LEVELS=[
+ {id:'normal',name:'Zwykły',reward:1,hp:1,damage:1,speed:1,error:1,reaction:1.2,turn:8,gear:0},
+ {id:'veteran',name:'Weteran',reward:2,hp:1.25,damage:1.15,speed:1.08,error:.55,reaction:.7,turn:11,gear:.5},
+ {id:'elite',name:'Elita',reward:3.5,hp:1.6,damage:1.35,speed:1.15,error:.25,reaction:.35,turn:15,gear:1}
+];
+export const botDifficulty=id=>BOT_LEVELS.find(l=>l.id===id)||BOT_LEVELS[0];
+export function scaleBotStats(s,id){const l=botDifficulty(id);return {...s,hp:s.hp*l.hp,spd:s.spd*l.speed,G:s.G.map(g=>({...g,d:g.d*l.damage})),dps:s.dps*l.damage};}
+
+export const BLESSING_PRICE=1000000;
+export const BLESSINGS=[
+ {name:'Potęga',description:'Mocno wzmacnia podstawowe parametry tej części.',power:1.3},
+ {name:'Wigor',description:'Wzmacnia część i zwiększa wytrzymałość mecha po jej założeniu.',power:1.15,health:1.08},
+ {name:'Pośpiech',description:'Wzmacnia część, ruch i ostrzał oraz przyspiesza odnawianie zdolności.',power:1.1,speed:1.05,rate:1.06,cooldown:.97},
+ {name:'Odnowa',description:'Wzmacnia część i stopniowo naprawia mech podczas walki.',power:1.12,regen:.008},
+ {name:'Gniew',description:'Wzmacnia część i zwiększa obrażenia mecha po jej założeniu.',power:1.1,damage:1.1},
+ {name:'Opieka',description:'Wzmacnia część i dodaje ochronę przed obrażeniami.',power:1.12,armor:.035}
+];
+export const blessingOf=p=>Number.isInteger(p?.blessing)?BLESSINGS[p.blessing]||null:null;
+export function blessingModifiers(parts){const m={health:1,damage:1,speed:1,rate:1,cooldown:1,regen:0,armor:0};for(const p of parts){const b=blessingOf(p);if(!b)continue;for(const key of ['health','damage','speed','rate','cooldown'])m[key]*=b[key]||1;for(const key of ['regen','armor'])m[key]+=b[key]||0;}return m;}

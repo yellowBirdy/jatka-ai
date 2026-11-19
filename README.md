@@ -276,3 +276,9 @@ Pajęczy Tron jest jednym z 20 boskich projektów: odblokowuje cztery niezależn
 V76 wzmacnia już posiadane boskie części: większa bazowa moc rzadkości, mocniejsze zdolności obronne, regeneracja i efekty ofensywne. Grom Zeusa zadaje znacznie silniejsze bezpośrednie trafienia, ma większy zasięg i wolniej się przegrzewa; łuk razi do trzech pobliskich przeciwników. Zmiany nie wymagają ponownego losowania ani używania kodu `od`.
 
 Jednorazowy kod `sigma` przyznaje 1 000 000 złota i dwie różne losowe boskie części, niezależnie od kodu `od`.
+
+V77: skrzynka boska kosztuje 400 000 złota i zawsze daje jeden z 20 boskich projektów. Merge łączy dwie identyczne części tej samej rzadkości i poziomu gwiazdek w jedną z wyższym poziomem (maksymalnie pięć). Materiał musi być niezainstalowaną kopią; ID i wyposażenie ulepszanej części zostają zachowane. Stare części mają domyślnie jedną gwiazdkę. Gwiazdki wzmacniają rzeczywiste parametry bojowe części. Wygrana przeciw trzem botom daje 100 złota, a przeciw siedmiu 1000; przegrana i porzucona walka nie dają nagrody.
+
+Trudność botów: Zwykły, Weteran, Elita. Oprócz wyposażenia botów skaluje się wytrzymałość, obrażenia, ruch, celność i tempo reakcji. Mnożniki nagród: 1, 2 i 3,5. Dla 3 botów daje to 100/200/350 złota, a dla 7 botów 1000/2000/3500. Wybrany poziom jest zapisany w aktualnym meczu i używany do nagrody, niezależnie od późniejszego ustawienia menu.
+
+Blessing: jednorazowy kod `bles` daje 4 000 000 złota. Losowanie za 1 000 000 przypisuje jedno z sześciu błogosławieństw do wskazanej części. Ponowne losowanie zastępuje obecne innym. Efekty działają dopiero po zamontowaniu części. Merge zachowuje błogosławieństwo wskazanej bazy; błogosławieństwo zużywanego materiału przepada.
