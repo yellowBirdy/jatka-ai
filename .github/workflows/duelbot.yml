@@ -31,7 +31,7 @@ jobs:
       - name: Package mod with Fabric API
         run: |
           mkdir -p release/mods
-          cp mod-build/duelbot-fabric/build/libs/duelbot-1.21.4-1.0.0.jar release/mods/
+          cp mod-build/duelbot-fabric/build/libs/duelbot-1.21.4-1.1.0.jar release/mods/
           api_jar=$(find "$HOME/.gradle/caches/modules-2/files-2.1/net.fabricmc.fabric-api/fabric-api/0.119.2+1.21.4" -name '*.jar' -print -quit)
           test -n "$api_jar"
           cp "$api_jar" release/mods/
@@ -48,12 +48,12 @@ jobs:
           cat > /tmp/duelbot-release.md <<'NOTES'
           Fabric client mod for Minecraft Java 1.21.4.
 
-          The mods ZIP contains the mod and its Fabric API dependency. Extract both JAR files into your client's mods directory. Fabric Loader 0.16.10+ and Minecraft 1.21.4 are required. R toggles the feature.
+          The mods ZIP contains the mod and its Fabric API dependency. Extract both JAR files into your client's mods directory. Fabric Loader 0.16.10+ and Minecraft 1.21.4 are required. R toggles the feature. Y opens item filters, attack rate, shield break and falling axe-to-mace combo settings. Local camera and movement inputs are not changed.
 
           Built by GitHub Actions with Java 21; compilation and automated math tests must pass before publication. Not tested inside a running Minecraft client. For agreed private duels.
           NOTES
-          if gh release view duelbot-1.21.4-v1 > /dev/null 2>&1; then
-            gh release upload duelbot-1.21.4-v1 release/mods/duelbot-1.21.4-1.0.0.jar release/duelbot-fabric-1.21.4-mods.zip --clobber
+          if gh release view duelbot-1.21.4-v2 > /dev/null 2>&1; then
+            gh release upload duelbot-1.21.4-v2 release/mods/duelbot-1.21.4-1.1.0.jar release/duelbot-fabric-1.21.4-mods.zip --clobber
           else
-            gh release create duelbot-1.21.4-v1 release/mods/duelbot-1.21.4-1.0.0.jar release/duelbot-fabric-1.21.4-mods.zip --target "$GITHUB_SHA" --title 'Private Duel Bot — Fabric 1.21.4' --notes-file /tmp/duelbot-release.md
+            gh release create duelbot-1.21.4-v2 release/mods/duelbot-1.21.4-1.1.0.jar release/duelbot-fabric-1.21.4-mods.zip --target "$GITHUB_SHA" --title 'Private Duel Bot 1.1 — Fabric 1.21.4' --notes-file /tmp/duelbot-release.md
           fi
