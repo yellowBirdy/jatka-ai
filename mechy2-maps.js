@@ -1,4 +1,4 @@
-import {INTERACTIONS} from './mechy2-upgrades.js?v=mechs-77';
+import {INTERACTIONS} from './mechy2-upgrades.js?v=mechs-78';
 export const MAPS=[
  {id:'foundry',name:'Odlewnia',relief:[{x:7,z:-1,r:5.5,h:1.8},{x:4,z:19,r:6,h:-1.1}],accent:0xf59e42,floor:0x29343c,fog:0x17222d,pads:[{x:-13,z:3,w:11,d:11,h:1.3},{x:14,z:-11,w:10,d:10,h:1.1}],covers:[[-20,-14,2],[-7,-19,2.2],[10,-22,2],[23,-3,2.1],[17,17,2.5],[-3,21,2],[-23,13,2.3],[0,-4,2],[3,6,1.8]]},
  {id:'port',name:'Port orbitalny',relief:[{x:-21,z:10,r:7,h:1.3},{x:8,z:-23,r:6,h:-1.4}],accent:0x67d9f0,floor:0x273d49,fog:0x1a2f3c,pads:[{x:-11,z:-13,w:12,d:10,h:1.4},{x:15,z:8,w:11,d:12,h:1.4}],covers:[[-24,-3,2],[-14,18,2.4],[1,23,2],[23,16,2.2],[25,-12,2],[-2,-25,2.2],[-3,1,2.8],[8,-7,1.8]]},

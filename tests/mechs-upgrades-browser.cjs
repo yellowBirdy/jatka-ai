@@ -2,7 +2,7 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
 (async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||(process.env.CI?chromium.executablePath():'/usr/bin/chromium'),args:['--no-sandbox','--disable-dev-shm-usage','--enable-unsafe-swiftshader','--use-angle=swiftshader']});try{
  const page=await browser.newPage({viewport:{width:1200,height:800}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('http://127.0.0.1:8000/mechy.html');
- const attach=()=>page.evaluate(async()=>window.readMech=(await import('./mechy2.js?v=mechs-77')).mechSnapshot),read=()=>page.evaluate(()=>window.readMech());await attach();const original=(await read()).state;
+ const attach=()=>page.evaluate(async()=>window.readMech=(await import('./mechy2.js?v=mechs-78')).mechSnapshot),read=()=>page.evaluate(()=>window.readMech());await attach();const original=(await read()).state;
  await page.locator('[data-tab="mech"]').click();for(const [i,slot]of ['body','legs','gl','gr'].entries())await page.locator(`[data-paint="${slot}"][data-color="${i+1}"]`).click();const saved=(await read()).state;assert.deepEqual(saved.paint,{body:1,legs:2,gl:3,gr:4});await page.reload();await attach();assert.deepEqual((await read()).state.paint,saved.paint);
  for(const [body,rarity]of [[0,0],[0,4],[1,4],[2,4],[3,5]]){
   const fixture=structuredClone(saved);fixture.inv.find(p=>p.id===fixture.eq.body).t=body;fixture.inv.find(p=>p.id===fixture.eq.body).r=rarity;fixture.inv.find(p=>p.id===fixture.eq.gl).t=2;fixture.inv.find(p=>p.id===fixture.eq.gr).t=1;

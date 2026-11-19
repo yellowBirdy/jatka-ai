@@ -16,8 +16,9 @@ export function createMech(S,color,accent,rarity=0xffffff,colors={}){
  const chest=new T.Shape();chest.moveTo(-w*.5,h*.96);chest.lineTo(w*.5,h*.96);chest.lineTo(w*.46,h*.5);chest.lineTo(w*.23,h*.23);chest.lineTo(-w*.23,h*.23);chest.lineTo(-w*.46,h*.5);chest.closePath();const chestGeo=new T.ExtrudeGeometry(chest,{depth:d*.8,bevelEnabled:true,bevelThickness:.07,bevelSize:.06,bevelSegments:3,steps:1});chestGeo.translate(0,0,-d*.4);mesh(chestGeo,paint,top);
  for(const side of [-1,1]){panel(w*.2,h*.51,.1,steel,top,side*w*.35,h*.66,d*.45,-side*.12);panel(.28,.13,.065,light,top,side*w*.29,h*.58,d*.53);panel(.21,.055,.07,trim,top,side*w*.25,h*.33,d*.49,-side*.4);for(const yy of [.43,.85])cyl(top,side*w*.42,h*yy,d*.51,.03,.04,dark,true);panel(.4,.4,.7,paint,top,side*(w/2+.08),h*.82,-.04,-side*.12);panel(.32,.13,.48,trim,top,side*(w/2+.08),h*1.03,-.03);}
  panel(w*.4,h*.44,.11,trim,top,0,h*.74,d*.5);panel(.16,.07,.045,rank,top,0,h*.58,d*.58);panel(w*.5,.22,.18,steel,top,0,h*.25,d*.3);
- const hd=new T.Group();hd.position.set(0,h,d*.04);top.add(hd);panel(.72,.42,.66,paint,hd,0,.2,0);panel(.45,.18,.07,dark,hd,0,.26,.38);panel(.34,.11,.035,light,hd,0,.26,.43);
- if(S.H.k==='arm')panel(.88,.13,.77,steel,hd,0,.45,0);if(S.H.k==='snp')cyl(hd,.27,.31,.67,.065,.8,dark,true);if(S.H.k==='cool')for(let k=-1;k<=1;k++)panel(.72,.06,.1,steel,hd,0,.49,k*.22);if(S.H.k==='scout'){cyl(hd,.28,.64,0,.025,.8,steel);joint(hd,.28,1.05,0,.08);}
+ const heads=[];for(const [index,H]of (S.heads||[S.H]).entries()){const hd=new T.Group();hd.position.set(index===0?0:(index===1?-.7:.7),h+(index===0?0:-.1),d*.04);if(index>0)hd.scale.setScalar(.8);top.add(hd);heads.push(hd);panel(.72,.42,.66,paint,hd,0,.2,0);panel(.45,.18,.07,dark,hd,0,.26,.38);panel(.34,.11,.035,light,hd,0,.26,.43);
+ if(H.k==='arm')panel(.88,.13,.77,steel,hd,0,.45,0);if(H.k==='snp')cyl(hd,.27,.31,.67,.065,.8,dark,true);if(H.k==='cool')for(let k=-1;k<=1;k++)panel(.72,.06,.1,steel,hd,0,.49,k*.22);if(H.k==='scout'){cyl(hd,.28,.64,0,.025,.8,steel);joint(hd,.28,1.05,0,.08);}
+ }
  // Mechanical back and exposed heat exchangers.
  panel(w*.54,h*.58,.15,dark,top,0,h*.62,-d*.48);for(let k=0;k<4;k++)panel(w*.43,.045,.05,steel,top,0,h*.4+k*.14,-d*.59);
  for(const [i,side]of S.G.map((_,i)=>[i,i%2?1:-1])){const pivot=new T.Group();pivot.position.set(side*(w/2+(i<2?.6:1.05)),h*(i<2?.55:.12),i<2?.25:-.2);top.add(pivot);wp.push(pivot);joint(pivot,0,0,-.12,.24);const kind=S.G[i].k,length=S.G[i].len+.3;panel(.56,.62,.78,gunPaint[i],pivot,0,0,.2);panel(.45,.12,.64,steel,pivot,0,.39,.19);
@@ -34,5 +35,5 @@ export function createMech(S,color,accent,rarity=0xffffff,colors={}){
  const smokeMaterial=new T.MeshBasicMaterial({color:0x252d34,transparent:true,opacity:.45,depthWrite:false});for(let i=0;i<4;i++){const puff=mesh(new T.SphereGeometry(.2,6,5),smokeMaterial,smoke,0,i*.4,0);puff.scale.setScalar(1+i*.45);}
  const exhaust=new T.Group();top.add(exhaust);exhaust.visible=false;for(const side of [-1,1]){const jet=mesh(new T.ConeGeometry(.19,1.1,8),new T.MeshBasicMaterial({color:0x6de6ff,transparent:true,opacity:.7}),exhaust,side*w*.3,-.3,-d*.45);jet.rotation.z=Math.PI;}
  const barrier=mesh(new T.BoxGeometry(w+1.5,2.8,.12),new T.MeshBasicMaterial({color:0x52cfff,transparent:true,opacity:.35,depthWrite:false}),top,0,.6,d+1);barrier.visible=false;
- g.add(lg,top);return {g,top,lg,parts,sh,wp,knees,damage,smoke,barrier,exhaust,charging,height:LH+h+(S.H.k==='scout'?1.1:.6)};
+ g.add(lg,top);return {g,top,lg,parts,sh,wp,knees,damage,smoke,barrier,exhaust,charging,heads,height:LH+h+((S.heads||[S.H]).some(h=>h.k==='scout')?1.1:.6)};
 }

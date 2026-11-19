@@ -1,4 +1,4 @@
-import {beamHitDistance} from './mechy2-aim.js?v=mechs-77';
+import {beamHitDistance} from './mechy2-aim.js?v=mechs-78';
 export const BODY_ABILITIES=[{kind:'cloak',name:'Kamuflaż',description:'Znika z celowników botów; strzał ujawnia mecha.',duration:4,cd:13},{kind:'flight',name:'Skok odrzutowy',description:'Krótki lot ponad przeszkodami.',duration:3,cd:12},{kind:'shield',name:'Rozkładana tarcza',description:'Przechwytuje ostrzał nadchodzący z przodu.',duration:4,cd:14},{kind:'charge',name:'Szarża',description:'Przyspiesza i odrzuca trafionego przeciwnika.',duration:1.1,cd:9}];
 export function activateBody(e,index,rarity){if(rarity<4||!Number.isInteger(rarity)||e.bodyCd>0)return false;const a=BODY_ABILITIES[index];e.bodyKind=a.kind;e.bodyT=a.duration;e.bodyCd=a.cd;e.rammed=new Set();return true;}
 export function tickBody(e,dt){e.bodyCd=Math.max(0,(e.bodyCd||0)-dt);e.bodyT=Math.max(0,(e.bodyT||0)-dt);}

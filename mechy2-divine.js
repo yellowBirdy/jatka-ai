@@ -6,7 +6,7 @@ export const DIVINE=[
  ['legs',2,'Szlak Odnowy','scavenger','Naprawia pancerz podczas przemieszczania się.'],
  ['body',2,'Egida Nieba','aegis','Odnawia osłonę po przerwie od otrzymywania obrażeń.'],
  ['body',1,'Serce Feniksa','phoenix','Raz w walce odradza mecha z mocno odbudowanym pancerzem i osłoną.'],
- ['body',3,'Pajęczy Tron','spider','Odblokowuje cztery niezależne mocowania broni.'],
+ ['body',3,'Pajęczy Tron','spider','Odblokowuje cztery bronie oraz trzy niezależne mocowania głów.'],
  ['body',0,'Rdzeń Ragnaroku','reactor','Przy osłabionym pancerzu znacznie wzmacnia własne trafienia.'],
  ['head',1,'Oko Wyroczni','seeker','Nadaje naprowadzanie także pociskom karabinu, działa i strzelby.'],
  ['head',3,'Oko Zimy','cryo','Każde trafienie spowalnia przeciwnika.'],
@@ -22,7 +22,7 @@ export const DIVINE=[
  ['sp',1,'Studnia Otchłani','void','Użycie modułu mocy mocno przyciąga i spowalnia pobliskich przeciwników.']
 ].map(([slot,t,name,power,description],id)=>({id,slot,t,name,power,description}));
 export const divineDesign=p=>Number.isInteger(p?.divine)?DIVINE[p.divine]:null;
-export function divinePowers(R){return new Set(['legs','body','head',...weaponSlots(R),'sp'].map(k=>divineDesign(R[k])?.power).filter(Boolean));}
+export function divinePowers(R){return new Set(equippedSlots(R).map(k=>divineDesign(R[k])?.power).filter(Boolean));}
 export function defendDivine(e,d){if(e.powers.has('phase')){e.divineHits=(e.divineHits||0)+1;if(e.divineHits%3===0)return 0;}return d;}
 export function tickDivine(e,dt){const p=e.powers;if(p.has('phoenix')&&e.hp<=0&&!e.reborn){e.reborn=true;e.hp=e.max*.7;e.shield=Math.max(e.shield||0,e.max*.2);e.burnT=0;e.stunT=0;}
  if(p.has('anchor'))e.stunT=0;if(p.has('sprint'))e.slowT=0;
@@ -41,3 +41,6 @@ export const weaponSlots=R=>divineDesign(R.body)?.power==='spider'?['gl','gr','g
 
 export function divineWeapon(g,p){const d=divineDesign(p);if(!d)return g;const zeus=d.power==='storm';return {...g,n:d.name,d:g.d*(zeus?1.8:1.25),r:g.r*(zeus?1.15:1.1),range:g.range*(zeus?1.25:1.15),heat:zeus?.065:.19};}
 export function stormTargets(hit,src,ents){return ents.filter(e=>e!==src&&e!==hit&&e.alive&&!(e.bodyT>0&&e.bodyKind==='cloak')&&Math.abs((e.groundY||0)-(hit.groundY||0))<4&&Math.hypot(e.x-hit.x,e.z-hit.z)<16).sort((a,b)=>Math.hypot(a.x-hit.x,a.z-hit.z)-Math.hypot(b.x-hit.x,b.z-hit.z)).slice(0,3);}
+
+export const headSlots=R=>divineDesign(R.body)?.power==='spider'?['head','head2','head3']:['head'];
+export const equippedSlots=R=>['legs','body',...headSlots(R),...weaponSlots(R),'sp'];
