@@ -8,56 +8,68 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: autoclicker-release
+  cancel-in-progress: true
 jobs:
-  build:
+  test-logic:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Extract utility sources
-        run: unzip -q downloads/autoclicker-source.zip
-      - name: Test intervals and ten-minute scheduling
+      - run: unzip -q downloads/autoclicker-source.zip
+      - name: Test slow intervals and 1000-per-second scheduling
         run: |
           gcc -std=c11 -Wall -Wextra -Werror autoclicker/test_interval.c -lm -o /tmp/test-interval
           /tmp/test-interval
-      - name: Install cross compiler
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends gcc-mingw-w64-x86-64
-      - name: Build native Windows executable
-        run: |
-          mkdir release
-          x86_64-w64-mingw32-gcc -std=c11 -Wall -Wextra -Werror -O2 -s -static -municode -mwindows -Wl,--dynamicbase,--nxcompat autoclicker/autoclicker.c -luser32 -lgdi32 -lm -o release/Autoclicker-Odstep.exe
-          cp autoclicker/CZYTAJ.txt autoclicker/LICENSE release/
-          cd release
-          zip -q Autoclicker-Odstep.zip Autoclicker-Odstep.exe CZYTAJ.txt LICENSE
-      - uses: actions/upload-artifact@v4
-        with:
-          name: autoclicker-windows
-          path: release/
-  windows-test:
-    needs: build
+  windows-build-test:
+    needs: test-logic
     runs-on: windows-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: autoclicker-windows
-          path: release
-      - name: Test executable and window controls without clicking
+      - uses: microsoft/setup-msbuild@v2
+      - name: Extract sources
+        shell: pwsh
+        run: Expand-Archive downloads/autoclicker-source.zip -DestinationPath .
+      - name: Build standalone Windows executable and tests
+        run: |
+          msbuild autoclicker/Autoclicker-Odstep.vcxproj /p:Configuration=Release /p:Platform=x64 /m
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          msbuild autoclicker/test-interval.vcxproj /p:Configuration=Release /p:Platform=x64 /m
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Run interval tests on Windows
+        run: |
+          & ./release/test-interval.exe
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Test window and high-resolution worker without clicking
         shell: pwsh
         run: |
           $process = Start-Process -FilePath "$PWD/release/Autoclicker-Odstep.exe" -ArgumentList '--self-test' -Wait -PassThru
           if ($process.ExitCode -ne 0) { throw "Windows self-test failed: $($process.ExitCode)" }
+      - name: Package tested executable
+        shell: pwsh
+        run: |
+          Copy-Item autoclicker/CZYTAJ.txt,autoclicker/LICENSE release/
+          Compress-Archive release/Autoclicker-Odstep.exe,release/CZYTAJ.txt,release/LICENSE release/Autoclicker-Odstep.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: autoclicker-windows
+          path: |
+            release/Autoclicker-Odstep.exe
+            release/Autoclicker-Odstep.zip
       - name: Publish tested executable
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           cat > release/notes.txt <<'NOTES'
-          Samodzielny autoclicker Windows 10/11 x64. Dowolny odstęp: ms, sekundy, minuty lub godziny. Domyślnie klik co 10 minut. F6 start/stop, F8 STOP.
+          Samodzielny autoclicker Windows 10/11 x64. Dowolny odstęp lub ustawienie do 1000 kliknięć/s. Domyślnie klik co 10 minut. F6 start/stop, F8 STOP.
 
-          Testy harmonogramu oraz test utworzenia okna i ustawień na Windows przechodzą przed publikacją. Test Windows nie wykonuje kliknięć. EXE bez podpisu Authenticode; SmartScreen może ostrzegać. Program nie wyłącza zabezpieczeń systemu.
+          Rzeczywista częstotliwość zależy od Windowsa i aplikacji. Przed publikacją przechodzą testy harmonogramu na Linuxie i Windowsie oraz test okna i osobnego wątku zegara, który zamiast kliknięć zlicza symulowane zdarzenia. EXE bez podpisu Authenticode; SmartScreen może ostrzegać.
           NOTES
-          gh release create autoclicker-odstep-v1 release/Autoclicker-Odstep.exe release/Autoclicker-Odstep.zip --target "$GITHUB_SHA" --title 'Autoclicker — dowolny odstęp' --notes-file release/notes.txt
+          if gh release view autoclicker-odstep-v2 > /dev/null 2>&1; then
+            gh release upload autoclicker-odstep-v2 release/Autoclicker-Odstep.exe release/Autoclicker-Odstep.zip --clobber
+          else
+            gh release create autoclicker-odstep-v2 release/Autoclicker-Odstep.exe release/Autoclicker-Odstep.zip --target "$GITHUB_SHA" --title 'Autoclicker — odstęp i do 1000 kliknięć/s' --notes-file release/notes.txt
+          fi
